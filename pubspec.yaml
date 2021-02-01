@@ -42,6 +42,7 @@ dependencies:
   flutter_slidable: "^0.5.4"
   shimmer: ^1.1.1
   cached_network_image: ^2.5.0
+  infinite_scroll_pagination: ^2.3.0
   simple_animations: ^1.3.4
   passwordfield: ^0.0.82
 dev_dependencies:

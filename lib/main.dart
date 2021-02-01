@@ -10,9 +10,13 @@ import 'package:my_store/functions/change_language.dart';
 import 'package:my_store/functions/localizations.dart';
 import 'package:my_store/pages/home/home.dart';
 import 'package:my_store/pages/login_signup/login.dart';
+import 'package:my_store/pages/product_list_view/get_function.dart';
+
 import 'package:my_store/pages/onboarding/onboarding.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'pages/home/products/get_function.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +25,11 @@ Future main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(
-      ChangeNotifierProvider<AppStateNotifier>(
-        create: (context) => AppStateNotifier(),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => AppStateNotifier()),
+          ChangeNotifierProvider(create: (context) => PostDataProvider()),
+        ],
         child: MyApp(
           appLanguage: appLanguage,
         ),
@@ -102,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Duration(seconds: 4),
           () => Navigator.push(
                 context,
-            MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => Home()),
               ));
     } else {
       Timer(
@@ -131,7 +138,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         alignment: Alignment.center,
-
       ),
     );
   }

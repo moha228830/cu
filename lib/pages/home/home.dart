@@ -44,10 +44,13 @@ class _HomeState extends State<Home> {
         await SharedPreferences.getInstance();
     var tok = localStorage.getString('token');
     var us = localStorage.getString('user_id');
+
 if ( tok == null  ){
   localStorage.setString('token', token);
   localStorage.setString('user_id', "0");
- // print( tok + "moha");
+  localStorage.setString('login', "0");
+
+  // print( tok + "moha");
 
 }
   print(tok);

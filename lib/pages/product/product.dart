@@ -244,7 +244,7 @@ class _ProductPageState extends State<ProductPage> {
                       dotColor: Colors.grey,
                       indicatorBgPadding: 5.0,
                       dotBgColor: Colors.purple.withOpacity(0.0),
-                      boxFit: BoxFit.fill,
+                      boxFit: BoxFit.fitHeight,
                       animationCurve: Curves.decelerate,
                       dotIncreasedColor: Colors.red,
 

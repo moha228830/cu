@@ -1,3 +1,3 @@
 class Config {
-  static String url = "https://kusha-store.com/api/v1/";
+  static String url = "https://lifewithyou.online/cusha/api/v1/";
 }

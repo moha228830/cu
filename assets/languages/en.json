@@ -17,6 +17,7 @@
 
         "pass_words": "password from 6 to 20 ",
 
+        "name_error": "name from 4 to 30 character ",
 
         "phone_error": "error in your phone number",
 
@@ -163,7 +164,8 @@
         "accountSettingString": "Account Setting",
         "faqString": "FAQ",
         "aboutAppString": "About App",
-        "callCenterString": "Call Center"
+        "callCenterString": "Call Center",
+        "register": "Register "
     },
 
     "accountSettingPage": {

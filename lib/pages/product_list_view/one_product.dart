@@ -7,8 +7,8 @@ import 'package:my_store/pages/product/product.dart';
 import 'package:my_store/pages/product_list_view/filter_row.dart';
 import 'package:my_store/functions/passDataToProducts.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:my_store/pages/product_list_view/product_class.dart' ;
-import 'package:my_store/pages/product_list_view/get_function.dart' ;
+import 'package:my_store/pages/product_list_view/product_class.dart';
+import 'package:my_store/pages/product_list_view/get_function.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
@@ -65,7 +65,7 @@ class _ProductsGridViewState extends State<ProductsGridView> {
                       child: Text(
                         products.name,
                         style: TextStyle(
-                          fontSize: width/25,
+                          fontSize: width / 25,
                           fontFamily: 'Jost',
                           letterSpacing: 0.8,
                           fontWeight: FontWeight.bold,
@@ -82,11 +82,13 @@ class _ProductsGridViewState extends State<ProductsGridView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            "${products.overPrice} KW ", textDirection: TextDirection.ltr,
+                            "${products.overPrice} KW ",
+                            textDirection: TextDirection.ltr,
                             style: TextStyle(
-                              fontSize: width/25,
+                              fontSize: width / 25,
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).textTheme.headline6.color,
+                              color:
+                                  Theme.of(context).textTheme.headline6.color,
                             ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
@@ -96,9 +98,10 @@ class _ProductsGridViewState extends State<ProductsGridView> {
                             width: 6.0,
                           ),
                           Text(
-                            "${products.price.toString()} KW ", textDirection: TextDirection.ltr,
+                            "${products.price.toString()} KW ",
+                            textDirection: TextDirection.ltr,
                             style: TextStyle(
-                                fontSize: width/25,
+                                fontSize: width / 25,
                                 decoration: TextDecoration.lineThrough,
                                 color: Colors.grey),
                             overflow: TextOverflow.ellipsis,
@@ -108,7 +111,6 @@ class _ProductsGridViewState extends State<ProductsGridView> {
                           SizedBox(
                             width: 6.0,
                           ),
-
                         ],
                       ),
                     ),
@@ -125,31 +127,29 @@ class _ProductsGridViewState extends State<ProductsGridView> {
           MaterialPageRoute(
             builder: (context) => ProductPage(
               data: Product(
-                id : products.id,
-                name : products.name,
-                description : products.description,
-                price : products.price,
-                overPrice : products.overPrice,
-                brandId : products.brandId,
-                made : products.made,
-                subCategoryId : products.subCategoryId,
-                categoryId : products.categoryId,
-                qut : products.qut,
-                pay : products.pay,
-                view : products.view,
-                newItem : products.newItem,
-                popular : products.popular,
-                over : products.over,
-                subSubCategoryId : products.subSubCategoryId,
-                img : products.img,
-                activity : products.activity,
-                numItem : products.numItem,
-                imgFullPath : products.imgFullPath,
-                precentage : products.precentage,
-                images : products.images,
-                sizes : products.sizes,
-
-
+                id: products.id,
+                name: products.name,
+                description: products.description,
+                price: products.price,
+                overPrice: products.overPrice,
+                brandId: products.brandId,
+                made: products.made,
+                subCategoryId: products.subCategoryId,
+                categoryId: products.categoryId,
+                qut: products.qut,
+                pay: products.pay,
+                view: products.view,
+                newItem: products.newItem,
+                popular: products.popular,
+                over: products.over,
+                subSubCategoryId: products.subSubCategoryId,
+                img: products.img,
+                activity: products.activity,
+                numItem: products.numItem,
+                imgFullPath: products.imgFullPath,
+                precentage: products.precentage,
+                images: products.images,
+                sizes: products.sizes,
               ),
             ),
           ),

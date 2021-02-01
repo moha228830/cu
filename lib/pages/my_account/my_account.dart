@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_store/pages/call_center/call_center.dart';
+import 'package:my_store/pages/product_list_view/get_function.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
+import 'package:my_store/pages/login_signup/signup.dart';
 
 // My Own Imports
 import 'package:my_store/AppTheme/AppStateNotifier.dart';
@@ -48,7 +51,7 @@ class _MyAccountState extends State<MyAccount> {
                     AppLocalizations.of(context)
                         .translate('myAccountPage', 'sureDialogueString'),
                     style: TextStyle(
-                      fontSize: width/25,
+                      fontSize: width / 25,
                       fontWeight: FontWeight.w700,
                       color: Theme.of(context).textTheme.headline6.color,
                     ),
@@ -156,16 +159,15 @@ class _MyAccountState extends State<MyAccount> {
                     Padding(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Text(
-                        'user',
+                        "user",
                         style: TextStyle(
-                            fontSize: width/25,
+                            fontSize: width / 25,
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).textTheme.headline6.color),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 8.0),
-
                     ),
                   ],
                 ),
@@ -194,7 +196,7 @@ class _MyAccountState extends State<MyAccount> {
                     Text(
                       "الوضع الليلي",
                       style: TextStyle(
-                          fontSize: width/25,
+                          fontSize: width / 25,
                           color: Theme.of(context).textTheme.headline6.color),
                     ),
                     Switch(
@@ -218,8 +220,6 @@ class _MyAccountState extends State<MyAccount> {
             height: 1.0,
           ),
         ),
-
-
         Padding(
           padding: EdgeInsets.only(right: 30.0, left: 70.0),
           child: Divider(
@@ -250,7 +250,7 @@ class _MyAccountState extends State<MyAccount> {
                   AppLocalizations.of(context)
                       .translate('myAccountPage', 'callCenterString'),
                   style: TextStyle(
-                      fontSize: width/25,
+                      fontSize: width / 25,
                       color: Theme.of(context).textTheme.headline6.color),
                 )
               ],
@@ -263,7 +263,43 @@ class _MyAccountState extends State<MyAccount> {
             height: 1.0,
           ),
         ),
-
+        Padding(
+          padding: EdgeInsets.only(right: 30.0, left: 70.0),
+          child: Divider(
+            height: 1.0,
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.rightToLeft, child: SignupPage()));
+          },
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.supervised_user_circle,
+                  size: 30.0,
+                  color: Theme.of(context).primaryColor,
+                ),
+                SizedBox(
+                  width: 25,
+                ),
+                Text(
+                  AppLocalizations.of(context)
+                      .translate('myAccountPage', 'register'),
+                  style: TextStyle(
+                      fontSize: width / 25,
+                      color: Theme.of(context).textTheme.headline6.color),
+                )
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

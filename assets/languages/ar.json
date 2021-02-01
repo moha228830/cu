@@ -25,6 +25,7 @@
 
 
         "phone_error": "رقم هاتف غير صالح ",
+        "name_error": "الاسم من 4 احرف الي 30 حرف ",
 
         "no_net": "لا يوجد انترنت متصل "
 
@@ -172,7 +173,8 @@
         "accountSettingString": "إعدادات الحساب",
         "faqString": "التعليمات",
         "aboutAppString": "عن التطبيق",
-        "callCenterString": "مركز الاتصال"
+        "callCenterString": "مركز الاتصال",
+        "register": "تسجيل الدخول"
     },
 
     "accountSettingPage": {

@@ -1,18 +1,248 @@
 import 'package:flutter/material.dart';
 import 'package:my_store/functions/localizations.dart';
+import 'package:my_store/pages/home/home.dart';
 import 'package:my_store/pages/login_signup/forgot_password.dart';
 import 'package:my_store/pages/login_signup/login.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:passwordfield/passwordfield.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:my_store/config.dart';
+
+import 'package:http/http.dart' as http;
 class SignupPage extends StatefulWidget {
   @override
   _SignupPageState createState() => _SignupPageState();
 }
 
 class _SignupPageState extends State<SignupPage> {
-  String _selectedCountryCode = "+965";
-  List<String> _countryCodes = ['+02', '+965'];
+  var token = utils.CreateCryptoRandomString();
 
+  set_token_not_register() async{
+    SharedPreferences localStorage =
+    await SharedPreferences.getInstance();
+    var tok = localStorage.getString('token');
+    var us = localStorage.getString('user_id');
+    if ( tok == null  ){
+      localStorage.setString('token', token);
+      localStorage.setString('user_id', "0");
+      localStorage.setString('login', "0");
+      // print( tok + "moha");
+
+    }
+    print(tok);
+  }
+  // Initially password is obscure
+  bool _obscureText = true;
+
+  String _password;
+
+  // Toggles the password show status
+  void _toggle() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  var _currentSelectedValue;
+  String code = "000";
+  var _country = [
+    "الكويت",
+    "مصر",
+    "الامارات",
+  ];
+
+  bool _isload = false;
+  final TextEditingController _phoneControl = new TextEditingController();
+  final TextEditingController _passwordControl = new TextEditingController();
+  final TextEditingController _nameControl = new TextEditingController();
+
+  //////////////login //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  my_login() async {
+
+
+    print(_currentSelectedValue.toString());
+
+
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var tok = localStorage.getString('token');
+    if (tok != null){
+    try {
+      print(_phoneControl.text);
+      print(_passwordControl.text);
+      print(_nameControl.text);
+      print(code.toString());
+      print(tok.toString());
+      if (_passwordControl.text
+          .trim()
+          .isEmpty ||
+          _phoneControl.text
+              .trim()
+              .isEmpty || _currentSelectedValue.toString() == "" ||
+          code == "000" || code == "") {
+        Fluttertoast.showToast(
+          msg: AppLocalizations.of(context).translate('loginPage', 'complete'),
+          backgroundColor: Theme
+              .of(context)
+              .textTheme
+              .headline6
+              .color,
+          textColor: Theme
+              .of(context)
+              .appBarTheme
+              .color,
+        );
+      } else if (_phoneControl.text.length < 8) {
+        Fluttertoast.showToast(
+          msg: AppLocalizations.of(context)
+              .translate('loginPage', 'phone_error'),
+          backgroundColor: Theme
+              .of(context)
+              .textTheme
+              .headline6
+              .color,
+          textColor: Theme
+              .of(context)
+              .appBarTheme
+              .color,
+        );
+      } else if (_nameControl.text.length < 4) {
+        Fluttertoast.showToast(
+          msg: AppLocalizations.of(context)
+              .translate('loginPage', 'name_error'),
+          backgroundColor: Theme
+              .of(context)
+              .textTheme
+              .headline6
+              .color,
+          textColor: Theme
+              .of(context)
+              .appBarTheme
+              .color,
+        );
+      }
+      else if (_nameControl.text.length > 30) {
+        Fluttertoast.showToast(
+          msg: AppLocalizations.of(context)
+              .translate('loginPage', 'name_error'),
+          backgroundColor: Theme
+              .of(context)
+              .textTheme
+              .headline6
+              .color,
+          textColor: Theme
+              .of(context)
+              .appBarTheme
+              .color,
+        );
+      }
+      else if (_passwordControl.text.length < 6 ||
+          _passwordControl.text.length > 20) {
+        Fluttertoast.showToast(
+          msg:
+          AppLocalizations.of(context).translate('loginPage', 'pass_words'),
+          backgroundColor: Theme
+              .of(context)
+              .textTheme
+              .headline6
+              .color,
+          textColor: Theme
+              .of(context)
+              .appBarTheme
+              .color,
+        );
+      } else {
+        if (this.mounted) {
+          setState(() {
+            _isload = true;
+          });
+        }
+        final response = await http
+            .post(Config.url + "register", headers: {
+          "Accept": "application/json"
+        }, body: {
+          "phone": _phoneControl.text,
+          "password": _passwordControl.text,
+          "name": _nameControl.text,
+          "cod": code,
+          "country": _currentSelectedValue.toString(),
+          "token":tok.toString()
+        });
+
+        final _formKey = GlobalKey<FormState>();
+
+        var prif = SharedPreferences.getInstance();
+
+        final data = jsonDecode(response.body);
+
+        if (data["state"] == "1") {
+          SharedPreferences localStorage =
+          await SharedPreferences.getInstance();
+          localStorage.setString('token', data['data']["api_token"]);
+          localStorage.setString('user', json.encode(data['data']));
+          localStorage.setString('login', "1");
+          return Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return Home();
+              },
+            ),
+          );
+        } else {
+          Fluttertoast.showToast(
+            msg: '${data["msg"]}',
+            backgroundColor: Theme
+                .of(context)
+                .textTheme
+                .headline6
+                .color,
+            textColor: Theme
+                .of(context)
+                .appBarTheme
+                .color,
+          );
+          //01155556624
+          if (this.mounted) {
+            setState(() {
+              _isload = false;
+            });
+          }
+        }
+        // _showDialog (data["state"],m);
+
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(
+        msg: AppLocalizations.of(context).translate('loginPage', 'no_net'),
+        backgroundColor: Theme
+            .of(context)
+            .textTheme
+            .headline6
+            .color,
+        textColor: Theme
+            .of(context)
+            .appBarTheme
+            .color,
+      );
+    }
+  }else{
+      Fluttertoast.showToast(
+        msg: 'خطأ غير متوقع اغلق التطبيق ثم اعد فتحة من البداية',
+        backgroundColor: Theme.of(context).textTheme.headline6.color,
+        textColor: Theme.of(context).appBarTheme.color,
+      );
+    }
+  }
+
+  ///end ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  @override
+  void initState() {
+    super.initState();
+    set_token_not_register();
+  }
   @override
   Widget build(BuildContext context) {
     var countryDropDown = Container(
@@ -25,28 +255,8 @@ class _SignupPageState extends State<SignupPage> {
       height: 45.0,
       margin: const EdgeInsets.all(3.0),
       //width: 300.0,
-      child: DropdownButtonHideUnderline(
-        child: ButtonTheme(
-          alignedDropdown: true,
-          child: DropdownButton(
-            value: _selectedCountryCode,
-            items: _countryCodes.map((String value) {
-              return new DropdownMenuItem<String>(
-                  value: value,
-                  child: new Text(
-                    value,
-                    style: TextStyle(fontSize: 12.0),
-                  ));
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                _selectedCountryCode = value;
-              });
-            },
-            style: Theme.of(context).textTheme.title,
-          ),
-        ),
-      ),
+      child: Container(padding: EdgeInsets.all(12.0),
+          child: Text(" ${code}+")),
     );
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -55,7 +265,7 @@ class _SignupPageState extends State<SignupPage> {
             Center(
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: 100.0),
+
                   Image.asset(
                     'assets/round_logo.png',
                     height: 80.0,
@@ -88,10 +298,12 @@ class _SignupPageState extends State<SignupPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           child: TextField(
+                            controller: _nameControl,
                             decoration: InputDecoration(
                               hintText: AppLocalizations.of(context).translate('signupPage','usernameString'),
                               prefixIcon: Icon(Icons.perm_identity),
-                              border: InputBorder.none,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide(width: 2, color: Colors.purple)),
@@ -107,17 +319,70 @@ class _SignupPageState extends State<SignupPage> {
                             borderRadius:
                             BorderRadius.all(Radius.circular(20.0)),
                           ),
+                          child:  FormField<String>(
+                            builder: (FormFieldState<String> state) {
+                              return InputDecorator(
+                                decoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.flag),
+                                    errorStyle: TextStyle(
+                                        color: Colors.redAccent, fontSize: 16.0),
+                                    hintText: 'اختر الدولة',
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20))),
+                                isEmpty: _currentSelectedValue == null,
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    value: _currentSelectedValue,
+                                    isDense: true,
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        _currentSelectedValue = newValue;
+                                        if(newValue=="الكويت"){
+                                          code = "965";
+                                        }else if(newValue=="مصر"){
+                                          code = "002";
+                                        }
+                                        else if(newValue=="الامارات"){
+                                          code = "975";
+                                        }
+
+                                        state.didChange(newValue);
+                                      });
+                                    },
+                                    items: _country.map((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(20.0)),
+                          ),
 
                           child: new TextFormField(
-                           // validator: (value) {
+                            controller: _phoneControl,
+                            // validator: (value) {
                             //  if (value.isEmpty) {
-                              //  return 'Please enter some text';
+                            //  return 'Please enter some text';
                             //  }
-                         //   },
+                            //   },
                             keyboardType: TextInputType.number,
                             decoration: new InputDecoration(
                                 contentPadding: const EdgeInsets.all(12.0),
-                                border: InputBorder.none,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20)),
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(width: 2, color: Colors.purple)),
@@ -132,6 +397,8 @@ class _SignupPageState extends State<SignupPage> {
                         SizedBox(
                           height: 20.0,
                         ),
+
+
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.grey[200],
@@ -139,48 +406,30 @@ class _SignupPageState extends State<SignupPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           child: TextField(
+                            controller: _passwordControl,
                             decoration: InputDecoration(
                               hintText: AppLocalizations.of(context).translate('loginPage','passwordString'),
-                              prefixIcon: Icon(Icons.vpn_key),
-                              border: InputBorder.none,
+                              prefixIcon:  new FlatButton(
+                                  onPressed: _toggle,
+                                  child: _obscureText?Icon(Icons.visibility_off ):Icon(Icons.visibility )
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide(width: 2, color: Colors.purple)),
                             ),
-                            obscureText: true,
+                            obscureText: _obscureText,
                           ),
                         ),
+
                         SizedBox(
                           height: 20.0,
                         ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius:
-                  BorderRadius.all(Radius.circular(20.0)),
-                ),                child: PasswordField(
 
-
-                  color: Colors.green,
-                  hasFloatingPlaceholder: true,
-                border: InputBorder.none,
-
-                focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(width: 2, color: Colors.purple)),
-                ),
-              ),
-                        SizedBox(
-                          height: 30.0,
-                        ),
                         InkWell(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    type: PageTransitionType.rightToLeft,
-                                    child: ForgotPasswordPage(
-                                    )));
+                            my_login();
                           },
                           child: Container(
                             height: 45.0,
@@ -192,7 +441,8 @@ class _SignupPageState extends State<SignupPage> {
                               elevation: 7.0,
                               child: GestureDetector(
                                 child: Center(
-                                  child: Text(AppLocalizations.of(context).translate('loginPage','createAccountString'),
+                                  child:!_isload?
+                                  Text(AppLocalizations.of(context).translate('loginPage','createAccountString'),
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'Jost',
@@ -200,7 +450,7 @@ class _SignupPageState extends State<SignupPage> {
                                       letterSpacing: 1.0,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                  ),
+                                  ):CircularProgressIndicator(),
                                 ),
                               ),
                             ),
