@@ -18,7 +18,10 @@ String city ;
 String address ;
 String phone ;
 double total ;
-PaymentPage(this.total,this.price,this.phone,this.govern,this.city,this.address);
+double balance ;
+
+String name ;
+PaymentPage(this.total,this.price,this.phone,this.govern,this.city,this.address,this.name,this.balance);
   @override
   _PaymentPageState createState() => _PaymentPageState();
 }
@@ -26,7 +29,35 @@ PaymentPage(this.total,this.price,this.phone,this.govern,this.city,this.address)
 class _PaymentPageState extends State<PaymentPage> {
   int selectedRadioPayment;
 bool _load = false ;
+double net=0.0;
+double remind=0.0;
+get_net(){
+   double net2 = (widget.total + widget.price) - widget.balance ;
+   if (net2 == 0 ){
+             setState(() {
+               net = 0.0;
+               remind = 0.0;
 
+             });
+   }
+   if (net2 > 0 ){
+
+     setState(() {
+       net =net2;
+       remind = 0.0;
+
+     });
+   }
+   if (net2 < 0 ){
+     setState(() {
+       net =0.0;
+       remind = (net2).abs();
+
+     });
+   }
+   print(widget.name);
+   print((widget.balance - remind).toString());
+}
   set_orders  () async{
     setState(() {
       _load = true ;
@@ -45,6 +76,7 @@ bool _load = false ;
             "Accept": "application/json"
           }, body: {
             "phone": widget.phone,
+            "username": widget.name,
             "name": widget.govern,
             "city": widget.city,
             "address": widget.address,
@@ -52,6 +84,9 @@ bool _load = false ;
             "user_id": user,
             "price":widget.price.toString(),
             "total":widget.total.toString(),
+            "balance":(widget.balance - remind).toString(),
+
+
 
           });
 
@@ -109,6 +144,7 @@ bool _load = false ;
   @override
   void initState() {
     super.initState();
+    get_net();
     selectedRadioPayment = 0;
     _load = false ;
 
@@ -164,6 +200,7 @@ bool _load = false ;
                 SizedBox(
                   height: 20.0,
                 ),
+
                 Container(
                   height: height/9,
 
@@ -185,7 +222,7 @@ bool _load = false ;
                             height: height/10,
                             alignment: Alignment.center,
                             child: Text(
-                             "  الطلب :  ${widget.total}" + " KW",
+                             "  الطلب :  ${widget.total.toStringAsFixed(2)}" + " KW",
                               style: TextStyle(
                                 fontSize: width/23,
                                 fontFamily: 'Jost',
@@ -224,6 +261,29 @@ bool _load = false ;
                     ),
                   )),
                 ),
+                widget.balance!=0.0?
+                Container(
+                  color: Theme.of(context).appBarTheme.color,
+                  width: width,
+                  padding:EdgeInsets.all(15.0),
+
+                  child: Text(
+                    "  رصيدك  :  ${(widget.balance)}" + " KW",
+                    style: TextStyle(
+                      fontSize:width/23,
+                      fontFamily: 'Jost',
+                      letterSpacing: 1.5,
+                      fontWeight: FontWeight.bold,
+
+                    ),
+                  ),
+                ):Divider(
+                  height: 1.0,
+                ),
+
+                Divider(
+                  height: 1.0,
+                ),
                 Container(
                   height: height/10,
 
@@ -245,7 +305,7 @@ bool _load = false ;
                             height: height/10,
                             alignment: Alignment.center,
                             child: Text(
-                              "  الاجمالي :  ${(widget.price + widget.total).toStringAsFixed(2)}" + " KW",
+                              "  عليك دفع :  ${(net).toStringAsFixed(2)}" + " KW",
                               style: TextStyle(
                                 fontSize:width/23,
                                 fontFamily: 'Jost',
@@ -262,6 +322,25 @@ bool _load = false ;
                       ],
                     ),
                   )),
+                ),
+                widget.balance!=0.0?
+                Container(
+                  color: Theme.of(context).appBarTheme.color,
+                  width: width,
+                  padding:EdgeInsets.all(15.0),
+
+                  child: Text(
+                    "  يتبقي من رصيدك  :  ${(remind).toStringAsFixed(2)}" + " KW",
+                    style: TextStyle(
+                      fontSize:width/23,
+                      fontFamily: 'Jost',
+                      letterSpacing: 1.5,
+                      fontWeight: FontWeight.bold,
+
+                    ),
+                  ),
+                ):Divider(
+                  height: 1.0,
                 ),
                 Divider(
                   height: 1.0,
@@ -314,7 +393,7 @@ bool _load = false ;
                       padding: EdgeInsets.all(15.0),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
+                        color: Colors.pinkAccent,
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                       child: !_load?Text(

@@ -1,11 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_store/pages/call_center/call_center.dart';
 import 'package:my_store/pages/product_list_view/get_function.dart';
+import 'package:my_store/pages/profile/address.dart';
+import 'package:my_store/pages/profile/balance.dart';
+import 'package:my_store/pages/profile/password.dart';
+import 'package:my_store/pages/profile/phone.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/provider.dart';
 import 'package:my_store/pages/login_signup/signup.dart';
+import 'package:my_store/pages/profile/data.dart';
+
+import 'package:my_store/pages/login_signup/login.dart';
+
+import 'package:my_store/pages/login_signup/activation.dart';
+import 'package:my_store/pages/login_signup/changePassword.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_store/pages/home/home.dart';
 
 // My Own Imports
 import 'package:my_store/AppTheme/AppStateNotifier.dart';
@@ -24,6 +38,95 @@ class MyAccount extends StatefulWidget {
 }
 
 class _MyAccountState extends State<MyAccount> {
+  String my_name;
+  deleete() async {
+
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    localStorage.remove("user");
+    localStorage.remove("token");
+    localStorage.setString('login', "0");
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.rightToLeft, child: Home()));
+
+
+  }
+  deleete_activation() async {
+
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    localStorage.remove("user");
+    localStorage.setString('login', "0");
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.rightToLeft, child: SignupPage()));
+
+
+  }
+  var status = "no";
+  var name = "user";
+  get_shard() async{
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var login = localStorage.getString('login');
+    //var user =localStorage.getString('user');
+    if (login != null){
+
+      if(login=="0"){
+          setState(() {
+            status = "0";
+           // name = user["name"];
+          });
+
+      }else if (login=="1"){
+
+        setState(() {
+          status = "1";
+        });
+      }else if (login=="2"){
+
+
+        var d = localStorage.getString('user');
+        var name = jsonDecode(d)["name"]??"user";
+
+
+        setState(() {
+          status = "2";
+          my_name = name;
+        });
+      }
+      else{
+        setState(() {
+          status = "0";
+        });
+
+
+      }
+
+
+    }else{
+      var token = utils.CreateCryptoRandomString();
+
+      SharedPreferences localStorage =
+      await SharedPreferences.getInstance();
+      var tok = localStorage.getString('token');
+      var us = localStorage.getString('user_id');
+      if ( tok == null  ){
+        localStorage.setString('token', token);
+        localStorage.setString('user_id', "0");
+        localStorage.setString('login', "0");
+        // print( tok + "moha");
+
+      }
+
+    }
+  }
+@override
+  void initState() {
+  my_name = "زائر";
+    get_shard();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -120,7 +223,8 @@ class _MyAccountState extends State<MyAccount> {
     }
     // Logout AlertDialog Ends Here
 
-    return ListView(
+    return status=="no"?CircularProgressIndicator():
+      ListView(
       shrinkWrap: true,
       children: <Widget>[
         Container(
@@ -158,10 +262,10 @@ class _MyAccountState extends State<MyAccount> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        "user",
+                      child:  Text(
+                        "${my_name}",
                         style: TextStyle(
-                            fontSize: width / 25,
+                            fontSize: width / 24,
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).textTheme.headline6.color),
                       ),
@@ -239,7 +343,7 @@ class _MyAccountState extends State<MyAccount> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Icon(
-                  Icons.voice_chat,
+                  Icons.phone,
                   size: 30.0,
                   color: Theme.of(context).primaryColor,
                 ),
@@ -269,37 +373,328 @@ class _MyAccountState extends State<MyAccount> {
             height: 1.0,
           ),
         ),
-        InkWell(
-          onTap: () {
-            Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType.rightToLeft, child: SignupPage()));
-          },
-          child: Container(
-            padding: EdgeInsets.all(16.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.supervised_user_circle,
-                  size: 30.0,
-                  color: Theme.of(context).primaryColor,
+          status == "1" ?
+          Column(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.rightToLeft, child: Activation()));
+                },
+                child: Container(
+                  padding: EdgeInsets.all(16.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.supervised_user_circle,
+                        size: 30.0,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      SizedBox(
+                        width: 25,
+                      ),
+                      Text(
+                        "تأكيد الحساب",
+                        style: TextStyle(
+                            fontSize: width / 25,
+                            color: Theme.of(context).textTheme.headline6.color),
+                      )
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  width: 25,
+
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 30.0, left: 70.0),
+                child: Divider(
+                  height: 1.0,
                 ),
-                Text(
-                  AppLocalizations.of(context)
-                      .translate('myAccountPage', 'register'),
-                  style: TextStyle(
-                      fontSize: width / 25,
-                      color: Theme.of(context).textTheme.headline6.color),
-                )
-              ],
+              ),
+              InkWell(
+                onTap: () {
+                  deleete_activation();
+                },
+                child: Container(
+                  padding: EdgeInsets.all(16.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.supervised_user_circle,
+                        size: 30.0,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      SizedBox(
+                        width: 25,
+                      ),
+                      Text(
+                        " الرجوع للتسجيل من جديد",
+                        style: TextStyle(
+                            fontSize: width / 25,
+                            color: Theme.of(context).textTheme.headline6.color),
+                      )
+                    ],
+                  ),
+                ),
+
+              )
+            ],
+          )
+          :
+          status == "2"?
+
+        Column(
+          children: [
+
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.rightToLeft, child:Balance()));
+              },
+              child: Container(
+                padding: EdgeInsets.all(16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.monetization_on,
+                      size: 30.0,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    SizedBox(
+                      width: 25,
+                    ),
+                    Text(
+                      "رصيدي",
+                      style: TextStyle(
+                          fontSize: width / 25,
+                          color: Theme.of(context).textTheme.headline6.color),
+                    )
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
+            Padding(
+              padding: EdgeInsets.only(right: 30.0, left: 70.0),
+              child: Divider(
+                height: 1.0,
+              ),
+            ),
+
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.rightToLeft, child:Address()));
+              },
+              child: Container(
+                padding: EdgeInsets.all(16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.location_city,
+                      size: 30.0,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    SizedBox(
+                      width: 25,
+                    ),
+                    Text(
+                      "دفتر العناوين",
+                      style: TextStyle(
+                          fontSize: width / 25,
+                          color: Theme.of(context).textTheme.headline6.color),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 30.0, left: 70.0),
+              child: Divider(
+                height: 1.0,
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.rightToLeft, child: Data()));
+              },
+              child: Container(
+                padding: EdgeInsets.all(16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.edit,
+                      size: 30.0,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    SizedBox(
+                      width: 25,
+                    ),
+                    Text(
+                      "تعديل الاسم",
+                      style: TextStyle(
+                          fontSize: width / 25,
+                          color: Theme.of(context).textTheme.headline6.color),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 30.0, left: 70.0),
+              child: Divider(
+                height: 1.0,
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.rightToLeft, child: Password()));
+              },
+              child: Container(
+                padding: EdgeInsets.all(16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.edit,
+                      size: 30.0,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    SizedBox(
+                      width: 25,
+                    ),
+                    Text(
+                      "تعديل كلمة المرور",
+                      style: TextStyle(
+                          fontSize: width / 25,
+                          color: Theme.of(context).textTheme.headline6.color),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 30.0, left: 70.0),
+              child: Divider(
+                height: 1.0,
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.rightToLeft, child: Phone()));
+              },
+              child: Container(
+                padding: EdgeInsets.all(16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.edit,
+                      size: 30.0,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    SizedBox(
+                      width: 25,
+                    ),
+                    Text(
+                      "تعديل الهاتف والدولة",
+                      style: TextStyle(
+                          fontSize: width / 25,
+                          color: Theme.of(context).textTheme.headline6.color),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 30.0, left: 70.0),
+              child: Divider(
+                height: 1.0,
+              ),
+            ),
+             SizedBox(height: 10,),
+            InkWell(
+              onTap: () {
+                deleete();
+              },
+              child: Container(
+                padding: EdgeInsets.all(16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.supervised_user_circle,
+                      size: 30.0,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    SizedBox(
+                      width: 25,
+                    ),
+                    Text(
+                      "تسجيل خروج",
+                      style: TextStyle(
+                          fontSize: width / 25,
+                          color: Theme.of(context).textTheme.headline6.color),
+                    )
+                  ],
+                ),
+              ),
+
+            ),
+          ],
+        ):
+
+
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.rightToLeft, child: LoginPage()));
+            },
+            child: Container(
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.supervised_user_circle,
+                    size: 30.0,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  SizedBox(
+                    width: 25,
+                  ),
+                  Text(
+                    "تسجيل دخول",
+                    style: TextStyle(
+                        fontSize: width / 25,
+                        color: Theme.of(context).textTheme.headline6.color),
+                  )
+                ],
+              ),
+            ),
+
+          )
+        ,
       ],
     );
   }

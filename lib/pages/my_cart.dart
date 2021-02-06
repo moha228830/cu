@@ -127,15 +127,16 @@ class _MyCartState extends State<MyCart> {
 
 
 
-  add_to_cart(item_id,color,size,qut,id,newValue) async {
+  add_to_cart(item_id,color,size,qut,id,newValue,type) async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var tok = localStorage.getString('token');
     if (tok != null){
 
 
-
       var data = "token="+tok+"&item_id="+item_id+
-          "&size="+size+"&color="+color+"&qut="+newValue;
+          "&size="+size+"&color="+color+"&qut="+newValue+"&type="+type;
+      print(data);
+
       try{
         if (this.mounted) {
           setState(() {
@@ -173,7 +174,7 @@ class _MyCartState extends State<MyCart> {
                 });
               }
               Fluttertoast.showToast(
-                msg: $res["msg"],
+                msg: '${$res["msg"]}',
                 backgroundColor: Theme.of(context).textTheme.headline6.color,
                 textColor: Theme.of(context).appBarTheme.color,
               );
@@ -185,7 +186,7 @@ class _MyCartState extends State<MyCart> {
                 });
               }
               Fluttertoast.showToast(
-                msg: 'خطأ حاول مرة اخري',
+                msg: '${$res["msg"]}',
                 backgroundColor: Theme.of(context).textTheme.headline6.color,
                 textColor: Theme.of(context).appBarTheme.color,
               );
@@ -643,6 +644,7 @@ class _MyCartState extends State<MyCart> {
                                                 crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                                 children: <Widget>[
+                                                  item["size"] != ""?
                                                   Text(
                                                     'المقاس :',
                                                     style: TextStyle(
@@ -652,7 +654,7 @@ class _MyCartState extends State<MyCart> {
                                                           .color,
                                                       fontSize:  width/25,
                                                     ),
-                                                  ),
+                                                  ):Text(" "),
                                                   SizedBox(
                                                     width: 10.0,
                                                   ),
@@ -707,9 +709,9 @@ class _MyCartState extends State<MyCart> {
                                               style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
 
                                               onChanged: ( newValue) {
+                                                print((item["item"]["type"]));
 
-
-                                                add_to_cart(item["item"]["id"].toString(),item["color"],item["size"],item["qut"].toString(),item["id"].toString(),newValue);
+                                                add_to_cart(item["item"]["id"].toString(),item["color"],item["size"],item["qut"].toString(),item["id"].toString(),newValue,item["type"].toString());
 
 
                                               },

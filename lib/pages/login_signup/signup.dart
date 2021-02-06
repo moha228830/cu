@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:my_store/config.dart';
+import 'package:my_store/pages/login_signup/activation.dart';
 
 import 'package:http/http.dart' as http;
 class SignupPage extends StatefulWidget {
@@ -26,8 +27,7 @@ class _SignupPageState extends State<SignupPage> {
     var us = localStorage.getString('user_id');
     if ( tok == null  ){
       localStorage.setString('token', token);
-      localStorage.setString('user_id', "0");
-      localStorage.setString('login', "0");
+       localStorage.setString('login', "0");
       // print( tok + "moha");
 
     }
@@ -70,18 +70,16 @@ class _SignupPageState extends State<SignupPage> {
     var tok = localStorage.getString('token');
     if (tok != null){
     try {
-      print(_phoneControl.text);
-      print(_passwordControl.text);
-      print(_nameControl.text);
-      print(code.toString());
-      print(tok.toString());
+
       if (_passwordControl.text
           .trim()
           .isEmpty ||
           _phoneControl.text
               .trim()
               .isEmpty || _currentSelectedValue.toString() == "" ||
-          code == "000" || code == "") {
+          code == "000" || code == "" ||_nameControl.text
+          .trim()
+          .isEmpty) {
         Fluttertoast.showToast(
           msg: AppLocalizations.of(context).translate('loginPage', 'complete'),
           backgroundColor: Theme
@@ -166,7 +164,7 @@ class _SignupPageState extends State<SignupPage> {
           "phone": _phoneControl.text,
           "password": _passwordControl.text,
           "name": _nameControl.text,
-          "cod": code,
+          "code": code,
           "country": _currentSelectedValue.toString(),
           "token":tok.toString()
         });
@@ -180,13 +178,11 @@ class _SignupPageState extends State<SignupPage> {
         if (data["state"] == "1") {
           SharedPreferences localStorage =
           await SharedPreferences.getInstance();
-          localStorage.setString('token', data['data']["api_token"]);
-          localStorage.setString('user', json.encode(data['data']));
           localStorage.setString('login', "1");
           return Navigator.of(context).push(
             MaterialPageRoute(
               builder: (BuildContext context) {
-                return Home();
+                return Activation();
               },
             ),
           );
@@ -260,16 +256,27 @@ class _SignupPageState extends State<SignupPage> {
     );
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.pinkAccent,
+        title: Text(
+          "تسجيل جديد",
+          style: TextStyle(
+            fontFamily: 'Jost',
+            color: Colors.white,
+            fontSize: width/24,
+            letterSpacing: 1.7,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        titleSpacing: 0.0,
+      ),
         body: ListView(
           children: <Widget>[
             Center(
               child: Column(
                 children: <Widget>[
 
-                  Image.asset(
-                    'assets/round_logo.png',
-                    height: 80.0,
-                  ),
+
                   SizedBox(
                     height: 25.0,
                   ),
@@ -437,7 +444,7 @@ class _SignupPageState extends State<SignupPage> {
                             child: Material(
                               borderRadius: BorderRadius.circular(20.0),
                               shadowColor: Colors.redAccent,
-                              color: Colors.red,
+                              color: Colors.pinkAccent,
                               elevation: 7.0,
                               child: GestureDetector(
                                 child: Center(
@@ -471,6 +478,27 @@ class _SignupPageState extends State<SignupPage> {
                           child: Text(AppLocalizations.of(context).translate('loginPage','loginString'),
                             style: TextStyle(
                               color: Theme.of(context).textTheme.headline6.color,
+                              fontFamily: 'Jost',
+                              fontSize: 17.0,
+                              letterSpacing: 0.7,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 30.0),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    type: PageTransitionType.rightToLeft,
+                                    child: Home()));
+                          },
+                          child: Text(
+                            "الرئيسية",
+                            style: TextStyle(
+                              color:
+                              Theme.of(context).textTheme.headline6.color,
                               fontFamily: 'Jost',
                               fontSize: 17.0,
                               letterSpacing: 0.7,

@@ -12,6 +12,10 @@ import 'package:my_store/config.dart';
 
 import 'package:http/http.dart' as http;
 class Activation extends StatefulWidget {
+  var phone;
+  var country ;
+  var code;
+  Activation(this.phone,this.country,this.code);
   @override
   _ActivationState createState() => _ActivationState();
 }
@@ -62,12 +66,15 @@ class _ActivationState extends State<Activation> {
             });
           }
           final response = await http
-              .post(Config.url + "activation", headers: {
+              .post(Config.url + "change_phone", headers: {
             "Accept": "application/json"
           }, body: {
-            "code": _codeControl.text,
+            "phone": widget.phone,
 
-            "token":tok.toString()
+            "phone_code": widget.code,
+            "country": widget.country,
+            "token":tok.toString(),
+            "code": _codeControl.text,
           });
 
           final _formKey = GlobalKey<FormState>();
@@ -81,8 +88,19 @@ class _ActivationState extends State<Activation> {
             await SharedPreferences.getInstance();
             localStorage.setString('token', data['data']["api_token"]);
             localStorage.setString('user', json.encode(data['data']["client"]));
-            localStorage.setString('login', "2");
             localStorage.setString('user_id', json.encode(data['data']["client"]["id"].toString()));
+            Fluttertoast.showToast(
+              msg: 'تمت العملية بنجاح',
+              backgroundColor: Theme
+                  .of(context)
+                  .textTheme
+                  .headline6
+                  .color,
+              textColor: Theme
+                  .of(context)
+                  .appBarTheme
+                  .color,
+            );
 
             return Navigator.of(context).push(
               MaterialPageRoute(
@@ -135,6 +153,11 @@ class _ActivationState extends State<Activation> {
         textColor: Theme.of(context).appBarTheme.color,
       );
     }
+    if (this.mounted) {
+      setState(() {
+        _isload = false;
+      });
+    }
   }
 
   ///end ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,26 +171,18 @@ class _ActivationState extends State<Activation> {
 
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.pinkAccent,
-        title: Text(
-          "تأكيد الحساب",
-          style: TextStyle(
-            fontFamily: 'Jost',
-            color: Colors.white,
-            fontSize: width/24,
-            letterSpacing: 1.7,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        titleSpacing: 0.0,
-      ),
       body: ListView(
         children: <Widget>[
           Center(
             child: Column(
               children: <Widget>[
-
+                SizedBox(
+                  height: 30.0,
+                ),
+                Image.asset(
+                  'assets/round_logo.png',
+                  height: 80.0,
+                ),
                 SizedBox(
                   height: 25.0,
                 ),

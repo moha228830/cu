@@ -22,6 +22,7 @@ class Product {
   List sizes;
   int numItem;
   String imgFullPath;
+  int type;
 
 
   Product(
@@ -47,7 +48,8 @@ class Product {
       this.imgFullPath,
         this.precentage,
         this.images,
-        this.sizes
+        this.sizes,
+        this.type
       });
 
     Product.fromJson(Map<String, dynamic> json) {
@@ -74,6 +76,7 @@ class Product {
     precentage = json['precentage'];
     images = json['images'];
     sizes = json['sizes'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -101,6 +104,7 @@ class Product {
     data['precentage'] = this.precentage;
     data['images'] = this.images;
     data['sizes'] = this.sizes;
+    data['type'] = this.type;
 
     return data;
   }

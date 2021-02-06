@@ -240,6 +240,7 @@ class _ItemsState extends State<Items> {
                                               crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                               children: <Widget>[
+                                                item["size"] !=""?
                                                 Text(
                                                   'المقاس :',
                                                   style: TextStyle(
@@ -249,7 +250,7 @@ class _ItemsState extends State<Items> {
                                                         .color,
                                                     fontSize: width/26,
                                                   ),
-                                                ),
+                                                ):Text(" "),
                                                 SizedBox(
                                                   width: 10.0,
                                                 ),

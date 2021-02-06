@@ -9,14 +9,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:my_store/config.dart';
+import 'package:my_store/pages/login_signup/activation.dart';
 
 import 'package:http/http.dart' as http;
-class Activation extends StatefulWidget {
+class Data extends StatefulWidget {
   @override
-  _ActivationState createState() => _ActivationState();
+  _DataState createState() => _DataState();
 }
 
-class _ActivationState extends State<Activation> {
+class _DataState extends State<Data> {
+  String name ;
   var token = utils.CreateCryptoRandomString();
 
 
@@ -26,25 +28,40 @@ class _ActivationState extends State<Activation> {
   // Toggles the password show status
 
 
-  bool _isload = false;
-  final TextEditingController _codeControl = new TextEditingController();
 
+
+  bool _isload = false;
+ String my_name = "user" ;
+  final TextEditingController _nameControl = new TextEditingController();
+  get_shard() async{
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var d = localStorage.getString('user');
+     name = jsonDecode(d)["name"]??" ";
+    setState(() {
+      my_name = name;
+      _nameControl.text = my_name;
+
+    });
+    print(name);
+  }
 
   //////////////login //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  my_activate() async {
-
+  my_login() async {
 
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var tok = localStorage.getString('token');
-    if (tok != null){
+    var login = localStorage.getString('login');
+
+
+    if (tok != null && login=="2"  ){
       try {
 
-        if (_codeControl.text
+        if (_nameControl.text
             .trim()
             .isEmpty ) {
           Fluttertoast.showToast(
-            msg: AppLocalizations.of(context).translate('loginPage', 'complete'),
+            msg: "لم تقم بتعديل الاسم",
             backgroundColor: Theme
                 .of(context)
                 .textTheme
@@ -55,17 +72,34 @@ class _ActivationState extends State<Activation> {
                 .appBarTheme
                 .color,
           );
-        }  else {
+        } else if (_nameControl.text.length < 4) {
+          Fluttertoast.showToast(
+            msg: AppLocalizations.of(context)
+                .translate('loginPage', 'name_error'),
+            backgroundColor: Theme
+                .of(context)
+                .textTheme
+                .headline6
+                .color,
+            textColor: Theme
+                .of(context)
+                .appBarTheme
+                .color,
+          );
+        }
+
+        else {
           if (this.mounted) {
             setState(() {
               _isload = true;
             });
           }
           final response = await http
-              .post(Config.url + "activation", headers: {
+              .post(Config.url + "edit_user", headers: {
             "Accept": "application/json"
           }, body: {
-            "code": _codeControl.text,
+
+            "name": _nameControl.text,
 
             "token":tok.toString()
           });
@@ -81,19 +115,22 @@ class _ActivationState extends State<Activation> {
             await SharedPreferences.getInstance();
             localStorage.setString('token', data['data']["api_token"]);
             localStorage.setString('user', json.encode(data['data']["client"]));
-            localStorage.setString('login', "2");
             localStorage.setString('user_id', json.encode(data['data']["client"]["id"].toString()));
-
-            return Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return Home();
-                },
-              ),
+            Fluttertoast.showToast(
+              msg: 'تمت العملية بنجاح',
+              backgroundColor: Theme
+                  .of(context)
+                  .textTheme
+                  .headline6
+                  .color,
+              textColor: Theme
+                  .of(context)
+                  .appBarTheme
+                  .color,
             );
           } else {
             Fluttertoast.showToast(
-              msg: '${data["msg"]}',
+              msg:"${data["msg"]}",
               backgroundColor: Theme
                   .of(context)
                   .textTheme
@@ -135,6 +172,11 @@ class _ActivationState extends State<Activation> {
         textColor: Theme.of(context).appBarTheme.color,
       );
     }
+    if (this.mounted) {
+      setState(() {
+        _isload = false;
+      });
+    }
   }
 
   ///end ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,6 +184,9 @@ class _ActivationState extends State<Activation> {
   @override
   void initState() {
     super.initState();
+    get_shard();
+    _nameControl.text = name;
+
   }
   @override
   Widget build(BuildContext context) {
@@ -151,7 +196,7 @@ class _ActivationState extends State<Activation> {
       appBar: AppBar(
         backgroundColor: Colors.pinkAccent,
         title: Text(
-          "تأكيد الحساب",
+          "تعديل الاسم",
           style: TextStyle(
             fontFamily: 'Jost',
             color: Colors.white,
@@ -167,6 +212,9 @@ class _ActivationState extends State<Activation> {
           Center(
             child: Column(
               children: <Widget>[
+                SizedBox(
+                  height: 25.0,
+                ),
 
                 SizedBox(
                   height: 25.0,
@@ -189,12 +237,9 @@ class _ActivationState extends State<Activation> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
+                      Text("تعديل اسم المستخدم"),
                       SizedBox(
-                        height: 20.0,
-                      ),
-                      Text("افحص رسائل sms علي هاتفك "),
-                      SizedBox(
-                        height: 10.0,
+                        height: 15.0,
                       ),
                       Container(
                         decoration: BoxDecoration(
@@ -202,12 +247,11 @@ class _ActivationState extends State<Activation> {
                           borderRadius:
                           BorderRadius.all(Radius.circular(20.0)),
                         ),
-
                         child: TextField(
-                          controller: _codeControl,
+                          controller: _nameControl,
                           decoration: InputDecoration(
-                            hintText: "كود التفعيل",
-                            prefixIcon: Icon(Icons.code),
+
+                            prefixIcon: Icon(Icons.perm_identity),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20)),
                             focusedBorder: OutlineInputBorder(
@@ -220,19 +264,10 @@ class _ActivationState extends State<Activation> {
                         height: 20.0,
                       ),
 
-                      SizedBox(
-                        height: 20.0,
-                      ),
-
-
-
-
-
-
 
                       InkWell(
                         onTap: () {
-                          my_activate();
+                          my_login();
                         },
                         child: Container(
                           height: 45.0,
@@ -240,12 +275,12 @@ class _ActivationState extends State<Activation> {
                           child: Material(
                             borderRadius: BorderRadius.circular(20.0),
                             shadowColor: Colors.redAccent,
-                            color: Colors.red,
+                            color: Colors.pinkAccent,
                             elevation: 7.0,
                             child: GestureDetector(
                               child: Center(
                                 child:!_isload?
-                                Text("تأكيد",
+                                Text(" حفظ ",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Jost',
@@ -260,20 +295,22 @@ class _ActivationState extends State<Activation> {
                         ),
                       ),
                       SizedBox(
-                        height: 20.0,
+                        height: 30.0,
                       ),
+
                       InkWell(
                         onTap: () {
                           Navigator.push(
                               context,
                               PageTransition(
                                   type: PageTransitionType.rightToLeft,
-                                  child: Home(
-                                  )));
+                                  child: Home()));
                         },
-                        child: Text("الرئيسية",
+                        child: Text(
+                          "الرئيسية",
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.headline6.color,
+                            color:
+                            Theme.of(context).textTheme.headline6.color,
                             fontFamily: 'Jost',
                             fontSize: 17.0,
                             letterSpacing: 0.7,

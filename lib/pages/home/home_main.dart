@@ -488,40 +488,46 @@ if (this.mounted) {
                               ),
                             ),
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductPage(
-                                    data: Product(
-                                      id : cat["id"],
-                                      name : cat["name"],
-                                      description : cat["description"],
-                                      price : cat["price"].toDouble(),
-                                      overPrice : cat["over_price"].toDouble(),
-                                      brandId : cat["brand_id"],
-                                      made : cat["made"],
-                                      subCategoryId : cat["subCategory_id"],
-                                      categoryId : cat["category_id"],
-                                      qut : cat["qut"],
-                                      pay : cat["pay"],
-                                      view : cat["view"],
-                                      newItem : cat["new"],
-                                      popular : cat["popular"],
-                                      over : cat["over"],
-                                      subSubCategoryId : cat["subSubCategory_id"],
-                                      img : cat["img"],
-                                      activity : cat["activity"],
-                                      numItem : cat["new"],
-                                      imgFullPath : cat["img_full_path"],
-                                      precentage : cat["precentage"],
-                                      images : cat["images"],
-                                      sizes : cat["sizes"],
+                              if(cat["type"]==1) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProductPage(
+                                      data: Product(
+                                        id : cat["id"],
+                                        name : cat["name"],
+                                        description : cat["description"],
+                                        price : cat["price"].toDouble(),
+                                        overPrice : cat["over_price"].toDouble(),
+                                        brandId : cat["brand_id"],
+                                        made : cat["made"],
+                                        subCategoryId : cat["subCategory_id"],
+                                        categoryId : cat["category_id"],
+                                        qut : cat["qut"],
+                                        pay : cat["pay"],
+                                        view : cat["view"],
+                                        newItem : cat["new"],
+                                        popular : cat["popular"],
+                                        over : cat["over"],
+                                        subSubCategoryId : cat["subSubCategory_id"],
+                                        img : cat["img"],
+                                        activity : cat["activity"],
+                                        numItem : cat["new"],
+                                        imgFullPath : cat["img_full_path"],
+                                        precentage : cat["precentage"],
+                                        images : cat["images"],
+                                        sizes : cat["sizes"],
+                                        type : cat["type"],
 
 
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
+                                );
+                              }else{
+
+
+                              }
                             },
                           ),
                         );
@@ -856,40 +862,47 @@ if (this.mounted) {
                               ),
                             ),
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductPage(
-                                    data: Product(
-                                      id : cat["id"],
-                                      name : cat["name"],
-                                      description : cat["description"],
-                                      price : cat["price"].toDouble(),
-                                      overPrice : cat["over_price"].toDouble(),
-                                      brandId : cat["brand_id"],
-                                      made : cat["made"],
-                                      subCategoryId : cat["subCategory_id"],
-                                      categoryId : cat["category_id"],
-                                      qut : cat["qut"],
-                                      pay : cat["pay"],
-                                      view : cat["view"],
-                                      newItem : cat["new"],
-                                      popular : cat["popular"],
-                                      over : cat["over"],
-                                      subSubCategoryId : cat["subSubCategory_id"],
-                                      img : cat["img"],
-                                      activity : cat["activity"],
-                                      numItem : cat["new"],
-                                      imgFullPath : cat["img_full_path"],
-                                      precentage : cat["precentage"],
-                                      images : cat["images"],
-                                      sizes : cat["sizes"],
+
+                              if(cat["type"]==1) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProductPage(
+                                      data: Product(
+                                        id : cat["id"],
+                                        name : cat["name"],
+                                        description : cat["description"],
+                                        price : cat["price"].toDouble(),
+                                        overPrice : cat["over_price"].toDouble(),
+                                        brandId : cat["brand_id"],
+                                        made : cat["made"],
+                                        subCategoryId : cat["subCategory_id"],
+                                        categoryId : cat["category_id"],
+                                        qut : cat["qut"],
+                                        pay : cat["pay"],
+                                        view : cat["view"],
+                                        newItem : cat["new"],
+                                        popular : cat["popular"],
+                                        over : cat["over"],
+                                        subSubCategoryId : cat["subSubCategory_id"],
+                                        img : cat["img"],
+                                        activity : cat["activity"],
+                                        numItem : cat["new"],
+                                        imgFullPath : cat["img_full_path"],
+                                        precentage : cat["precentage"],
+                                        images : cat["images"],
+                                        sizes : cat["sizes"],
+                                        type : cat["type"],
 
 
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
+                                );
+                              }else{
+
+
+                              }
                             },
                           ),
                         );
@@ -1222,40 +1235,48 @@ if (this.mounted) {
                               ),
                             ),
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductPage(
-                                    data: Product(
-                                      id : cat["id"],
-                                      name : cat["name"],
-                                      description : cat["description"],
-                                      price : cat["price"].toDouble(),
-                                      overPrice : cat["over_price"].toDouble(),
-                                      brandId : cat["brand_id"],
-                                      made : cat["made"],
-                                      subCategoryId : cat["subCategory_id"],
-                                      categoryId : cat["category_id"],
-                                      qut : cat["qut"],
-                                      pay : cat["pay"],
-                                      view : cat["view"],
-                                      newItem : cat["new"],
-                                      popular : cat["popular"],
-                                      over : cat["over"],
-                                      subSubCategoryId : cat["subSubCategory_id"],
-                                      img : cat["img"],
-                                      activity : cat["activity"],
-                                      numItem : cat["new"],
-                                      imgFullPath : cat["img_full_path"],
-                                      precentage : cat["precentage"],
-                                      images : cat["images"],
-                                      sizes : cat["sizes"],
+                             if(cat["type"]==1) {
+                               Navigator.push(
+                                 context,
+                                 MaterialPageRoute(
+                                   builder: (context) =>
+                                       ProductPage(
+                                         data: Product(
+                                           id: cat["id"],
+                                           name: cat["name"],
+                                           description: cat["description"],
+                                           price: cat["price"].toDouble(),
+                                           overPrice: cat["over_price"]
+                                               .toDouble(),
+                                           brandId: cat["brand_id"],
+                                           made: cat["made"],
+                                           subCategoryId: cat["subCategory_id"],
+                                           categoryId: cat["category_id"],
+                                           qut: cat["qut"],
+                                           pay: cat["pay"],
+                                           view: cat["view"],
+                                           newItem: cat["new"],
+                                           popular: cat["popular"],
+                                           over: cat["over"],
+                                           subSubCategoryId: cat["subSubCategory_id"],
+                                           img: cat["img"],
+                                           activity: cat["activity"],
+                                           numItem: cat["new"],
+                                           imgFullPath: cat["img_full_path"],
+                                           precentage: cat["precentage"],
+                                           images: cat["images"],
+                                           sizes: cat["sizes"],
+                                           type: cat["type"],
 
 
-                                    ),
-                                  ),
-                                ),
-                              );
+                                         ),
+                                       ),
+                                 ),
+                               );
+                             }else{
+
+
+                             }
 
                             },
                           ),

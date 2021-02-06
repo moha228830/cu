@@ -21,75 +21,37 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // My Own Imports
 
-class ProductPage extends StatefulWidget {
+class ProductPage2 extends StatefulWidget {
   final Product data;
 
-  ProductPage({Key key, this.data}) : super(key: key);
+  ProductPage2({Key key, this.data}) : super(key: key);
 
 
   @override
-  _ProductPageState createState() => _ProductPageState();
+  _ProductPage2State createState() => _ProductPage2State();
 }
 
-class _ProductPageState extends State<ProductPage> {
+class _ProductPage2State extends State<ProductPage2> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool favourite = false;
   int cartItem = 3;
-    bool   is_laad = false;
+  bool   is_laad = false;
 
-  List sizes = [];
-  List colors = ["اللون"];
+
   List qut =["الكمية","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"];
-  List colors_map = [];
-  String dropdownValue = 'المقاس';
-  String dropdownValue2 = 'اللون';
+
   String dropdownValue3 = 'الكمية';
   Map map = {};
 
-  get_size(){
-    sizes.add("المقاس");
-    for (int i = 0; i < widget.data.sizes.length; i++) {
-      if(!sizes.contains(widget.data.sizes[i]["name"])) {
-        sizes.add(widget.data.sizes[i]["name"]);
-      }
-    }
 
 
-  }
-
-  get_color(){
-    if (colors_map.length > 0){
-      colors = [];
-      colors.add("اللون");
-      for (int i = 0; i < colors_map.length; i++) {
-
-     if(!colors.contains(colors_map[i]["name"])){
-       colors.add(colors_map[i]["name"]);
-     }
-
-      }
-    }
-  //  print(colors);
-
-  }
-
-  add_map(){
-
-    for (int i = 0; i < widget.data.sizes.length; i++) {
-
-      map[widget.data.sizes[i]["name"]] = widget.data.sizes[i]["colors"];
-    }
-
-
-  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    get_size();
-    add_map();
+
   }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,71 +59,71 @@ class _ProductPageState extends State<ProductPage> {
   add_to_cart() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var tok = localStorage.getString('token');
-
+     var user_id = localStorage.getString('user_id')??0;
     if (tok != null){
-      var user_id = localStorage.getString('user_id')??0;
 
-       if(dropdownValue == "المقاس" || dropdownValue2 == "اللون"  || dropdownValue3 == "الكمية"){
-         Fluttertoast.showToast(
-           msg: 'قم بتحديد المقاس ثم اللون وقم بتحديد الكمية',
-           backgroundColor: Theme.of(context).textTheme.headline6.color,
-           textColor: Theme.of(context).appBarTheme.color,
-         );
+      if( dropdownValue3 == "الكمية"){
+        Fluttertoast.showToast(
+          msg: 'قم بتحديد الكمية',
+          backgroundColor: Theme.of(context).textTheme.headline6.color,
+          textColor: Theme.of(context).appBarTheme.color,
+        );
 
-       }else{
-
-         var data = "token="+tok+"&item_id="+widget.data.id.toString()+
-             "&size="+dropdownValue+"&color="+dropdownValue2+"&qut="+dropdownValue3+"type="+widget.data.type.toString()
-             +"user_id="+user_id.toString();
-         try{
-           final result = await InternetAddress.lookup('google.com');
-           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-             http.Response response =
-             await http.get(Config.url+"add_carts?"+data);
+      }else{
 
 
-             if (response.statusCode == 200) {
-               var $res =  json.decode(response.body);
-               if ($res["state"]=="1"){
-                 Fluttertoast.showToast(
-                   msg: '  تمت الاضافة بنجاح الي عربة التسوق ',
-                   backgroundColor: Theme.of(context).textTheme.headline6.color,
-                   textColor: Theme.of(context).appBarTheme.color,
-                 );
-               }
-               else if ($res["state"]=="4"){
-                 Fluttertoast.showToast(
-                   msg: $res["msg"],
-                   backgroundColor: Theme.of(context).textTheme.headline6.color,
-                   textColor: Theme.of(context).appBarTheme.color,
-                 );
-               }
-               else{
-                 Fluttertoast.showToast(
-                   msg: 'خطأ حاول مرة اخري',
-                   backgroundColor: Theme.of(context).textTheme.headline6.color,
-                   textColor: Theme.of(context).appBarTheme.color,
-                 );
-               }
-             }
-           }else{
-             Fluttertoast.showToast(
-               msg: 'no internet ',
-               backgroundColor: Theme.of(context).textTheme.headline6.color,
-               textColor: Theme.of(context).appBarTheme.color,
-             );
-           }
-         } on SocketException {
-
-           Fluttertoast.showToast(
-             msg: 'no internet ',
-             backgroundColor: Theme.of(context).textTheme.headline6.color,
-             textColor: Theme.of(context).appBarTheme.color,
-           );
-         }
+        var data = "token="+tok+"&item_id="+widget.data.id.toString()+
+            "&qut="+dropdownValue3+"&type="+widget.data.type.toString()+"&user_id="+user_id;
+print(data);
+        try{
+          final result = await InternetAddress.lookup('google.com');
+          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+            http.Response response =
+            await http.get(Config.url+"add_carts?"+data);
 
 
-       }
+            if (response.statusCode == 200) {
+              var $res =  json.decode(response.body);
+              if ($res["state"]=="1"){
+                Fluttertoast.showToast(
+                  msg: '  تمت الاضافة بنجاح الي عربة التسوق ',
+                  backgroundColor: Theme.of(context).textTheme.headline6.color,
+                  textColor: Theme.of(context).appBarTheme.color,
+                );
+              }
+              else if ($res["state"]=="4"){
+                Fluttertoast.showToast(
+                  msg: $res["msg"],
+                  backgroundColor: Theme.of(context).textTheme.headline6.color,
+                  textColor: Theme.of(context).appBarTheme.color,
+                );
+              }
+              else{
+                Fluttertoast.showToast(
+                  msg: 'خطأ حاول مرة اخري',
+                  backgroundColor: Theme.of(context).textTheme.headline6.color,
+                  textColor: Theme.of(context).appBarTheme.color,
+                );
+              }
+            }
+          }else{
+            Fluttertoast.showToast(
+              msg: 'no internet ',
+              backgroundColor: Theme.of(context).textTheme.headline6.color,
+              textColor: Theme.of(context).appBarTheme.color,
+            );
+          }
+        } on SocketException {
+
+          Fluttertoast.showToast(
+            msg: 'no internet ',
+            backgroundColor: Theme.of(context).textTheme.headline6.color,
+            textColor: Theme.of(context).appBarTheme.color,
+          );
+        }
+
+
+      }
 
 
     }else{
@@ -197,24 +159,24 @@ class _ProductPageState extends State<ProductPage> {
         title: Text(
           widget.data.name,
           style: TextStyle(
-            fontFamily: 'Jost',
-            letterSpacing: 1.0,
-            fontSize: width/25,
-            fontWeight: FontWeight.bold,
-            color: Colors.white
+              fontFamily: 'Jost',
+              letterSpacing: 1.0,
+              fontSize: width/25,
+              fontWeight: FontWeight.bold,
+              color: Colors.white
           ),
         ),
         titleSpacing: 0.0,
-       // actions: <Widget>[
-       //   IconButton(
-          //  icon: Icon(
-            //  Icons.search,
-           // ),
-           // onPressed: () {
-            //  Navigator.push(
-                //  context, MaterialPageRoute(builder: (context) => Search()));
-           // },
-         // ),
+        // actions: <Widget>[
+        //   IconButton(
+        //  icon: Icon(
+        //  Icons.search,
+        // ),
+        // onPressed: () {
+        //  Navigator.push(
+        //  context, MaterialPageRoute(builder: (context) => Search()));
+        // },
+        // ),
         //],
       ),
       body: ListView(
@@ -226,79 +188,79 @@ class _ProductPageState extends State<ProductPage> {
 
             children: <Widget>[
               Container(
-                   width: width,
+                width: width,
                 padding: EdgeInsets.only(top: 2.0),
                 color: Theme.of(context).appBarTheme.color,
                 child: SizedBox(
                   height: (height / 2.0),
-                    width: width,
+                  width: width,
 
 
 
-                    child: Carousel(
+                  child: Carousel(
 
-                      images:   widget.data.images.map((title) => NetworkImage(title["img_full_path"])).toList(),
+                    images:   widget.data.images.map((title) => NetworkImage(title["img_full_path"])).toList(),
 
 
 
-                      dotSize: 5.0,
+                    dotSize: 5.0,
 
-                      dotSpacing: 15.0,
-                      dotColor: Colors.grey,
-                      indicatorBgPadding: 5.0,
-                      dotBgColor: Colors.purple.withOpacity(0.0),
-                      boxFit: BoxFit.fitHeight,
-                      animationCurve: Curves.decelerate,
-                      dotIncreasedColor: Colors.red,
+                    dotSpacing: 15.0,
+                    dotColor: Colors.grey,
+                    indicatorBgPadding: 5.0,
+                    dotBgColor: Colors.purple.withOpacity(0.0),
+                    boxFit: BoxFit.fitHeight,
+                    animationCurve: Curves.decelerate,
+                    dotIncreasedColor: Colors.red,
 
-                    ),
+                  ),
 
                 ),
               ),
-            //  Positioned(
-             //   top: 20.0,
-             //   right: 20.0,
-               // child: FloatingActionButton(
-                //  backgroundColor: Theme.of(context).appBarTheme.color,
-                //  elevation: 3.0,
-                 // onPressed: () {
-                  //  if (this.mounted) {
-    //setState(() {
-    //if (!favourite) {
-    //favourite = true;
-   // color = Colors.red;
+              //  Positioned(
+              //   top: 20.0,
+              //   right: 20.0,
+              // child: FloatingActionButton(
+              //  backgroundColor: Theme.of(context).appBarTheme.color,
+              //  elevation: 3.0,
+              // onPressed: () {
+              //  if (this.mounted) {
+              //setState(() {
+              //if (!favourite) {
+              //favourite = true;
+              // color = Colors.red;
 
-   // Scaffold.of(context).showSnackBar(
-    //SnackBar(
-   // content: Text(
-   // AppLocalizations.of(context).translate(
-    //'productPage', 'addedtoWishlistString'),
-   // ),
-   // ),
-    //);
-   // } else {
-    //favourite = false;
-    //color = Colors.grey;
-    //Scaffold.of(context).showSnackBar(
-    //SnackBar(
-   // content: Text(
-    //AppLocalizations.of(context).translate(
-    //'productPage', 'removeFromWishlistString'),
-    //),
-    //),
-    //);
-    //}
-   // });
-   // }
-                //  },
-                 // child: Icon(
-                   // (!favourite)
-                     //   ? FontAwesomeIcons.heart
-                    //    : FontAwesomeIcons.solidHeart,
-                  //  color: color,
-                 // ),
-             //   ),
-             // ),
+              // Scaffold.of(context).showSnackBar(
+              //SnackBar(
+              // content: Text(
+              // AppLocalizations.of(context).translate(
+              //'productPage', 'addedtoWishlistString'),
+              // ),
+              // ),
+              //);
+              // } else {
+              //favourite = false;
+              //color = Colors.grey;
+              //Scaffold.of(context).showSnackBar(
+              //SnackBar(
+              // content: Text(
+              //AppLocalizations.of(context).translate(
+              //'productPage', 'removeFromWishlistString'),
+              //),
+              //),
+              //);
+              //}
+              // });
+              // }
+              //  },
+              // child: Icon(
+              // (!favourite)
+              //   ? FontAwesomeIcons.heart
+              //    : FontAwesomeIcons.solidHeart,
+              //  color: color,
+              // ),
+              //   ),
+              // ),
             ],
           ),
           // Slider and Add to Wishlist Code Ends Here
@@ -390,86 +352,8 @@ class _ProductPageState extends State<ProductPage> {
               children: [
 
 
-                Expanded(child:
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.pinkAccent,
 
-                    boxShadow: [
-                      BoxShadow(color: Colors.pinkAccent, spreadRadius: 3),
-                    ],
-                  ),
-                  padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                  margin: EdgeInsets.all(5),
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    icon: Icon(Icons.arrow_downward,color: Colors.white,),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
 
-                    onChanged: (String newValue) {
-                      if (this.mounted) {
-    setState(() {
-    dropdownValue = newValue;
-    dropdownValue2= "اللون";
-    if(dropdownValue != "المقاس"){
-
-    colors_map = map[dropdownValue];
-    get_color();
-    }
-
-    });
-    }
-                    },
-                    items:sizes
-                        .map<DropdownMenuItem<String>>(( value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Container(padding: EdgeInsets.all(10),
-                            child: Text(value)),
-                      );
-                    }).toList(),
-                  ),
-                ) ,),
-                Expanded(child:Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.pinkAccent,
-
-                    boxShadow: [
-                      BoxShadow(color: Colors.pinkAccent, spreadRadius: 3),
-                    ],
-                  ),
-                  padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                  margin: EdgeInsets.all(5),
-                  child: DropdownButton<String>(
-                    value: dropdownValue2,
-                    icon: Icon(Icons.arrow_downward,color: Colors.white,),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
-
-                    onChanged: (String newValue) {
-    if (this.mounted) {
-      setState(() {
-        dropdownValue2 = newValue;
-      });
-    }
-                    },
-                    items: colors
-
-                        .map<DropdownMenuItem<String>>(( value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Container(padding: EdgeInsets.all(10),
-                          child: Text(value),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ) ,),
                 Expanded(child:
                 Container(
                   decoration: BoxDecoration(
@@ -490,11 +374,11 @@ class _ProductPageState extends State<ProductPage> {
                     style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
 
                     onChanged: (String newValue) {
-    if (this.mounted) {
-      setState(() {
-        dropdownValue3 = newValue;
-      });
-    }
+                      if (this.mounted) {
+                        setState(() {
+                          dropdownValue3 = newValue;
+                        });
+                      }
                     },
                     items: qut
 
@@ -586,10 +470,10 @@ class _ProductPageState extends State<ProductPage> {
                 height: height/10,
                 child: RaisedButton(
                   child:is_laad? Container(
-                    child: CircularProgressIndicator(),
-          width: 32,
-          height: 32
-      ):
+                      child: CircularProgressIndicator(),
+                      width: 32,
+                      height: 32
+                  ):
 
                   Text(
                     AppLocalizations.of(context)
@@ -603,12 +487,12 @@ class _ProductPageState extends State<ProductPage> {
                     ),
                   ),
                   onPressed: () {
-    if (this.mounted) {
-      setState(() {
-        is_laad = true;
-      });
-    }
-                   // _displaySnackBarAddToCart(context);
+                    if (this.mounted) {
+                      setState(() {
+                        is_laad = true;
+                      });
+                    }
+                    // _displaySnackBarAddToCart(context);
                     add_to_cart();
                   },
                   color: Colors.pinkAccent,
@@ -620,7 +504,7 @@ class _ProductPageState extends State<ProductPage> {
                 height: height/10,
                 child: RaisedButton(
                   child: Text(
-                  //  AppLocalizations.of(context).translate('productPage', 'buyNowString'),
+                    //  AppLocalizations.of(context).translate('productPage', 'buyNowString'),
                     " الصفحة الرئيسية",
                     style: TextStyle(
                       color: Colors.white,
@@ -653,9 +537,9 @@ class _ProductPageState extends State<ProductPage> {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
 
         content: Text(
-      AppLocalizations.of(context).translate('productPage', 'addedToCartString'),
-      style: TextStyle(fontSize: width/25),
-    )));
+          AppLocalizations.of(context).translate('productPage', 'addedToCartString'),
+          style: TextStyle(fontSize: width/25),
+        )));
   }
   void _productDescriptionModalBottomSheet(context,data) {
     double width = MediaQuery.of(context).size.width;

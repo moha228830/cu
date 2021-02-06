@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:my_store/config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_store/functions/localizations.dart';
@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
           });
         }
         final response = await http
-            .post("https://lifewithyou.online/نجاحك/api/v1/login", headers: {
+            .post(Config.url + "login", headers: {
           "Accept": "application/json"
         }, body: {
           "phone": _phoneControl.text,
@@ -73,7 +73,11 @@ class _LoginPageState extends State<LoginPage> {
           SharedPreferences localStorage =
           await SharedPreferences.getInstance();
           localStorage.setString('token', data['data']["api_token"]);
-          localStorage.setString('user', json.encode(data['data']));
+          localStorage.setString('user', json.encode(data['data']["client"]));
+          localStorage.setString('user_id', json.encode(data['data']["client"]["id"].toString()));
+
+          localStorage.setString('login', "2");
+
           return Navigator.of(context).push(
             MaterialPageRoute(
               builder: (BuildContext context) {
@@ -116,17 +120,27 @@ class _LoginPageState extends State<LoginPage> {
     Locale myLocale = Localizations.localeOf(context);
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.pinkAccent,
+        title: Text(
+          "تسجيل دخول",
+          style: TextStyle(
+            fontFamily: 'Jost',
+            color: Colors.white,
+            fontSize: width/24,
+            letterSpacing: 1.7,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        titleSpacing: 0.0,
+      ),
       body: WillPopScope(
         child: ListView(
           children: <Widget>[
             Center(
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: 100.0),
-                  Image.asset(
-                    'assets/round_logo.png',
-                    height: 80.0,
-                  ),
+
                   SizedBox(
                     height: 25.0,
                   ),
@@ -160,7 +174,8 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: AppLocalizations.of(context)
                                   .translate('loginPage', 'phone'),
                               prefixIcon: Icon(Icons.phone),
-                              border: InputBorder.none,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20)),
                             ),
                           ),
                         ),
@@ -179,7 +194,8 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: AppLocalizations.of(context)
                                   .translate('loginPage', 'passwordString'),
                               prefixIcon: Icon(Icons.vpn_key),
-                              border: InputBorder.none,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20)),
                             ),
                             obscureText: true,
                           ),
@@ -222,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: Material(
                               borderRadius: BorderRadius.circular(20.0),
                               shadowColor: Colors.redAccent,
-                              color: Colors.red,
+                              color: Colors.pinkAccent,
                               elevation: 7.0,
                               child: GestureDetector(
                                 child: Center(
@@ -261,6 +277,28 @@ class _LoginPageState extends State<LoginPage> {
                           child: Text(
                             AppLocalizations.of(context)
                                 .translate('loginPage', 'createAccountString'),
+                            style: TextStyle(
+                              color:
+                              Theme.of(context).textTheme.headline6.color,
+                              fontFamily: 'Jost',
+                              fontSize: 17.0,
+                              letterSpacing: 0.7,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 50.0),
+
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    type: PageTransitionType.rightToLeft,
+                                    child: Home()));
+                          },
+                          child: Text(
+                           "الرئيسية",
                             style: TextStyle(
                               color:
                               Theme.of(context).textTheme.headline6.color,

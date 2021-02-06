@@ -9,30 +9,56 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:my_store/config.dart';
+import 'package:my_store/pages/profile/activation.dart';
 
 import 'package:http/http.dart' as http;
-class Activation extends StatefulWidget {
+class Phone extends StatefulWidget {
   @override
-  _ActivationState createState() => _ActivationState();
+  _PhoneState createState() => _PhoneState();
 }
 
-class _ActivationState extends State<Activation> {
+class _PhoneState extends State<Phone> {
   var token = utils.CreateCryptoRandomString();
+  String phone ;
 
 
   // Initially password is obscure
+  get_shard() async{
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var d = localStorage.getString('user');
+    var my_code = jsonDecode(d)["phone_code"].toString()??"000";
+    var my_country = jsonDecode(d)["country"].toString()??"";
+    var my_phone = jsonDecode(d)["phone"].toString()??"my";
 
+    setState(() {
+     code = my_code;
+     phone = my_phone;
+     _phoneControl.text = my_phone;
+     if(_country.contains(my_country)){
+       _currentSelectedValue = my_country;
+     }
+    });
+    print(d);
+  }
 
-  // Toggles the password show status
-
+  var _currentSelectedValue;
+  String code = "000";
+  List _country = [
+    "الكويت",
+    "مصر",
+    "الامارات",
+  ];
 
   bool _isload = false;
-  final TextEditingController _codeControl = new TextEditingController();
+  final TextEditingController _phoneControl = new TextEditingController();
 
 
   //////////////login //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  my_activate() async {
+  my_login() async {
+
+
+    print(_currentSelectedValue.toString());
 
 
     SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -40,9 +66,11 @@ class _ActivationState extends State<Activation> {
     if (tok != null){
       try {
 
-        if (_codeControl.text
-            .trim()
-            .isEmpty ) {
+        if (
+            _phoneControl.text
+                .trim()
+                .isEmpty || _currentSelectedValue.toString() == "" ||
+            code == "000" || code == "" ) {
           Fluttertoast.showToast(
             msg: AppLocalizations.of(context).translate('loginPage', 'complete'),
             backgroundColor: Theme
@@ -55,18 +83,35 @@ class _ActivationState extends State<Activation> {
                 .appBarTheme
                 .color,
           );
-        }  else {
+        } else if (_phoneControl.text.length < 8) {
+          Fluttertoast.showToast(
+            msg: AppLocalizations.of(context)
+                .translate('loginPage', 'phone_error'),
+            backgroundColor: Theme
+                .of(context)
+                .textTheme
+                .headline6
+                .color,
+            textColor: Theme
+                .of(context)
+                .appBarTheme
+                .color,
+          );
+        }
+        else {
           if (this.mounted) {
             setState(() {
               _isload = true;
             });
           }
           final response = await http
-              .post(Config.url + "activation", headers: {
+              .post(Config.url + "edit_phone", headers: {
             "Accept": "application/json"
           }, body: {
-            "code": _codeControl.text,
+            "phone": _phoneControl.text,
 
+            "code": code,
+            "country": _currentSelectedValue.toString(),
             "token":tok.toString()
           });
 
@@ -79,15 +124,10 @@ class _ActivationState extends State<Activation> {
           if (data["state"] == "1") {
             SharedPreferences localStorage =
             await SharedPreferences.getInstance();
-            localStorage.setString('token', data['data']["api_token"]);
-            localStorage.setString('user', json.encode(data['data']["client"]));
-            localStorage.setString('login', "2");
-            localStorage.setString('user_id', json.encode(data['data']["client"]["id"].toString()));
-
             return Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return Home();
+                  return Activation(_phoneControl.text,_currentSelectedValue.toString(),code.toString());
                 },
               ),
             );
@@ -141,17 +181,31 @@ class _ActivationState extends State<Activation> {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   @override
   void initState() {
+    _phoneControl.text = phone;
+    get_shard();
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-
+    var countryDropDown = Container(
+      decoration: new BoxDecoration(
+        color: Colors.grey[200],
+        border: Border(
+          right: BorderSide(width: 0.5, color: Colors.grey),
+        ),
+      ),
+      height: 45.0,
+      margin: const EdgeInsets.all(3.0),
+      //width: 300.0,
+      child: Container(padding: EdgeInsets.all(12.0),
+          child: Text(" ${code}+")),
+    );
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pinkAccent,
         title: Text(
-          "تأكيد الحساب",
+          "تعديل الهاتف والدولة",
           style: TextStyle(
             fontFamily: 'Jost',
             color: Colors.white,
@@ -167,6 +221,7 @@ class _ActivationState extends State<Activation> {
           Center(
             child: Column(
               children: <Widget>[
+
 
                 SizedBox(
                   height: 25.0,
@@ -189,12 +244,60 @@ class _ActivationState extends State<Activation> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
+
                       SizedBox(
                         height: 20.0,
                       ),
-                      Text("افحص رسائل sms علي هاتفك "),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(20.0)),
+                        ),
+                        child:  FormField<String>(
+                          builder: (FormFieldState<String> state) {
+                            return InputDecorator(
+                              decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.flag),
+                                  errorStyle: TextStyle(
+                                      color: Colors.redAccent, fontSize: 16.0),
+                                  hintText: 'اختر الدولة',
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20))),
+                              isEmpty: _currentSelectedValue == null,
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: _currentSelectedValue,
+                                  isDense: true,
+                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      _currentSelectedValue = newValue;
+                                      if(newValue=="الكويت"){
+                                        code = "965";
+                                      }else if(newValue=="مصر"){
+                                        code = "002";
+                                      }
+                                      else if(newValue=="الامارات"){
+                                        code = "975";
+                                      }
+
+                                      state.didChange(newValue);
+                                    });
+                                  },
+                                  items: _country.map(( value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                       SizedBox(
-                        height: 10.0,
+                        height: 20.0,
                       ),
                       Container(
                         decoration: BoxDecoration(
@@ -203,36 +306,44 @@ class _ActivationState extends State<Activation> {
                           BorderRadius.all(Radius.circular(20.0)),
                         ),
 
-                        child: TextField(
-                          controller: _codeControl,
-                          decoration: InputDecoration(
-                            hintText: "كود التفعيل",
-                            prefixIcon: Icon(Icons.code),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(width: 2, color: Colors.purple)),
-                          ),
+                        child: new TextFormField(
+                          controller: _phoneControl,
+
+                          // validator: (value) {
+                          //  if (value.isEmpty) {
+                          //  return 'Please enter some text';
+                          //  }
+                          //   },
+                          keyboardType: TextInputType.number,
+                          decoration: new InputDecoration(
+                              contentPadding: const EdgeInsets.all(12.0),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(width: 2, color: Colors.purple)),
+                              fillColor: Colors.white,
+                              prefixIcon: countryDropDown,
+                              hintText: AppLocalizations.of(context)
+                                  .translate('loginPage', 'phone'),
+                              labelText: AppLocalizations.of(context)
+                                  .translate('loginPage', 'phone')),
                         ),
                       ),
                       SizedBox(
                         height: 20.0,
                       ),
 
+
+
+
                       SizedBox(
                         height: 20.0,
                       ),
 
-
-
-
-
-
-
                       InkWell(
                         onTap: () {
-                          my_activate();
+                          my_login();
                         },
                         child: Container(
                           height: 45.0,
@@ -240,12 +351,12 @@ class _ActivationState extends State<Activation> {
                           child: Material(
                             borderRadius: BorderRadius.circular(20.0),
                             shadowColor: Colors.redAccent,
-                            color: Colors.red,
+                            color: Colors.pinkAccent,
                             elevation: 7.0,
                             child: GestureDetector(
                               child: Center(
                                 child:!_isload?
-                                Text("تأكيد",
+                                Text("حفظ",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Jost',
@@ -259,21 +370,21 @@ class _ActivationState extends State<Activation> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
+
+                      SizedBox(height: 30.0),
                       InkWell(
                         onTap: () {
                           Navigator.push(
                               context,
                               PageTransition(
                                   type: PageTransitionType.rightToLeft,
-                                  child: Home(
-                                  )));
+                                  child: Home()));
                         },
-                        child: Text("الرئيسية",
+                        child: Text(
+                          "الرئيسية",
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.headline6.color,
+                            color:
+                            Theme.of(context).textTheme.headline6.color,
                             fontFamily: 'Jost',
                             fontSize: 17.0,
                             letterSpacing: 0.7,

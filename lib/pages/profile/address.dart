@@ -14,20 +14,39 @@ import 'package:my_store/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // My Own Imports
 
-class Delivery extends StatefulWidget {
-  double total ;
-  Delivery(this.total);
+class Address extends StatefulWidget {
+
 
   @override
-  _DeliveryState createState() => _DeliveryState();
+  _AddressState createState() => _AddressState();
 }
 
-class _DeliveryState extends State<Delivery> {
-  var my_phone="" ;
-  var name ="" ;
-  String govern ;
-  var login ="0";
-double  balance = 0.0;
+class _AddressState extends State<Address> {
+String govern ;
+  set_token() async{
+    SharedPreferences localStorage =
+    await SharedPreferences.getInstance();
+    localStorage.setString('city', _citycontroller.text);
+    localStorage.setString('price', price.toString());
+
+    localStorage.setString('govern', _currentSelectedValue);
+    localStorage.setString('address',_addresscontroller.text);
+    Fluttertoast.showToast(
+      msg: "تمت العملية بنجاح",
+      backgroundColor: Theme
+          .of(context)
+          .textTheme
+          .headline6
+          .color,
+      textColor: Theme
+          .of(context)
+          .appBarTheme
+          .color,
+    );
+
+  }
+  var token = utils.CreateCryptoRandomString();
+
   // Initially password is obscure
   get_shard() async{
     SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -36,22 +55,12 @@ double  balance = 0.0;
     var my_govern = localStorage.getString('govern');
     var my_address = localStorage.getString('address');
     var my_price = localStorage.getString('price');
-    if(d != null){
-      my_phone =  jsonDecode(d)["phone"]??" ";
-      name =  jsonDecode(d)["name"]??" ";
-    }
-
-
-    print(names);
+      print(names);
     setState(() {
-      login = localStorage.getString('login');
-      price =  double.parse(my_price);
-      govern = my_govern;
+       price =  double.parse(my_price);
+        govern = my_govern;
       _citycontroller.text = my_city;
       _addresscontroller.text = my_address;
-
-      _phonecontroller.text = my_phone;
-      _namecontroller.text = name;
       if(names.contains(my_govern)){
         _currentSelectedValue = my_govern;
       }
@@ -63,8 +72,6 @@ double  balance = 0.0;
   final _addresscontroller = TextEditingController();
   final _citycontroller = TextEditingController();
   final _phonecontroller = TextEditingController();
-  final _namecontroller = TextEditingController();
-
   List governs = [];
   int len ;
   bool _load = true ;
@@ -73,74 +80,62 @@ double  balance = 0.0;
   List <String> names = [];
   //////////////////////////////////////////////////////////////////////////////////////////////////////
   get_carts  () async{
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var token = localStorage.getString('token');
-   if(token !="" || token !=null ){
-     try{
-       final result = await InternetAddress.lookup('google.com');
-       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-         http.Response response =
-         await http.get(Config.url+"get_governs?token="+token);
+    try{
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        http.Response response =
+        await http.get(Config.url+"get_governs");
 
 
-         if (response.statusCode == 200) {
+        if (response.statusCode == 200) {
 
 
-           var res = json.decode(response.body);
-           if (res["state"]=="1"){
-             if (this.mounted) {
-               setState(() {
-                 governs = res["data"];
-                 balance= res["msg"].toDouble();
-                 // print(governs);
-                 len = governs.length;
-                 for (int i = 0; i < len; i++) {
-                   names.add(governs[i]["name"]);
-                   map[governs[i]["name"]] = governs[i]["price"];
-                   if(names.contains(govern)){
-                     _currentSelectedValue = govern;
-                   }
-                 }
-               });
-             }
-             //print(cartItemList.length);
+          var res = json.decode(response.body);
+          if (res["state"]=="1"){
+            if (this.mounted) {
+              setState(() {
+                governs = res["data"];
+               // print(governs);
+                len = governs.length;
+                for (int i = 0; i < len; i++) {
+                  names.add(governs[i]["name"]);
+                  map[governs[i]["name"]] = governs[i]["price"];
+                  if(names.contains(govern)){
+                    _currentSelectedValue = govern;
+                  }
+                }
+              });
+            }
+            //print(cartItemList.length);
 
-             //  print(tok);
+            //  print(tok);
 
-           }else{
-             Fluttertoast.showToast(
-               msg: '${res["msg"]}',
-               backgroundColor: Theme.of(context).textTheme.headline6.color,
-               textColor: Theme.of(context).appBarTheme.color,
-             );
+          }else{
+            Fluttertoast.showToast(
+              msg: '${res["msg"]}',
+              backgroundColor: Theme.of(context).textTheme.headline6.color,
+              textColor: Theme.of(context).appBarTheme.color,
+            );
 
-           }
+          }
 
 
-         }
-       }else{
-         Fluttertoast.showToast(
-           msg: 'no internet ',
-           backgroundColor: Theme.of(context).textTheme.headline6.color,
-           textColor: Theme.of(context).appBarTheme.color,
-         );
-       }
-     } on SocketException {
+        }
+      }else{
+        Fluttertoast.showToast(
+          msg: 'no internet ',
+          backgroundColor: Theme.of(context).textTheme.headline6.color,
+          textColor: Theme.of(context).appBarTheme.color,
+        );
+      }
+    } on SocketException {
 
-       Fluttertoast.showToast(
-         msg: 'no internet ',
-         backgroundColor: Theme.of(context).textTheme.headline6.color,
-         textColor: Theme.of(context).appBarTheme.color,
-       );
-     }
-
-   }else{
-     Fluttertoast.showToast(
-       msg: 'اغلق التطبيق ثم اعد فتحه ',
-       backgroundColor: Theme.of(context).textTheme.headline6.color,
-       textColor: Theme.of(context).appBarTheme.color,
-     );
-   }
+      Fluttertoast.showToast(
+        msg: 'no internet ',
+        backgroundColor: Theme.of(context).textTheme.headline6.color,
+        textColor: Theme.of(context).appBarTheme.color,
+      );
+    }
 
     if (this.mounted) {
       setState(() {
@@ -150,7 +145,7 @@ double  balance = 0.0;
   }
 
   go_pay(){
-    if(_currentSelectedValue=="" || _citycontroller.text ==""   || _addresscontroller.text==""  || _namecontroller.text==""  || _phonecontroller.text==""  )
+    if(_currentSelectedValue=="" || _citycontroller.text ==""   || _addresscontroller.text==""  )
     {
 
       Fluttertoast.showToast(
@@ -229,69 +224,10 @@ double  balance = 0.0;
                         height: 1.6),
                     textAlign: TextAlign.center,
                   ),
+
                   SizedBox(
-                    height: 18.0,
-                  ),
-                  login !="2"?
-                  Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(20.0)),
-                        ),
-                        child: TextField(
-                          controller: _namecontroller,
-
-                          decoration: new InputDecoration(
-                              contentPadding: const EdgeInsets.all(12.0),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(width: 2, color: Colors.purple)),
-                              fillColor: Colors.white,
-                              hintText: "الاسم",
-                              labelText:"الاسم"),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 26.0,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(20.0)),
-                        ),
-                        child: TextField(
-                          controller: _phonecontroller,
-
-                          decoration: new InputDecoration(
-                              contentPadding: const EdgeInsets.all(12.0),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(width: 2, color: Colors.purple)),
-                              fillColor: Colors.white,
-                              hintText: "الهاتف",
-                              labelText:"الهاتف"),
-                        ),
-                      ),
-
-
-                      SizedBox(
-                        height: 26.0,
-                      ),
-                    ],
-                  ):SizedBox(
                     height: 26.0,
                   ),
-
-
-
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
@@ -401,12 +337,8 @@ double  balance = 0.0;
                       onTap: () {
 
                         if(go_pay()){
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  type: PageTransitionType.rightToLeft,child:
-                              PaymentPage(widget.total,price,_phonecontroller.text,_currentSelectedValue,_citycontroller.text,
-                                  _addresscontroller.text,_namecontroller.text,balance)));
+                          set_token();
+                              //PaymentPage(widget.total,price,_phonecontroller.text,_currentSelectedValue,_citycontroller.text,_addresscontroller.text)));
                         }
                       },
                       child: Container(
@@ -418,7 +350,7 @@ double  balance = 0.0;
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                         child: Text(
-                          "حفظ وانتقال ",
+                          "حفظ ",
                           style: TextStyle(
                               color: Theme.of(context).appBarTheme.color,
                               fontFamily: 'Jost',

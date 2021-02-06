@@ -9,30 +9,48 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:my_store/config.dart';
+import 'package:my_store/pages/login_signup/activation.dart';
 
 import 'package:http/http.dart' as http;
-class Activation extends StatefulWidget {
+class Password extends StatefulWidget {
   @override
-  _ActivationState createState() => _ActivationState();
+  _PasswordState createState() => _PasswordState();
 }
 
-class _ActivationState extends State<Activation> {
+class _PasswordState extends State<Password> {
   var token = utils.CreateCryptoRandomString();
 
 
   // Initially password is obscure
+  bool _obscureText1 = true;
+  bool _obscureText2 = true;
 
+  String _password;
 
   // Toggles the password show status
+  void _toggle1() {
+    setState(() {
+      _obscureText1 = !_obscureText1;
+    });
+  }
+
+  void _toggle2() {
+    setState(() {
+      _obscureText2 = !_obscureText2;
+    });
+  }
+
 
 
   bool _isload = false;
-  final TextEditingController _codeControl = new TextEditingController();
-
+  final TextEditingController _newpasswordControl = new TextEditingController();
+  final TextEditingController _oldpasswordControl = new TextEditingController();
 
   //////////////login //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  my_activate() async {
+  my_login() async {
+
+
 
 
     SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -40,9 +58,12 @@ class _ActivationState extends State<Activation> {
     if (tok != null){
       try {
 
-        if (_codeControl.text
+        if (_oldpasswordControl.text
             .trim()
-            .isEmpty ) {
+            .isEmpty ||
+            _newpasswordControl.text
+                .trim()
+                .isEmpty ) {
           Fluttertoast.showToast(
             msg: AppLocalizations.of(context).translate('loginPage', 'complete'),
             backgroundColor: Theme
@@ -55,17 +76,51 @@ class _ActivationState extends State<Activation> {
                 .appBarTheme
                 .color,
           );
-        }  else {
+        }
+
+        else if (_oldpasswordControl.text.length < 6 ||
+            _oldpasswordControl.text.length > 20) {
+          Fluttertoast.showToast(
+            msg:
+            AppLocalizations.of(context).translate('loginPage', 'pass_words'),
+            backgroundColor: Theme
+                .of(context)
+                .textTheme
+                .headline6
+                .color,
+            textColor: Theme
+                .of(context)
+                .appBarTheme
+                .color,
+          );
+        }
+        else if (_newpasswordControl.text.length < 6 ||
+            _newpasswordControl.text.length > 20) {
+          Fluttertoast.showToast(
+            msg:
+            AppLocalizations.of(context).translate('loginPage', 'pass_words'),
+            backgroundColor: Theme
+                .of(context)
+                .textTheme
+                .headline6
+                .color,
+            textColor: Theme
+                .of(context)
+                .appBarTheme
+                .color,
+          );
+        } else {
           if (this.mounted) {
             setState(() {
               _isload = true;
             });
           }
           final response = await http
-              .post(Config.url + "activation", headers: {
+              .post(Config.url + "edit_pass", headers: {
             "Accept": "application/json"
           }, body: {
-            "code": _codeControl.text,
+            "new": _newpasswordControl.text,
+            "old": _oldpasswordControl.text,
 
             "token":tok.toString()
           });
@@ -81,16 +136,21 @@ class _ActivationState extends State<Activation> {
             await SharedPreferences.getInstance();
             localStorage.setString('token', data['data']["api_token"]);
             localStorage.setString('user', json.encode(data['data']["client"]));
-            localStorage.setString('login', "2");
             localStorage.setString('user_id', json.encode(data['data']["client"]["id"].toString()));
-
-            return Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return Home();
-                },
-              ),
+            Fluttertoast.showToast(
+              msg: 'تمت العملية بنجاح',
+              backgroundColor: Theme
+                  .of(context)
+                  .textTheme
+                  .headline6
+                  .color,
+              textColor: Theme
+                  .of(context)
+                  .appBarTheme
+                  .color,
             );
+
+
           } else {
             Fluttertoast.showToast(
               msg: '${data["msg"]}',
@@ -135,6 +195,11 @@ class _ActivationState extends State<Activation> {
         textColor: Theme.of(context).appBarTheme.color,
       );
     }
+    if (this.mounted) {
+      setState(() {
+        _isload = false;
+      });
+    }
   }
 
   ///end ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,7 +216,7 @@ class _ActivationState extends State<Activation> {
       appBar: AppBar(
         backgroundColor: Colors.pinkAccent,
         title: Text(
-          "تأكيد الحساب",
+          "تعديل كلمة المرور",
           style: TextStyle(
             fontFamily: 'Jost',
             color: Colors.white,
@@ -167,6 +232,9 @@ class _ActivationState extends State<Activation> {
           Center(
             child: Column(
               children: <Widget>[
+                SizedBox(
+                  height: 30.0,
+                ),
 
                 SizedBox(
                   height: 25.0,
@@ -189,12 +257,32 @@ class _ActivationState extends State<Activation> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(20.0)),
+                        ),
+                        child: TextField(
+                          controller: _oldpasswordControl,
+                          decoration: InputDecoration(
+                            hintText: "كلمة المرور القديمة",
+                            prefixIcon:  new FlatButton(
+                                onPressed: _toggle1,
+                                child: _obscureText1?Icon(Icons.visibility_off ):Icon(Icons.visibility )
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(width: 2, color: Colors.purple)),
+                          ),
+                          obscureText: _obscureText1,
+                        ),
+                      ),
+
                       SizedBox(
                         height: 20.0,
-                      ),
-                      Text("افحص رسائل sms علي هاتفك "),
-                      SizedBox(
-                        height: 10.0,
                       ),
                       Container(
                         decoration: BoxDecoration(
@@ -202,28 +290,26 @@ class _ActivationState extends State<Activation> {
                           borderRadius:
                           BorderRadius.all(Radius.circular(20.0)),
                         ),
-
                         child: TextField(
-                          controller: _codeControl,
+                          controller: _newpasswordControl,
                           decoration: InputDecoration(
-                            hintText: "كود التفعيل",
-                            prefixIcon: Icon(Icons.code),
+                            hintText: "كلمة المرور الجديدة",
+                            prefixIcon:  new FlatButton(
+                                onPressed: _toggle2,
+                                child: _obscureText2?Icon(Icons.visibility_off ):Icon(Icons.visibility )
+                            ),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20)),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(width: 2, color: Colors.purple)),
                           ),
+                          obscureText: _obscureText2,
                         ),
                       ),
                       SizedBox(
                         height: 20.0,
                       ),
-
-                      SizedBox(
-                        height: 20.0,
-                      ),
-
 
 
 
@@ -232,7 +318,7 @@ class _ActivationState extends State<Activation> {
 
                       InkWell(
                         onTap: () {
-                          my_activate();
+                          my_login();
                         },
                         child: Container(
                           height: 45.0,
@@ -240,16 +326,16 @@ class _ActivationState extends State<Activation> {
                           child: Material(
                             borderRadius: BorderRadius.circular(20.0),
                             shadowColor: Colors.redAccent,
-                            color: Colors.red,
+                            color: Colors.pinkAccent,
                             elevation: 7.0,
                             child: GestureDetector(
                               child: Center(
                                 child:!_isload?
-                                Text("تأكيد",
+                                Text("حفظ",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Jost',
-                                    fontSize: 16.0,
+                                    fontSize: 18.0,
                                     letterSpacing: 1.0,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -260,7 +346,7 @@ class _ActivationState extends State<Activation> {
                         ),
                       ),
                       SizedBox(
-                        height: 20.0,
+                        height: 15.0,
                       ),
                       InkWell(
                         onTap: () {

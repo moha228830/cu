@@ -4,6 +4,8 @@ import 'dart:async' show Future, Timer;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:my_store/pages/product/product.dart';
+import 'package:my_store/pages/product/product2.dart';
+
 import 'package:my_store/pages/product_list_view/filter_row.dart';
 import 'package:my_store/functions/passDataToProducts.dart';
 import 'package:shimmer/shimmer.dart';
@@ -122,38 +124,76 @@ class _ProductsGridViewState extends State<ProductsGridView> {
         ),
       ),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductPage(
-              data: Product(
-                id: products.id,
-                name: products.name,
-                description: products.description,
-                price: products.price,
-                overPrice: products.overPrice,
-                brandId: products.brandId,
-                made: products.made,
-                subCategoryId: products.subCategoryId,
-                categoryId: products.categoryId,
-                qut: products.qut,
-                pay: products.pay,
-                view: products.view,
-                newItem: products.newItem,
-                popular: products.popular,
-                over: products.over,
-                subSubCategoryId: products.subSubCategoryId,
-                img: products.img,
-                activity: products.activity,
-                numItem: products.numItem,
-                imgFullPath: products.imgFullPath,
-                precentage: products.precentage,
-                images: products.images,
-                sizes: products.sizes,
+        if(products.type==1) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductPage(
+                data: Product(
+                  id: products.id,
+                  name: products.name,
+                  description: products.description,
+                  price: products.price,
+                  overPrice: products.overPrice,
+                  brandId: products.brandId,
+                  made: products.made,
+                  subCategoryId: products.subCategoryId,
+                  categoryId: products.categoryId,
+                  qut: products.qut,
+                  pay: products.pay,
+                  view: products.view,
+                  newItem: products.newItem,
+                  popular: products.popular,
+                  over: products.over,
+                  subSubCategoryId: products.subSubCategoryId,
+                  img: products.img,
+                  activity: products.activity,
+                  numItem: products.numItem,
+                  imgFullPath: products.imgFullPath,
+                  precentage: products.precentage,
+                  images: products.images,
+                  sizes: products.sizes,
+                  type: products.type,
+                ),
               ),
             ),
-          ),
-        );
+          );
+        }else{
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductPage2(
+                data: Product(
+                  id: products.id,
+                  name: products.name,
+                  description: products.description,
+                  price: products.price,
+                  overPrice: products.overPrice,
+                  brandId: products.brandId,
+                  made: products.made,
+                  subCategoryId: products.subCategoryId,
+                  categoryId: products.categoryId,
+                  qut: products.qut,
+                  pay: products.pay,
+                  view: products.view,
+                  newItem: products.newItem,
+                  popular: products.popular,
+                  over: products.over,
+                  subSubCategoryId: products.subSubCategoryId,
+                  img: products.img,
+                  activity: products.activity,
+                  numItem: products.numItem,
+                  imgFullPath: products.imgFullPath,
+                  precentage: products.precentage,
+                  images: products.images,
+                  sizes: products.sizes,
+                  type: products.type,
+                ),
+              ),
+            ),
+          );
+        }
+
       },
     );
   }
