@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_store/functions/localizations.dart';
 import 'package:my_store/pages/home/home.dart';
-import 'package:my_store/pages/login_signup/forgot_password.dart';
-import 'package:my_store/pages/login_signup/login.dart';
+import 'package:provider/provider.dart';
+import 'package:my_store/pages/product_list_view/get_function.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -187,6 +187,7 @@ class _DataState extends State<Data> {
     get_shard();
     _nameControl.text = name;
 
+
   }
   @override
   Widget build(BuildContext context) {
@@ -207,7 +208,8 @@ class _DataState extends State<Data> {
         ),
         titleSpacing: 0.0,
       ),
-      body: ListView(
+      body:
+      ListView(
         children: <Widget>[
           Center(
             child: Column(

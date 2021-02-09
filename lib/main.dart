@@ -16,7 +16,6 @@ import 'package:my_store/pages/onboarding/onboarding.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'pages/home/products/get_function.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -7,6 +7,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_store/functions/localizations.dart';
 import 'package:my_store/pages/contact.dart';
 import 'package:my_store/pages/orders/orders.dart';
+import 'package:my_store/pages/product_list_view/get_function.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 import 'dart:convert';
@@ -28,7 +30,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int currentIndex;
-
+  var num = "!";
   var token = utils.CreateCryptoRandomString();
 
   DateTime currentBackPressTime;
@@ -37,6 +39,7 @@ class _HomeState extends State<Home> {
     super.initState();
     currentIndex = 0;
     set_token_not_register();
+
   }
 
   set_token_not_register() async{
@@ -57,6 +60,15 @@ if ( tok == null  ){
 
   // print( tok + "moha");
 
+}else{
+
+   var cl = new PostDataProvider() ;
+      await cl.cat_num(tok);
+      cl.c();
+      setState(() {
+        num =  cl.num ;
+      });
+
 }
   print(tok);
   }
@@ -66,6 +78,8 @@ if ( tok == null  ){
       currentIndex = index;
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +171,7 @@ if ( tok == null  ){
                 backgroundColor: Colors.white,
                 icon: Badge(
                   badgeContent: Text(
-                    '!',
+                      num.toString(),
                     style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize:17)
                   ),
                   badgeColor:Colors.white,

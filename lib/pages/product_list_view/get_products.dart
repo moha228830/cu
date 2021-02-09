@@ -42,12 +42,13 @@ class _GetProductsState extends State<GetProducts> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: Provider.of<PostDataProvider>(context)
-          .getPostData(http.Client(), widget.id, widget.type),
+          .getPostData(http.Client(), widget.id, widget.type,10,0),
       builder: (context, snapshot) {
         if (snapshot.hasError) print(snapshot.error);
 
         return snapshot.hasData
-            ? ListView(
+            ?
+        ListView(
                 children: <Widget>[
                   //  FilterRow(),
                   //  Divider(

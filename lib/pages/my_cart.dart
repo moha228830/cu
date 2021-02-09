@@ -5,6 +5,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io' ;
+import 'package:provider/provider.dart';
+import 'package:my_store/pages/product_list_view/product_class.dart';
+import 'package:my_store/pages/login_signup/signup.dart';
+
 import 'package:my_store/config.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
@@ -36,6 +40,91 @@ class _MyCartState extends State<MyCart> {
         "46","47","48","49","50"];
   String dropdownValue3 = 'الكمية';
    //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  get_shard() async{
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var login = localStorage.getString('login');
+    //print(login);
+    //var user =localStorage.getString('user');
+    if (login != "2"){
+
+      showGeneralDialog(
+          context: context,
+          barrierDismissible: true,
+          barrierLabel: MaterialLocalizations.of(context)
+              .modalBarrierDismissLabel,
+          barrierColor: Colors.black45,
+          transitionDuration: const Duration(milliseconds: 200),
+          pageBuilder: (BuildContext buildContext,
+              Animation animation,
+              Animation secondaryAnimation) {
+            return Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width - 10,
+                height: MediaQuery.of(context).size.height -  80,
+
+                padding: EdgeInsets.all(20),
+                color: Theme.of(context).appBarTheme.color,
+                child: Scaffold(
+                  body:   Container(
+                    padding: EdgeInsets.all(20),
+
+                    child: Column(
+                      children: [
+                        Text("يمكنك الشراء من التطبيق بدون تسجيل وللحصول علي مميزات اضافية قم بالتسجيل اولا "
+                        ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,
+                          color: Theme.of(context).textTheme.headline6.color),),
+                        SizedBox(height: 15,),
+                        Divider(),
+                        SizedBox(height: 15,),
+                        Row(
+                          children: [
+                            RaisedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.rightToLeft,
+                                        child: SignupPage()));
+                              },
+                              child: Text(
+                                "تسجيل جديد",
+                                style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                              color: Colors.pinkAccent,
+                            ),
+                            SizedBox(width: 20,),
+
+                            RaisedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                "تخطي ",
+                                style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                              color: Colors.pinkAccent,
+                            ),
+                          ],
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          });
+
+
+
+
+    }
+  }
+
 
   get_carts  () async{
     SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -338,6 +427,7 @@ class _MyCartState extends State<MyCart> {
     progres = false ;
      cartItem;
      set_num;
+    get_shard();
     get_carts();
   }
 

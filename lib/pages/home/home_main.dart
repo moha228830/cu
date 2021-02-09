@@ -4,10 +4,11 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'dart:io' ;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_store/config.dart';
+import 'package:my_store/pages/product/product2.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:my_store/pages/product/product.dart';
 import 'package:my_store/pages/product_list_view/product_class.dart';
-import 'package:my_store/pages/home/products/product_list_view.dart';
+import 'package:my_store/pages/product_list_view/product_list_view.dart';
 // My Own Import
 import 'package:my_store/pages/home/home_component/category_slider.dart';
 import 'package:my_store/pages/home/home_component/deal_of_the_day.dart';
@@ -36,7 +37,7 @@ class _HomeMainState extends State<HomeMain> {
   List popular =[];
   List  new_item =[];
  List brands = [];
- List sliders = [];
+ var sliders = [];
   bool _shimmer = true;
 
   List list1 = [];
@@ -192,6 +193,25 @@ if (this.mounted) {
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.7,
                         color: Theme.of(context).textTheme.headline6.color,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>  ProductListView(1, "new",),
+                          ),
+                        );
+                      },
+                      child: Text("شاهد المزيد ",
+                        style: TextStyle(
+                          fontFamily: 'Jost',
+                          fontSize: width/23,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.7,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                     ),
 
@@ -526,7 +546,41 @@ if (this.mounted) {
                                 );
                               }else{
 
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>ProductPage2(
+                                      data: Product(
+                                        id : cat["id"],
+                                        name : cat["name"],
+                                        description : cat["description"],
+                                        price : cat["price"].toDouble(),
+                                        overPrice : cat["over_price"].toDouble(),
+                                        brandId : cat["brand_id"],
+                                        made : cat["made"],
+                                        subCategoryId : cat["subCategory_id"],
+                                        categoryId : cat["category_id"],
+                                        qut : cat["qut"],
+                                        pay : cat["pay"],
+                                        view : cat["view"],
+                                        newItem : cat["new"],
+                                        popular : cat["popular"],
+                                        over : cat["over"],
+                                        subSubCategoryId : cat["subSubCategory_id"],
+                                        img : cat["img"],
+                                        activity : cat["activity"],
+                                        numItem : cat["new"],
+                                        imgFullPath : cat["img_full_path"],
+                                        precentage : cat["precentage"],
+                                        images : cat["images"],
+                                        sizes : cat["sizes"],
+                                        type : cat["type"],
 
+
+                                      ),
+                                    ),
+                                  ),
+                                );
                               }
                             },
                           ),
@@ -566,6 +620,25 @@ if (this.mounted) {
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.7,
                         color: Theme.of(context).textTheme.headline6.color,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>  ProductListView(1, "popular",),
+                          ),
+                        );
+                      },
+                      child: Text("شاهد المزيد ",
+                        style: TextStyle(
+                          fontFamily: 'Jost',
+                          fontSize: width/23,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.7,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                     ),
 
@@ -900,7 +973,41 @@ if (this.mounted) {
                                   ),
                                 );
                               }else{
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>ProductPage2(
+                                      data: Product(
+                                        id : cat["id"],
+                                        name : cat["name"],
+                                        description : cat["description"],
+                                        price : cat["price"].toDouble(),
+                                        overPrice : cat["over_price"].toDouble(),
+                                        brandId : cat["brand_id"],
+                                        made : cat["made"],
+                                        subCategoryId : cat["subCategory_id"],
+                                        categoryId : cat["category_id"],
+                                        qut : cat["qut"],
+                                        pay : cat["pay"],
+                                        view : cat["view"],
+                                        newItem : cat["new"],
+                                        popular : cat["popular"],
+                                        over : cat["over"],
+                                        subSubCategoryId : cat["subSubCategory_id"],
+                                        img : cat["img"],
+                                        activity : cat["activity"],
+                                        numItem : cat["new"],
+                                        imgFullPath : cat["img_full_path"],
+                                        precentage : cat["precentage"],
+                                        images : cat["images"],
+                                        sizes : cat["sizes"],
+                                        type : cat["type"],
 
+
+                                      ),
+                                    ),
+                                  ),
+                                );
 
                               }
                             },
@@ -939,6 +1046,25 @@ if (this.mounted) {
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.7,
                         color: Theme.of(context).textTheme.headline6.color,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>  ProductListView(1, "over",),
+                          ),
+                        );
+                      },
+                      child: Text("شاهد المزيد ",
+                        style: TextStyle(
+                          fontFamily: 'Jost',
+                          fontSize: width/23,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.7,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                     ),
 
@@ -1274,7 +1400,41 @@ if (this.mounted) {
                                  ),
                                );
                              }else{
+                               Navigator.push(
+                                 context,
+                                 MaterialPageRoute(
+                                   builder: (context) =>ProductPage2(
+                                     data: Product(
+                                       id : cat["id"],
+                                       name : cat["name"],
+                                       description : cat["description"],
+                                       price : cat["price"].toDouble(),
+                                       overPrice : cat["over_price"].toDouble(),
+                                       brandId : cat["brand_id"],
+                                       made : cat["made"],
+                                       subCategoryId : cat["subCategory_id"],
+                                       categoryId : cat["category_id"],
+                                       qut : cat["qut"],
+                                       pay : cat["pay"],
+                                       view : cat["view"],
+                                       newItem : cat["new"],
+                                       popular : cat["popular"],
+                                       over : cat["over"],
+                                       subSubCategoryId : cat["subSubCategory_id"],
+                                       img : cat["img"],
+                                       activity : cat["activity"],
+                                       numItem : cat["new"],
+                                       imgFullPath : cat["img_full_path"],
+                                       precentage : cat["precentage"],
+                                       images : cat["images"],
+                                       sizes : cat["sizes"],
+                                       type : cat["type"],
 
+
+                                     ),
+                                   ),
+                                 ),
+                               );
 
                              }
 

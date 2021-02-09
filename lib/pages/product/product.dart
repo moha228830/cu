@@ -3,6 +3,10 @@ import 'package:my_store/functions/localizations.dart';
 import 'package:my_store/pages/home/home.dart';
 import 'package:my_store/pages/order_payment/delivery_address.dart';
 import 'package:my_store/pages/product/product_details.dart';
+import 'package:my_store/pages/product_list_view/get_function.dart';
+import 'package:provider/provider.dart';
+import 'package:my_store/pages/product_list_view/product_class.dart';
+
 import 'package:my_store/pages/product_list_view/product_class.dart';
 import 'package:my_store/pages/search.dart';
 import 'package:page_transition/page_transition.dart';
@@ -123,6 +127,9 @@ class _ProductPageState extends State<ProductPage> {
              if (response.statusCode == 200) {
                var $res =  json.decode(response.body);
                if ($res["state"]=="1"){
+
+                 var cl = new PostDataProvider() ;
+                  cl.cat_num(tok);
                  Fluttertoast.showToast(
                    msg: '  تمت الاضافة بنجاح الي عربة التسوق ',
                    backgroundColor: Theme.of(context).textTheme.headline6.color,

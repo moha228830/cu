@@ -1,6 +1,5 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
-import 'package:my_store/pages/home/products/product_list_view.dart';
 
 class NewMainSlider extends StatefulWidget {
   List sliders ;

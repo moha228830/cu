@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_store/functions/localizations.dart';
-import 'package:my_store/pages/home/products/product_list_view.dart';
+import 'package:my_store/pages/product_list_view/product_list_view.dart';
 
 class DealOfTheDay extends StatefulWidget {
-List brands ;
+var brands ;
 DealOfTheDay(this.brands);
   @override
   _DealOfTheDayState createState() => _DealOfTheDayState();

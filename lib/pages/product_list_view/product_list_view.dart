@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_store/functions/localizations.dart';
 
 // My Own Imports
-import 'package:my_store/pages/product_list_view/get_products.dart';
+import 'package:my_store/pages/product_list_view/test.dart';
 import 'package:my_store/pages/search.dart';
 
 class ProductListView extends StatefulWidget {
@@ -65,7 +65,9 @@ class _ProductListViewState extends State<ProductListView> {
          // ),
        // ],
       ),
-      body: GetProducts(widget.id, widget.type),
+      body: Container(
+
+          child: GetProducts(widget.id, widget.type)),
     );
   }
 }

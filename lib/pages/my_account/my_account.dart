@@ -64,7 +64,7 @@ class _MyAccountState extends State<MyAccount> {
 
 
   }
-  var status = "no";
+  var status = "0";
   var name = "user";
   get_shard() async{
     SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -641,7 +641,7 @@ class _MyAccountState extends State<MyAccount> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Icon(
-                      Icons.supervised_user_circle,
+                      Icons.arrow_back,
                       size: 30.0,
                       color: Theme.of(context).primaryColor,
                     ),
