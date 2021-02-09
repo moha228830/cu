@@ -89,9 +89,19 @@ get_net(){
 
 
           });
+          print(widget.phone);
+          print(widget.name);
+          print(widget.govern);
+          print(widget.city);
+          print(widget.address);
+          print(tok);
 
-
+          print((widget.balance - remind).toString());
+          print(widget.total.toString());
+          print(widget.price.toString());
           if (response.statusCode == 200) {
+           // print((widget.balance - remind).toString());
+
 
 
             var res = json.decode(response.body);

@@ -5,7 +5,6 @@ import 'package:my_store/pages/order_payment/delivery_address.dart';
 import 'package:my_store/pages/product/product_details.dart';
 import 'package:my_store/pages/product_list_view/get_function.dart';
 import 'package:provider/provider.dart';
-import 'package:my_store/pages/product_list_view/product_class.dart';
 
 import 'package:my_store/pages/product_list_view/product_class.dart';
 import 'package:my_store/pages/search.dart';
@@ -113,23 +112,26 @@ class _ProductPageState extends State<ProductPage> {
          );
 
        }else{
-
          var data = "token="+tok+"&item_id="+widget.data.id.toString()+
-             "&size="+dropdownValue+"&color="+dropdownValue2+"&qut="+dropdownValue3+"type="+widget.data.type.toString()
-             +"user_id="+user_id.toString();
+             "&size="+dropdownValue+"&color="+dropdownValue2+"&qut="+dropdownValue3+"&type="+widget.data.type.toString();
+         print(data);
          try{
+
            final result = await InternetAddress.lookup('google.com');
            if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+
              http.Response response =
              await http.get(Config.url+"add_carts?"+data);
 
 
              if (response.statusCode == 200) {
+
+
                var $res =  json.decode(response.body);
+               print($res["state"]);
                if ($res["state"]=="1"){
 
-                 var cl = new PostDataProvider() ;
-                  cl.cat_num(tok);
+
                  Fluttertoast.showToast(
                    msg: '  تمت الاضافة بنجاح الي عربة التسوق ',
                    backgroundColor: Theme.of(context).textTheme.headline6.color,
@@ -152,6 +154,7 @@ class _ProductPageState extends State<ProductPage> {
                }
              }
            }else{
+
              Fluttertoast.showToast(
                msg: 'no internet ',
                backgroundColor: Theme.of(context).textTheme.headline6.color,

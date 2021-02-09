@@ -198,6 +198,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         ),
 
                         child: TextField(
+                          keyboardType: TextInputType.number,
                           controller: _phoneControl,
                           decoration: InputDecoration(
                             hintText: "رقم الهاتف",

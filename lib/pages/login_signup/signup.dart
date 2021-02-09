@@ -179,6 +179,8 @@ class _SignupPageState extends State<SignupPage> {
           SharedPreferences localStorage =
           await SharedPreferences.getInstance();
           localStorage.setString('login', "1");
+          localStorage.setString('token', data['data']["api_token"]);
+
           return Navigator.of(context).push(
             MaterialPageRoute(
               builder: (BuildContext context) {

@@ -75,7 +75,7 @@ class _ProductPage2State extends State<ProductPage2> {
 
 
         var data = "token="+tok+"&item_id="+widget.data.id.toString()+
-            "&qut="+dropdownValue3+"&type="+widget.data.type.toString()+"&user_id="+user_id;
+            "&qut="+dropdownValue3+"&type="+widget.data.type.toString();
 print(data);
         try{
           final result = await InternetAddress.lookup('google.com');

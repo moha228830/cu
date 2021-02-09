@@ -224,7 +224,107 @@ class _MyCartState extends State<MyCart> {
 
       var data = "token="+tok+"&item_id="+item_id+
           "&size="+size+"&color="+color+"&qut="+newValue+"&type="+type;
-      print(data);
+
+
+      try{
+        if (this.mounted) {
+          setState(() {
+            progres = true;
+          });
+        }
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          http.Response response =
+          await http.get(Config.url+"add_carts_cart?"+data);
+
+
+          if (response.statusCode == 200) {
+            var $res =  json.decode(response.body);
+            if ($res["state"]=="1"){
+              if (this.mounted) {
+                setState(() {
+                  _load = true;
+                  total = 0.00;
+                  get_carts();
+                });
+              }
+
+              Fluttertoast.showToast(
+                msg: ' تمت العملية بنجاح ',
+                backgroundColor: Theme.of(context).textTheme.headline6.color,
+                textColor: Theme.of(context).appBarTheme.color,
+              );
+            }
+            else if ($res["state"]=="4"){
+              if (this.mounted) {
+                setState(() {
+                  map[id] = qut;
+                  print(qut);
+                });
+              }
+              Fluttertoast.showToast(
+                msg: '${$res["msg"]}',
+                backgroundColor: Theme.of(context).textTheme.headline6.color,
+                textColor: Theme.of(context).appBarTheme.color,
+              );
+            }
+            else{
+              if (this.mounted) {
+                setState(() {
+                  map[id] = qut;
+                });
+              }
+              Fluttertoast.showToast(
+                msg: '${$res["msg"]}',
+                backgroundColor: Theme.of(context).textTheme.headline6.color,
+                textColor: Theme.of(context).appBarTheme.color,
+              );
+            }
+          }
+        }else{
+          Fluttertoast.showToast(
+            msg: 'no internet ',
+            backgroundColor: Theme.of(context).textTheme.headline6.color,
+            textColor: Theme.of(context).appBarTheme.color,
+          );
+        }
+      } on SocketException {
+
+        Fluttertoast.showToast(
+          msg: 'no internet ',
+          backgroundColor: Theme.of(context).textTheme.headline6.color,
+          textColor: Theme.of(context).appBarTheme.color,
+        );
+      }
+
+
+
+
+
+    }else{
+      Fluttertoast.showToast(
+        msg: 'خطأ غير متوقع اغلق التطبيق ثم اعد فتحة من البداية',
+        backgroundColor: Theme.of(context).textTheme.headline6.color,
+        textColor: Theme.of(context).appBarTheme.color,
+      );
+    }
+    if (this.mounted) {
+      setState(() {
+        _load = false;
+        progres = false;
+      });
+    }
+    //print(map);
+  }
+  add_to_cart2(item_id,color,size,qut,id,newValue,type) async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var tok = localStorage.getString('token');
+    if (tok != null){
+
+
+      var data = "token="+tok+"&item_id="+item_id+
+          "&qut="+newValue+"&type="+type;
+
 
       try{
         if (this.mounted) {
@@ -714,7 +814,7 @@ class _MyCartState extends State<MyCart> {
                                             crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              Text(
+                                              item["color"] !=null ?Text(
                                                 '${item["color"]}',
                                                 style: TextStyle(
                                                   color: Theme.of(context)
@@ -724,7 +824,7 @@ class _MyCartState extends State<MyCart> {
                                                   fontSize:  width/25,
                                                   fontWeight: FontWeight.bold,
                                                 ),
-                                              ),
+                                              ):Text(" "),
                                               SizedBox(
                                                 height: 7.0,
                                               ),
@@ -734,7 +834,7 @@ class _MyCartState extends State<MyCart> {
                                                 crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                                 children: <Widget>[
-                                                  item["size"] != ""?
+                                                    item["size"] !=null ?
                                                   Text(
                                                     'المقاس :',
                                                     style: TextStyle(
@@ -748,6 +848,7 @@ class _MyCartState extends State<MyCart> {
                                                   SizedBox(
                                                     width: 10.0,
                                                   ),
+                                                  item["size"] !=null ?
                                                   Text(
                                                     '${item["size"]}',
                                                     style: TextStyle(
@@ -757,7 +858,7 @@ class _MyCartState extends State<MyCart> {
                                                           .color,
                                                       fontSize:  width/25,
                                                     ),
-                                                  ),
+                                                  ):Text(" "),
                                                 ],
                                               ),
                                               SizedBox(
@@ -800,8 +901,13 @@ class _MyCartState extends State<MyCart> {
 
                                               onChanged: ( newValue) {
                                                 print((item["item"]["type"]));
+                                                  if(item["item"]["type"]==2){
+                                                    add_to_cart2(item["item"]["id"].toString(),item["color"],item["size"],item["qut"].toString(),item["id"].toString(),newValue,item["type"].toString());
 
-                                                add_to_cart(item["item"]["id"].toString(),item["color"],item["size"],item["qut"].toString(),item["id"].toString(),newValue,item["type"].toString());
+                                                  }else{
+                                                    add_to_cart(item["item"]["id"].toString(),item["color"],item["size"],item["qut"].toString(),item["id"].toString(),newValue,item["type"].toString());
+
+                                                  }
 
 
                                               },

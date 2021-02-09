@@ -169,6 +169,8 @@ class _LoginPageState extends State<LoginPage> {
                             BorderRadius.all(Radius.circular(20.0)),
                           ),
                           child: TextField(
+                            keyboardType: TextInputType.number,
+
                             controller: _phoneControl,
                             decoration: InputDecoration(
                               hintText: AppLocalizations.of(context)

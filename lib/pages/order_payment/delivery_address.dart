@@ -37,6 +37,7 @@ double  balance = 0.0;
     var my_address = localStorage.getString('address');
     var my_price = localStorage.getString('price');
     if(d != null){
+
       my_phone =  jsonDecode(d)["phone"]??" ";
       name =  jsonDecode(d)["name"]??" ";
     }
@@ -44,14 +45,15 @@ double  balance = 0.0;
 
     print(names);
     setState(() {
-      login = localStorage.getString('login');
+      _phonecontroller.text = my_phone;
+      _namecontroller.text = name;
+      login =  localStorage.getString('login');
       price =  double.parse(my_price);
       govern = my_govern;
       _citycontroller.text = my_city;
       _addresscontroller.text = my_address;
 
-      _phonecontroller.text = my_phone;
-      _namecontroller.text = name;
+
       if(names.contains(my_govern)){
         _currentSelectedValue = my_govern;
       }
@@ -150,6 +152,7 @@ double  balance = 0.0;
   }
 
   go_pay(){
+    print("_namecontroller.text");
     if(_currentSelectedValue=="" || _citycontroller.text ==""   || _addresscontroller.text==""  || _namecontroller.text==""  || _phonecontroller.text==""  )
     {
 
@@ -160,6 +163,7 @@ double  balance = 0.0;
       );
       return false ;
     }else{
+
       return true ;
 
 
@@ -232,7 +236,7 @@ double  balance = 0.0;
                   SizedBox(
                     height: 18.0,
                   ),
-                  login !="2"?
+                  login !="2"?////////////////////////////////////////////////////////////////////////////////////////////////////
                   Column(
                     children: [
                       Container(
@@ -267,7 +271,7 @@ double  balance = 0.0;
                         ),
                         child: TextField(
                           controller: _phonecontroller,
-
+                          keyboardType: TextInputType.number,
                           decoration: new InputDecoration(
                               contentPadding: const EdgeInsets.all(12.0),
                               border: OutlineInputBorder(
@@ -401,6 +405,7 @@ double  balance = 0.0;
                       onTap: () {
 
                         if(go_pay()){
+
                           Navigator.push(
                               context,
                               PageTransition(

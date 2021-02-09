@@ -204,6 +204,8 @@ class _ActivationState extends State<Activation> {
                         ),
 
                         child: TextField(
+                          keyboardType: TextInputType.number,
+
                           controller: _codeControl,
                           decoration: InputDecoration(
                             hintText: "كود التفعيل",

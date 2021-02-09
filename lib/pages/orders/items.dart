@@ -220,6 +220,7 @@ class _ItemsState extends State<Items> {
                                           crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                           children: <Widget>[
+                                            item["color"] !=null ?
                                             Text(
                                               '${item["color"]}',
                                               style: TextStyle(
@@ -230,7 +231,7 @@ class _ItemsState extends State<Items> {
                                                 fontSize: width/26,
                                                 fontWeight: FontWeight.bold,
                                               ),
-                                            ),
+                                            ):Text(" "),
                                             SizedBox(
                                               height: 7.0,
                                             ),
@@ -240,7 +241,7 @@ class _ItemsState extends State<Items> {
                                               crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                               children: <Widget>[
-                                                item["size"] !=""?
+                                                item["size"] !=null?
                                                 Text(
                                                   'المقاس :',
                                                   style: TextStyle(
@@ -253,7 +254,7 @@ class _ItemsState extends State<Items> {
                                                 ):Text(" "),
                                                 SizedBox(
                                                   width: 10.0,
-                                                ),
+                                                ),  item["size"] !=null ?
                                                 Text(
                                                   '${item["size"]}',
                                                   style: TextStyle(
@@ -263,7 +264,7 @@ class _ItemsState extends State<Items> {
                                                         .color,
                                                     fontSize: 15.0,
                                                   ),
-                                                ),
+                                                ):Text(" "),
                                               ],
                                             ),
                                             SizedBox(

@@ -171,18 +171,26 @@ class _ActivationState extends State<Activation> {
 
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.pinkAccent,
+        title: Text(
+          "كود تغيير رقم الهاتف",
+          style: TextStyle(
+            fontFamily: 'Jost',
+            color: Colors.white,
+            fontSize: width/24,
+            letterSpacing: 1.7,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        titleSpacing: 0.0,
+      ),
       body: ListView(
         children: <Widget>[
           Center(
             child: Column(
               children: <Widget>[
-                SizedBox(
-                  height: 30.0,
-                ),
-                Image.asset(
-                  'assets/round_logo.png',
-                  height: 80.0,
-                ),
+
                 SizedBox(
                   height: 25.0,
                 ),
@@ -219,9 +227,11 @@ class _ActivationState extends State<Activation> {
                         ),
 
                         child: TextField(
+                          keyboardType: TextInputType.number,
+
                           controller: _codeControl,
                           decoration: InputDecoration(
-                            hintText: "كود التفعيل",
+                            hintText: "كود التغيير",
                             prefixIcon: Icon(Icons.code),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20)),
