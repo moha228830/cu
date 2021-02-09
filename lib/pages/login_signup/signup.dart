@@ -352,7 +352,7 @@ class _SignupPageState extends State<SignupPage> {
                                           code = "002";
                                         }
                                         else if(newValue=="الامارات"){
-                                          code = "975";
+                                          code = "971";
                                         }
 
                                         state.didChange(newValue);
