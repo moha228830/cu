@@ -5,12 +5,16 @@ import 'package:my_store/pages/Category/new_item.dart';
 import 'package:my_store/pages/Category/sub_category.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:my_store/pages/product_list_view/test.dart';
+
 import 'dart:async' show Future, Timer;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:my_store/functions/passDataToProducts.dart';
 import 'package:my_store/pages/product/product.dart';
 import 'package:my_store/pages/product_list_view/product_class.dart';
 import 'package:my_store/pages/product_list_view/product_list_view.dart';
+import 'package:my_store/pages/product_list_view/product_list_view2.dart';
+
 import 'package:shimmer/shimmer.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -34,6 +38,7 @@ List selected = [] ;
   int id ;
 
 get_select_first(){
+  print(widget.data[0]["category_id"]);
   widget.data.forEach((value) {
     if (selected.length == 0) {
       selected.add(1);
@@ -229,8 +234,7 @@ get_select(i){
 
 
 
-              Divider(color:Theme.of(context).textTheme.headline6.color,),
-              // Item Discount Start
+              Divider(color:Colors.grey,),              // Item Discount Start
               ListTile(
                 title: InkWell(
                   onTap: () {
@@ -246,11 +250,11 @@ get_select(i){
                         ,fontWeight: FontWeight.bold),),
                 ),
               ),
-              Divider(color:Theme.of(context).textTheme.headline6.color,),
+              Divider(color:Colors.grey,),
               ListView.separated(
                 shrinkWrap: true,
                 itemCount: subsub == null?0: subsub.length,
-                separatorBuilder: (BuildContext context, int index) => Divider(color:Theme.of(context).textTheme.headline6.color,),
+                separatorBuilder: (BuildContext context, int index) => Divider(color:Colors.grey,),
                 itemBuilder: (BuildContext context, int index) {
                   Map cat =  subsub[index];
 
@@ -272,7 +276,25 @@ get_select(i){
                 },
               ),
 
-              Divider(color: Theme.of(context).textTheme.headline6.color,),
+              Divider(color:Colors.grey,),
+              Card(
+                color: Colors.pinkAccent,
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.fromLTRB(10, 30, 10, 20),
+                  child: Text(" كل منتجات  ${categoryName}", style: TextStyle(
+                    fontFamily: 'Jost',
+                    fontWeight: FontWeight.bold,
+                    fontSize: width/20,
+                    color: Colors.white,
+                  ),),
+                ),
+              ),
+              Card(
+                child: Container(
+                  width: width-10,
+                    child:GetProducts2(widget.data[0]["category_id"], "all")),
+              ),
             ],
           ),
         ),
