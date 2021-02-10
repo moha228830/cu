@@ -81,9 +81,9 @@ class _GetProducts2State extends State<GetProducts2> {
         physics: NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 1.0,
-          mainAxisSpacing: 1.0,
-          childAspectRatio: (MediaQuery.of(context).size.width/1.3 / MediaQuery.of(context).size.width),
+          crossAxisSpacing: 4.0,
+          mainAxisSpacing: 4.0,
+          childAspectRatio: (MediaQuery.of(context).size.width/1.32 / MediaQuery.of(context).size.width),
 
         ),
         pagingController: _pagingController,

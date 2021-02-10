@@ -79,8 +79,8 @@ int num = 0;
       PagedGridView<int, Product>(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 1.0,
-          mainAxisSpacing: 1.0,
+          crossAxisSpacing: 5.0,
+          mainAxisSpacing: 5.0,
           childAspectRatio: (MediaQuery.of(context).size.width/1.3 / MediaQuery.of(context).size.width),
 
         ),
