@@ -74,14 +74,25 @@ class _ProductPage2State extends State<ProductPage2> {
       }else{
 
 
-        var data = "token="+tok+"&item_id="+widget.data.id.toString()+
-            "&qut="+dropdownValue3+"&type="+widget.data.type.toString();
-print(data);
+
         try{
           final result = await InternetAddress.lookup('google.com');
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-            http.Response response =
-            await http.get(Config.url+"add_carts?"+data);
+            http.Response response  =
+            await http.post(Config.url+"add_carts", headers: {
+              "Accept": "application/json"
+            }, body: {
+              "token":tok,
+              "item_id": widget.data.id.toString(),
+
+
+              "qut": dropdownValue3,
+              "type":widget.data.type.toString(),
+
+
+
+
+            });
 
 
             if (response.statusCode == 200) {

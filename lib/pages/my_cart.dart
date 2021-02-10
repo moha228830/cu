@@ -222,8 +222,8 @@ class _MyCartState extends State<MyCart> {
     if (tok != null){
 
 
-      var data = "token="+tok+"&item_id="+item_id+
-          "&size="+size+"&color="+color+"&qut="+newValue+"&type="+type;
+     // var data = "token="+tok+"&item_id="+item_id+
+        //  "&size="+size+"&color="+color+"&qut="+newValue+"&type="+type;
 
 
       try{
@@ -234,8 +234,23 @@ class _MyCartState extends State<MyCart> {
         }
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          http.Response response =
-          await http.get(Config.url+"add_carts_cart?"+data);
+          http.Response response  =
+          await http.post(Config.url+"add_carts", headers: {
+            "Accept": "application/json"
+          }, body: {
+            "token":tok,
+            "item_id": item_id,
+            "size": size,
+
+            "color": color,
+
+            "qut": newValue,
+            "type":type,
+
+
+
+
+          });
 
 
           if (response.statusCode == 200) {
@@ -334,8 +349,20 @@ class _MyCartState extends State<MyCart> {
         }
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          http.Response response =
-          await http.get(Config.url+"add_carts_cart?"+data);
+          http.Response response  =
+          await http.post(Config.url+"add_carts", headers: {
+            "Accept": "application/json"
+          }, body: {
+            "token":tok,
+            "item_id": item_id,
+
+            "qut": newValue,
+            "type":type,
+
+
+
+
+          });
 
 
           if (response.statusCode == 200) {
