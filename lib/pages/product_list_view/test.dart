@@ -57,8 +57,7 @@ int num = 0;
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final newItems = await Provider.of<PostDataProvider>(context)
-          .getPostData(http.Client(), widget.id, widget.type,_pageSize,pageKey);
+      final newItems = await fetchProducts(http.Client(), widget.id, widget.type,_pageSize,pageKey);
       setState(() {
         num = newItems.length;
       });
