@@ -383,7 +383,7 @@ class _MyCartState extends State<MyCart> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Home()),
+                    MaterialPageRoute(builder: (context) => Home(0)),
                   );
                 },
                 child: Container(

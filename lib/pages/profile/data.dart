@@ -306,7 +306,7 @@ class _DataState extends State<Data> {
                               context,
                               PageTransition(
                                   type: PageTransitionType.rightToLeft,
-                                  child: Home()));
+                                  child: Home(0)));
                         },
                         child: Text(
                           "الرئيسية",

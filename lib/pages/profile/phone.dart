@@ -378,7 +378,7 @@ class _PhoneState extends State<Phone> {
                               context,
                               PageTransition(
                                   type: PageTransitionType.rightToLeft,
-                                  child: Home()));
+                                  child: Home(0)));
                         },
                         child: Text(
                           "الرئيسية",

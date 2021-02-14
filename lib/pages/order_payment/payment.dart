@@ -497,7 +497,7 @@ get_net(){
         setState(() {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Home()),
+            MaterialPageRoute(builder: (context) => Home(1)),
           );
         });
       }

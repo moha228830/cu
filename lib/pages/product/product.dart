@@ -152,6 +152,11 @@ class _ProductPageState extends State<ProductPage> {
                    backgroundColor: Theme.of(context).textTheme.headline6.color,
                    textColor: Theme.of(context).appBarTheme.color,
                  );
+                 Navigator.push(
+                     context,
+                     PageTransition(
+                         type: PageTransitionType.rightToLeft,
+                         child: Home(2)));
                }
                else if ($res["state"]=="4"){
                  Fluttertoast.showToast(
@@ -390,10 +395,29 @@ class _ProductPageState extends State<ProductPage> {
                             width: 8.0,
                           ),
 
+
                         ],
                       ),
                     ),)
                   ],
+                ),
+                SizedBox(
+                  height: 5.0,
+                ),
+                SingleChildScrollView(
+                  child: Row(
+                    children: [
+                      Icon(Icons.arrow_forward_ios),
+                      Flexible(
+                          child: new Text(
+                            '${widget.data.description} ', textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                                fontSize: width/25,
+                                color: Theme.of(context).textTheme.headline6.color),
+                          ),)
+
+                    ],
+                  ),
                 ),
                 // Price & Offer Row Ends Here
 
@@ -548,45 +572,7 @@ class _ProductPageState extends State<ProductPage> {
           // Product Details Ends Here
 
           // Product Description Start Here
-          Container(
-            padding: EdgeInsets.all(5.0),
-            margin: EdgeInsets.only(top: 5.0),
-            color: Theme.of(context).appBarTheme.color,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
 
-
-
-                SizedBox(height: 5.0),
-
-                InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          AppLocalizations.of(context)
-                              .translate('productPage', 'productDescriptionString'),
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: width/25,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    _productDescriptionModalBottomSheet(context,widget.data.description);
-                  },
-                ),
-                Divider(
-                  height: 1.0,
-                ),
-              ],
-            ),
-          ),
 
 
 
@@ -607,7 +593,7 @@ class _ProductPageState extends State<ProductPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               ButtonTheme(
-                minWidth: ((width) / 2),
+                minWidth: ((width) ),
                 height: height/10,
                 child: RaisedButton(
                   child:is_laad? Container(
@@ -639,32 +625,7 @@ class _ProductPageState extends State<ProductPage> {
                   color: Colors.pinkAccent,
                 ),
               ),
-              ButtonTheme(
-                // minWidth: ((width - 60.0) / 2),
-                minWidth: ((width) / 2),
-                height: height/10,
-                child: RaisedButton(
-                  child: Text(
-                  //  AppLocalizations.of(context).translate('productPage', 'buyNowString'),
-                    " الصفحة الرئيسية",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: (myLocale.languageCode == 'id' || myLocale.languageCode == 'ru') ? width/25 : width/25,
-                      fontFamily: 'Jost',
-                      letterSpacing: 0.7,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            child: Home()));
-                  },
-                  color: Colors.deepPurpleAccent,
-                ),
-              ),
+
             ],
           ),
         ),

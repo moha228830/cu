@@ -235,7 +235,7 @@ class _MyCartState extends State<MyCart> {
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           http.Response response  =
-          await http.post(Config.url+"add_carts", headers: {
+          await http.post(Config.url+"add_carts_cart", headers: {
             "Accept": "application/json"
           }, body: {
             "token":tok,
@@ -350,7 +350,7 @@ class _MyCartState extends State<MyCart> {
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           http.Response response  =
-          await http.post(Config.url+"add_carts", headers: {
+          await http.post(Config.url+"add_carts_cart", headers: {
             "Accept": "application/json"
           }, body: {
             "token":tok,
@@ -440,6 +440,7 @@ class _MyCartState extends State<MyCart> {
         _load = false;
         progres = false;
       });
+      print(newValue);
     }
     //print(map);
   }
@@ -598,7 +599,7 @@ class _MyCartState extends State<MyCart> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Home()),
+                      MaterialPageRoute(builder: (context) => Home(0)),
                     );
                   },
                   child: Container(

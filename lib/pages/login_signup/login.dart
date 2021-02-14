@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
           return Navigator.of(context).push(
             MaterialPageRoute(
               builder: (BuildContext context) {
-                return Home();
+                return Home(0);
               },
             ),
           );
@@ -297,7 +297,7 @@ class _LoginPageState extends State<LoginPage> {
                                 context,
                                 PageTransition(
                                     type: PageTransitionType.rightToLeft,
-                                    child: Home()));
+                                    child: Home(0)));
                           },
                           child: Text(
                            "الرئيسية",

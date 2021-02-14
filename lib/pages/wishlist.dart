@@ -76,7 +76,7 @@ class _WishListState extends State<WishList> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Home()),
+                      MaterialPageRoute(builder: (context) => Home(0)),
                     );
                   },
                   child: Container(

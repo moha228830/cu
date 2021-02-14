@@ -234,51 +234,149 @@ get_select(i){
 
 
 
-              Divider(color:Colors.grey,),              // Item Discount Start
-              ListTile(
-                title: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProductListView(id,"sub"),
+              Divider(color:Colors.grey,),
+              SizedBox(height: 10.0),
+
+// Item Discount Start
+              // Sub Category Start
+              Center(
+                child: Container(
+                  width: width,
+                  height: height/13,
+                  color: Theme.of(context).appBarTheme.color,
+                  child:
+                  ListView(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    children: <Widget>[
+
+
+                      SizedBox(width: 10.0),
+
+
+                      SingleChildScrollView(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductListView(id,"sub"),
+                              ),
+                            );
+                          },
+                          child: Center(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 2.0,
+                                    spreadRadius: 1.0,
+                                    color: Colors.grey,
+                                  ),
+                                ],
+                              ),
+                              padding: EdgeInsets.all(10.0),
+                              margin: EdgeInsets.fromLTRB(5.0,0,5,0),
+
+
+                              child: Text(
+                                  " كل عناصر  ${cat_name}  ",
+                                  style: TextStyle(
+                                      color:Colors.black,     //Theme.of(context).textTheme.headline6.color,
+                                      fontSize: width/24,
+
+                                      fontWeight: FontWeight.bold
+                                  )),
+                            ),
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                  child: Text(' كل عناصر ${cat_name}',
-                    style: TextStyle(color: Theme.of(context).textTheme.headline6.color,fontSize: width/22
-                        ,fontWeight: FontWeight.bold),),
+
+
+
+
+
+
+                      ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: subsub == null?0: subsub.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          Map cat =  subsub[index];
+
+                          return
+
+                            SingleChildScrollView(
+                              child: Row(
+                                children: [
+                                  SizedBox(width: 10.0),
+
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ProductListView(cat["id"],"subsub"),
+                                        ),
+                                      );
+                                    },
+                                    child: Center(
+                                      child: Container(
+
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,                                       borderRadius: BorderRadius.circular(10.0),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              blurRadius: 2.0,
+                                              spreadRadius: 1.0,
+                                              color: Colors.grey,
+                                            ),
+                                          ],
+                                        ),
+                                        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                        margin: EdgeInsets.fromLTRB(5.0,0,5,0),
+
+
+                                        child:  Text("${cat["name"]}",
+                                            style: TextStyle(
+                                                color:Colors.black,     //Theme.of(context).textTheme.headline6.color,
+                                                fontSize: width/24,
+
+                                                fontWeight: FontWeight.bold
+                                            )),
+                                      ),
+                                    ),
+                                  ),
+
+
+
+                                ],
+                              ),
+                            )
+
+
+
+
+                          ;
+                        },
+                      ),
+
+                      SizedBox(width: 10.0),
+                    ],
+                  ),
                 ),
               ),
-              Divider(color:Colors.grey,),
-              ListView.separated(
-                shrinkWrap: true,
-                itemCount: subsub == null?0: subsub.length,
-                separatorBuilder: (BuildContext context, int index) => Divider(color:Colors.grey,),
-                itemBuilder: (BuildContext context, int index) {
-                  Map cat =  subsub[index];
+              // Sub Category End
+              SizedBox(width: 10.0),
 
-                  return ListTile(
-                    title: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductListView(cat["id"],"subsub"),
-                          ),
-                        );
-                      },
-                      child: Text('${cat["name"] }',
-                      style: TextStyle(color: Theme.of(context).textTheme.headline6.color,fontSize: width/22
-                      ,fontWeight: FontWeight.bold),),
-                    ),
-                  );
-                },
+              Divider(color:Colors.grey,),
+              SizedBox(
+                height: 10.0,
               ),
-
-              Divider(color:Colors.grey,),
               Card(
-                color: Colors.pinkAccent,
+                color: Colors.blueGrey,
                 child: Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.fromLTRB(10, 30, 10, 20),

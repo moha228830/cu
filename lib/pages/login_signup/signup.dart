@@ -494,7 +494,7 @@ class _SignupPageState extends State<SignupPage> {
                                 context,
                                 PageTransition(
                                     type: PageTransitionType.rightToLeft,
-                                    child: Home()));
+                                    child: Home(0)));
                           },
                           child: Text(
                             "الرئيسية",

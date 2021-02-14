@@ -48,7 +48,7 @@ class _MyAccountState extends State<MyAccount> {
     Navigator.push(
         context,
         PageTransition(
-            type: PageTransitionType.rightToLeft, child: Home()));
+            type: PageTransitionType.rightToLeft, child: Home(0)));
 
 
   }
@@ -305,9 +305,9 @@ class _MyAccountState extends State<MyAccount> {
                     ),
                     Switch(
                       value:
-                          Provider.of<AppStateNotifier>(context).isDarkModeOn,
+                          Provider.of<AppStateNotifier>(context,listen: false).isDarkModeOn,
                       onChanged: (boolVal) {
-                        Provider.of<AppStateNotifier>(context)
+                        Provider.of<AppStateNotifier>(context,listen: false)
                             .updateTheme(boolVal);
                       },
                       activeColor: Theme.of(context).primaryColor,

@@ -368,7 +368,7 @@ class _OrderState extends State<Order> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Home()),
+                  MaterialPageRoute(builder: (context) => Home(0)),
                 );
               },
               child: Container(

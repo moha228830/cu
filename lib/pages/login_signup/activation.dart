@@ -87,7 +87,7 @@ class _ActivationState extends State<Activation> {
             return Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return Home();
+                  return Home(0);
                 },
               ),
             );
@@ -270,7 +270,7 @@ class _ActivationState extends State<Activation> {
                               context,
                               PageTransition(
                                   type: PageTransitionType.rightToLeft,
-                                  child: Home(
+                                  child: Home(0
                                   )));
                         },
                         child: Text("الرئيسية",

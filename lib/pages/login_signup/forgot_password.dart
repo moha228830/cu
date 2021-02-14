@@ -263,7 +263,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               context,
                               PageTransition(
                                   type: PageTransitionType.rightToLeft,
-                                  child: Home(
+                                  child: Home(0
                                   )));
                         },
                         child: Text("الرئيسية",

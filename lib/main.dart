@@ -109,14 +109,14 @@ class _MyHomePageState extends State<MyHomePage> {
           Duration(seconds: 4),
           () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => Home(0)),
               ));
     } else {
       Timer(
           Duration(seconds: 4),
           () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => Home(0)),
               ));
     }
   }

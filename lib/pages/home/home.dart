@@ -24,6 +24,8 @@ import 'package:my_store/pages/search.dart';
 import 'package:my_store/pages/wishlist.dart';
 
 class Home extends StatefulWidget {
+  int index ;
+  Home(this.index);
   @override
   _HomeState createState() => _HomeState();
 }
@@ -37,7 +39,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    currentIndex = 0;
+    currentIndex = widget.index??0;
     set_token_not_register();
 
   }
