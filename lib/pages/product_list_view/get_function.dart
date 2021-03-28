@@ -27,6 +27,7 @@ List<Product> parseProducts(responseBody) {
 
 
 Future  cart_num(token) async {
+
   final response = await http
       .get(Config.url + 'cart_num?token='+token) ;
 
@@ -52,6 +53,11 @@ class PostDataProvider with ChangeNotifier {
     loading = false;
     return post;
 
+    notifyListeners();
+  }
+
+  set_cat_after_api(val){
+    num = val;
     notifyListeners();
   }
 

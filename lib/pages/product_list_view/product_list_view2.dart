@@ -1,118 +1,125 @@
+import 'package:badges/badges.dart';
+import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:my_store/functions/localizations.dart';
+import 'package:my_store/pages/home/home.dart';
+import 'package:my_store/pages/product_list_view/filter.dart';
+import 'package:my_store/pages/product_list_view/filter_row.dart';
+import 'package:my_store/pages/product_list_view/product_class.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:my_store/config.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:my_store/pages/product_list_view/product_class.dart';
-
-import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
+import 'package:my_store/providers/homeProvider.dart';
+import 'package:select_dialog/select_dialog.dart';
 import 'dart:convert';
 import 'dart:async' show Future, Timer;
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:sizer/sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:my_store/pages/product/product.dart';
-import 'package:my_store/pages/product/product2.dart';
-
 import 'package:my_store/pages/product_list_view/filter_row.dart';
 import 'package:my_store/functions/passDataToProducts.dart';
+import 'package:my_store/providers/productsProvider.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:my_store/pages/product_list_view/product_class.dart';
+import 'package:my_store/pages/product_list_view/se.dart';
 import 'package:my_store/pages/product_list_view/get_function.dart';
 import 'package:my_store/pages/product_list_view/one_product.dart';
 
 import 'dart:async';
 import 'package:http/http.dart' as http;
-class GetProducts2 extends StatefulWidget {
-  int id;
-  String type;
-  GetProducts2(this.id, this.type);
+import 'package:my_store/config.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:my_store/pages/product_list_view/product_class.dart';
+import 'package:provider/provider.dart';
+// My Own Imports
+import 'package:my_store/pages/product_list_view/test.dart';
+import 'package:my_store/pages/search.dart';
+
+class ProductListView2 extends StatefulWidget {
+  int id ;
+  String type ;
+  ProductListView2(this.id ,this.type);
   @override
-  _GetProducts2State createState() => _GetProducts2State();
+  _ProductListView2State createState() => _ProductListView2State();
 }
 
-class _GetProducts2State extends State<GetProducts2> {
-  bool loading = true, all = true, men = false, women = false;
-  static const _pageSize = 6;
-  int num = 0;
-  final PagingController<int, Product> _pagingController =
-  PagingController(firstPageKey: 0);
-
+class _ProductListView2State extends State<ProductListView2> {
   @override
-  void initState() {
-    Timer(const Duration(seconds: 2), () {
-      if (this.mounted) {
-        setState(() {
-          loading = false;
-        });
-      }
-    });
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
-    super.initState();
-  }
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.pinkAccent,
 
-  Future<void> _fetchPage(int pageKey) async {
-    try {
-      final newItems = await fetchProducts(http.Client(), widget.id, widget.type,_pageSize,pageKey);
-      setState(() {
-        num = newItems.length;
-      });
-      final isLastPage = newItems.length < _pageSize;
-      if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
-      } else {
-        final nextPageKey = pageKey + newItems.length;
-        _pagingController.appendPage(newItems, nextPageKey);
-      }
-    } catch (error) {
-      _pagingController.error = error;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) =>
-      PagedGridView<int, Product>(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 4.0,
-          mainAxisSpacing: 4.0,
-          childAspectRatio: (MediaQuery.of(context).size.width/1.32 / MediaQuery.of(context).size.width),
-
-        ),
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<Product>(
-          itemBuilder: (context, item, index) =>
-
-          (loading)
-              ? Container(
-
-            margin: EdgeInsets.only(top: 10.0),
-            child: Shimmer.fromColors(
-              baseColor: Colors.grey[300],
-              highlightColor: Colors.white,
-              child: ProductsGridView(products: item,num:num),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              AppLocalizations.of(context)
+                  .translate('productListViewPage', 'productString'),
+              style: TextStyle(
+                  fontFamily: 'Jost',
+                  fontWeight: FontWeight.bold,
+                  fontSize: width/25,
+                  letterSpacing: 1.7,
+                  color:Colors.white
+              ),
             ),
-          )
-              : Container(
-            height: MediaQuery.of(context).size.height/2.7,
-
-            child: ProductsGridView(products: item,num:num),
-          ),
-
-
+            // Text(
+            //   '37024 ${AppLocalizations.of(context).translate('productListViewPage', 'itemsString')}',
+            // style: TextStyle(
+            // fontFamily: 'Jost',
+            // fontWeight: FontWeight.bold,
+            // fontSize: 12.0,
+            // letterSpacing: 1.5,
+            // color: Colors.white,
+            //  ),
+            // )
+          ],
         ),
-      );
+        titleSpacing: 0.0,
+        actions: <Widget>[
+          // IconButton(
+          //  icon: Icon(
+          //  Icons.search,
+          //  ),
+          //    onPressed: () {
 
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
+          //   }),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 1.0.h, horizontal: 1.0.h),
+            child: IconButton(
+              icon: Badge(
+                badgeContent: Text(
+                  '${Provider.of<PostDataProvider>(context, listen: true).num??0}',
+                  style: TextStyle(color: Colors.white),
+                ),
+                badgeColor: Colors.grey,
+                child: Icon(
+                  Icons.local_grocery_store_sharp,color: Colors.white,size: 20.0.sp,
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        curve: Curves.linear,
+                        duration: Duration(milliseconds: 900),
+
+                        type: PageTransitionType.bottomToTop,
+                        child:Home(2)));
+              },
+            ),
+          ),
+        ],
+      ),
+      body: Container(
+
+          child: GetProducts(widget.id, widget.type)),
+    );
   }
-
 }

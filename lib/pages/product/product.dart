@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:my_store/functions/localizations.dart';
 import 'package:my_store/pages/home/home.dart';
-import 'package:my_store/pages/order_payment/delivery_address.dart';
-import 'package:my_store/pages/product/product_details.dart';
+import 'package:my_store/pages/product/releted.dart';
 import 'package:my_store/pages/product_list_view/get_function.dart';
+import 'package:my_store/providers/homeProvider.dart';
+import 'package:my_store/providers/productsProvider.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+import 'package:select_dialog/select_dialog.dart';
+import 'package:sizer/sizer.dart';
+import '../../helper.dart';
 
 import 'package:my_store/pages/product_list_view/product_class.dart';
 import 'package:my_store/pages/search.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:my_store/functions/passDataToProducts.dart';
+import 'package:my_store/pages/product/previw.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -42,15 +49,56 @@ class _ProductPageState extends State<ProductPage> {
 
   List sizes = [];
   List colors = ["اللون"];
-  List qut =["الكمية","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"];
   List colors_map = [];
   String dropdownValue = 'المقاس';
   String dropdownValue2 = 'اللون';
-  String dropdownValue3 = 'الكمية';
+   int qut = 1;
   Map map = {};
+  var total ;
+
+  set_fav(context)async{
+    SharedPreferences localStorage =
+    await SharedPreferences.getInstance();
+    localStorage.setStringList('favorite',Provider.of<HomeProvider>(context, listen: false).favorite);
+
+
+  }
+
+  Future  add_favorite(id) async {
+var user =Provider.of<HomeProvider>(context, listen: false).user_id;
+var token =Provider.of<HomeProvider>(context, listen: false).token;
+
+    final response = await http
+        .get(Config.url + 'add_favorite?token='+token + "&user_id="+user+"&id="+id) ;
+      return false ;
+    // Use the compute function to run parseProducts in a separate isolate.
+   // var res=jsonDecode(response.body);
+   // if( res["state"]=="1"){
+     // return res["data"];
+    //}
+   // return "0";
+
+  }
+
+  coounter_increment (){
+    setState(() {
+      qut = qut + 1;
+      total = widget.data.overPrice * qut;
+    });
+  }
+
+  coounter_decrement (){
+    setState(() {
+      if(qut>1){
+        qut = qut -  1 ;
+      }
+      total = widget.data.overPrice * qut;
+
+    });
+  }
 
   get_size(){
-    sizes.add("المقاس");
+   // sizes.add("المقاس");
     for (int i = 0; i < widget.data.sizes.length; i++) {
       if(!sizes.contains(widget.data.sizes[i]["name"])) {
         sizes.add(widget.data.sizes[i]["name"]);
@@ -63,7 +111,7 @@ class _ProductPageState extends State<ProductPage> {
   get_color(){
     if (colors_map.length > 0){
       colors = [];
-      colors.add("اللون");
+     // colors.add("اللون");
       for (int i = 0; i < colors_map.length; i++) {
 
      if(!colors.contains(colors_map[i]["name"])){
@@ -88,11 +136,13 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    total = widget.data.overPrice;
+    get_size();
+    print( Provider.of<ProductsProvider>(context, listen: false).releted);
+    add_map();
     super.initState();
 
-    get_size();
-    add_map();
+
   }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,12 +154,10 @@ class _ProductPageState extends State<ProductPage> {
     if (tok != null){
       var user_id = localStorage.getString('user_id')??0;
 
-       if(dropdownValue == "المقاس" || dropdownValue2 == "اللون"  || dropdownValue3 == "الكمية"){
-         Fluttertoast.showToast(
-           msg: 'قم بتحديد المقاس ثم اللون وقم بتحديد الكمية',
-           backgroundColor: Theme.of(context).textTheme.headline6.color,
-           textColor: Theme.of(context).appBarTheme.color,
-         );
+       if(dropdownValue == "المقاس" || dropdownValue2 == "اللون"  || qut == 0){
+         showSimpleNotification(Text("قم بتحديد المقاس ثم اللون  ", style: TextStyle(fontSize: 12.0.sp,fontFamily: "Cairo"),),
+             background: Colors.red);
+
 
        }else{
 
@@ -131,7 +179,7 @@ class _ProductPageState extends State<ProductPage> {
 
                "color": dropdownValue2,
 
-               "qut": dropdownValue3,
+               "qut": qut.toString(),
                "type":widget.data.type.toString(),
 
 
@@ -143,34 +191,56 @@ class _ProductPageState extends State<ProductPage> {
 
 
                var $res =  json.decode(response.body);
-               print($res["state"]);
+              // print($res["state"]);
                if ($res["state"]=="1"){
+               print($res["data"]);
+                 Provider.of<PostDataProvider>(context, listen: false).set_cat_after_api($res["data"]);
+                 Alert(
+                   context: context,
+                   type: AlertType.warning,
+                   style:AlertStyle(titleStyle:TextStyle(fontSize:12.0.sp,fontWeight: FontWeight.bold,fontFamily: "Cairo" ,color: Colors.indigo),
+                     descStyle: TextStyle(fontSize:12.0.sp,fontWeight: FontWeight.bold,fontFamily: "Cairo" ),
+                   ),
+                   title: "نجاح العملية",
+                   desc: "تمت الاضافة الي عربة التسوق بنجاح.",
+                   buttons: [
+                     DialogButton(
+                       child: Text(
+                         "الذهاب للشراء",
+                         style: TextStyle(color: Colors.white, fontSize: 10.0.sp,fontFamily: "Cairo",fontWeight: FontWeight.bold),
+                       ),
+                       onPressed:() {
+                         Navigator.push(
+                             context,
+                             PageTransition(
+                                 type: PageTransitionType.rightToLeft,
+                                 child: Home(2)));
 
+                       },
+                       color: Colors.green,
+                     ),
+                     DialogButton(
+                       child: Text(
+                         "مواصلة التسوق",
+                         style: TextStyle(color: Colors.white, fontSize: 10.0.sp,fontFamily: "Cairo",fontWeight: FontWeight.bold),
+                       ),
+                       onPressed: () => Navigator.pop(context),
+                       color: Colors.red,
+                     ),
 
-                 Fluttertoast.showToast(
-                   msg: '  تمت الاضافة بنجاح الي عربة التسوق ',
-                   backgroundColor: Theme.of(context).textTheme.headline6.color,
-                   textColor: Theme.of(context).appBarTheme.color,
-                 );
-                 Navigator.push(
-                     context,
-                     PageTransition(
-                         type: PageTransitionType.rightToLeft,
-                         child: Home(2)));
+                   ],
+                 ).show();
+
                }
                else if ($res["state"]=="4"){
-                 Fluttertoast.showToast(
-                   msg: $res["msg"],
-                   backgroundColor: Theme.of(context).textTheme.headline6.color,
-                   textColor: Theme.of(context).appBarTheme.color,
-                 );
+                 showSimpleNotification(Text("${$res["msg"]} ", style: TextStyle(fontSize: 12.0.sp,fontFamily: "Cairo"),),
+                     background: Colors.red);
+
                }
                else{
-                 Fluttertoast.showToast(
-                   msg: 'خطأ حاول مرة اخري',
-                   backgroundColor: Theme.of(context).textTheme.headline6.color,
-                   textColor: Theme.of(context).appBarTheme.color,
-                 );
+                 showSimpleNotification(Text("خطأ حاول مرة اخري ", style: TextStyle(fontSize: 12.0.sp,fontFamily: "Cairo"),),
+                     background: Colors.red);
+
                }
              }
            }else{
@@ -222,31 +292,7 @@ class _ProductPageState extends State<ProductPage> {
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: Colors.pinkAccent,
-        title: Text(
-          widget.data.name,
-          style: TextStyle(
-            fontFamily: 'Jost',
-            letterSpacing: 1.0,
-            fontSize: width/25,
-            fontWeight: FontWeight.bold,
-            color: Colors.white
-          ),
-        ),
-        titleSpacing: 0.0,
-       // actions: <Widget>[
-       //   IconButton(
-          //  icon: Icon(
-            //  Icons.search,
-           // ),
-           // onPressed: () {
-            //  Navigator.push(
-                //  context, MaterialPageRoute(builder: (context) => Search()));
-           // },
-         // ),
-        //],
-      ),
+ backgroundColor: Colors.grey[200],
       body: ListView(
         shrinkWrap: true,
         children: <Widget>[
@@ -255,312 +301,519 @@ class _ProductPageState extends State<ProductPage> {
 
 
             children: <Widget>[
-              Container(
-                   width: width,
-                padding: EdgeInsets.only(top: 2.0),
-                color: Theme.of(context).appBarTheme.color,
-                child: SizedBox(
-                  height: (height / 2.0),
-                    width: width,
+              InkWell(
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          curve: Curves.linear,
+                          duration: Duration(milliseconds: 700),
+
+                          type: PageTransitionType.bottomToTop,
+                          child:PreviwPage(widget.data.images,)));
+
+                },
+                child: Container(
+                     width: width,
+                  padding: EdgeInsets.only(top: 2.0),
+                  color: Theme.of(context).appBarTheme.color,
+                  child: SizedBox(
+                    height: (58.0.h),
+                      width: width,
 
 
 
-                    child: Carousel(
+                      child: Carousel(
 
-                      images:   widget.data.images.map((title) => NetworkImage(title["img_full_path"])).toList(),
+                        images:   widget.data.images.map((title) => NetworkImage(title["img_full_path"])).toList(),
 
 
 
-                      dotSize: 5.0,
+                        dotSize: 5.0,
 
-                      dotSpacing: 15.0,
-                      dotColor: Colors.grey,
-                      indicatorBgPadding: 5.0,
-                      dotBgColor: Colors.purple.withOpacity(0.0),
-                      boxFit: BoxFit.fitHeight,
-                      animationCurve: Curves.decelerate,
-                      dotIncreasedColor: Colors.red,
+                        dotSpacing: 15.0,
+                        dotColor: Colors.grey,
+                        indicatorBgPadding: 5.0,
+                        dotBgColor: Colors.purple.withOpacity(0.0),
+                        boxFit: BoxFit.fitHeight,
+                        animationCurve: Curves.decelerate,
+                        dotIncreasedColor: Colors.red,
 
-                    ),
+                      ),
 
+                  ),
                 ),
               ),
-            //  Positioned(
-             //   top: 20.0,
-             //   right: 20.0,
-               // child: FloatingActionButton(
-                //  backgroundColor: Theme.of(context).appBarTheme.color,
-                //  elevation: 3.0,
-                 // onPressed: () {
-                  //  if (this.mounted) {
-    //setState(() {
-    //if (!favourite) {
-    //favourite = true;
-   // color = Colors.red;
+              Positioned(
+                top: 20.0,
+                right:20.0,
+                child: InkWell(
+                  onTap: (){
+                    Navigator.pop(context);
+                   },
+                  child: Container(
 
-   // Scaffold.of(context).showSnackBar(
-    //SnackBar(
-   // content: Text(
-   // AppLocalizations.of(context).translate(
-    //'productPage', 'addedtoWishlistString'),
-   // ),
-   // ),
-    //);
-   // } else {
-    //favourite = false;
-    //color = Colors.grey;
-    //Scaffold.of(context).showSnackBar(
-    //SnackBar(
-   // content: Text(
-    //AppLocalizations.of(context).translate(
-    //'productPage', 'removeFromWishlistString'),
-    //),
-    //),
-    //);
-    //}
-   // });
-   // }
-                //  },
-                 // child: Icon(
-                   // (!favourite)
-                     //   ? FontAwesomeIcons.heart
-                    //    : FontAwesomeIcons.solidHeart,
-                  //  color: color,
-                 // ),
-             //   ),
-             // ),
+                      padding: EdgeInsets.all(5.0),
+                      margin: EdgeInsets.all(6.0),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+
+                        borderRadius: BorderRadius.only(
+                          topLeft:
+                          Radius.circular(10.0),
+                          bottomRight: Radius.circular(
+                            10.0,
+                          ),
+                        ),
+                      ),
+                      child:
+                      Icon(Icons.arrow_back,color: Colors.red,size: 20.0.sp,)
+                  ),
+                ),
+              ),
+             Positioned(
+               top: 20.0,
+               left: 20.0,
+                child: FloatingActionButton(
+                 backgroundColor: Theme.of(context).appBarTheme.color,
+                 elevation: 3.0,
+                 onPressed: () {
+
+                     Provider.of<HomeProvider>(context, listen: false).toggel_faforite(widget.data.id);
+                     set_fav(context);
+
+                 },
+                  child: Icon(
+                    Provider.of<HomeProvider>(context, listen: true).favorite_int.contains(widget.data.id)
+
+                    ?
+                    FontAwesomeIcons.solidHeart
+                    :FontAwesomeIcons.heart,
+                    color: color,
+                  ),
+               ),
+              ),
             ],
           ),
           // Slider and Add to Wishlist Code Ends Here
-          SizedBox(
-            height: 8.0,
-          ),
+
           Divider(
             height: 1.0,
           ),
-
+          SizedBox(height: 1.0.h,),
           Container(
-            color: Theme.of(context).appBarTheme.color,
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.symmetric(vertical: 1.7.h, horizontal: 0.7.h),
+
+            decoration: new BoxDecoration(
+                border: Border.all(color:Colors.grey),
+                color:Colors.white,
+                borderRadius: new BorderRadius.only(
+                  topLeft: const Radius.circular(0.0),
+                  topRight: const Radius.circular(0.0),
+                )
+            ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                // Product Title Start Here
+              children: [
+                Container(
 
-                // Product Title End Here
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      // Product Title Start Here
 
-                // Special Price badge Start Here
+                      // Product Title End Here
 
-                // Special Price badge Ends Here.
+                      // Special Price badge Start Here
 
-                // Price & Offer Row Starts Here
-                Row(
-                  children: [
-                    Expanded(child:  Text(
-                      '${widget.data.name}',
-                      style: TextStyle(
-                        fontSize: width/24,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Jost',
-                        letterSpacing: 0.7,
-                        color: Theme.of(context).textTheme.headline6.color,
-                      ),
-                      textAlign: TextAlign.start,
-                    ),),
-                    Expanded(child:  Container(
-                      margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            '${widget.data.overPrice} KW', textDirection: TextDirection.ltr,
-                            style: TextStyle(
-                              fontSize: width/24,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).textTheme.headline6.color,
+                      // Special Price badge Ends Here.
+
+                      
+                      Row(
+                         
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(" ")
+
                             ),
-                          ),
-                          SizedBox(
-                            width: 8.0,
-                          ),
-                          Text(
-                            '${widget.data.price} KW', textDirection: TextDirection.ltr,
-                            style: TextStyle(
-                                fontSize: width/25,
-                                decoration: TextDecoration.lineThrough,
-                                color: Colors.grey),
-                          ),
-                          SizedBox(
-                            width: 8.0,
-                          ),
+                            Expanded(
+                              flex: 5,
+                              child: Text(
+                                '${widget.data.name}',
+                                style: TextStyle(
+                                  fontSize: 11.0.sp,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Cairo',
+                                  letterSpacing: 0.7,
+                                  color: Theme.of(context).textTheme.headline6.color,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 4,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '${widget.data.price} KWD', textDirection: TextDirection.ltr,
+                                    style: TextStyle(
+                                        fontSize: width/25,
+                                        decoration: TextDecoration.lineThrough,
+                                        color: Colors.grey),
+                                  ),
+                                  Text(
+                                    '${widget.data.overPrice} KWD', textDirection: TextDirection.ltr,
+                                    style: TextStyle(
+                                      fontSize: width/24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.pinkAccent,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                                child: Text(" ")
+
+                            ),
+                            
 
 
-                        ],
+                          ],
+                        ),
+                      
+                      SizedBox(
+                        height: 1.0.h,
                       ),
-                    ),)
-                  ],
+
+                      Center(
+                        child: Text(
+                          '${widget.data.description} ',
+                          style: TextStyle(
+                              fontSize: 10.0.sp,
+                              fontFamily: "Cairo",
+                              color: Theme.of(context).textTheme.headline6.color),
+                        ),
+                      ),
+
+                      // Price & Offer Row Ends Here
+
+                      // Rating Row Starts Here
+                      // RatingRow(),
+                      // Rating Row Ends Here
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  height: 5.0,
-                ),
-                SingleChildScrollView(
+
+                // Product Size & Color Start Here
+                //  P
+                //  roductSize(),
+
+                Container(
+                  padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
                   child: Row(
                     children: [
-                      Icon(Icons.arrow_forward_ios),
-                      Flexible(
-                          child: new Text(
-                            '${widget.data.description} ', textDirection: TextDirection.ltr,
-                            style: TextStyle(
-                                fontSize: width/25,
-                                color: Theme.of(context).textTheme.headline6.color),
-                          ),)
+                      Expanded(child:Container(
+                        child: Text(" "),
+                      ) ,),
+
+                      Expanded(
+                        flex: 3,
+                        child: InkWell(
+
+                          child:
+                          Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black)   ,
+                                borderRadius: BorderRadius.circular(10.0),
+
+                                color: Colors.pinkAccent
+
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                getDeviceType()=="small"?
+                                Text("${get_by_size(dropdownValue,7,7,""  )}",style: TextStyle(color: Colors.white,fontSize:  11.0.sp,fontFamily: "Cairo"),)
+                                    :
+
+                                Text("${get_by_size(dropdownValue,8,8,"")}  ",style: TextStyle(color: Colors.white,fontSize:  12.0.sp,fontFamily: "Cairo"),),
+                                Icon(Icons.arrow_downward,color: Colors.white,size: 15.0.sp,)
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            SelectDialog.showModal(
+                              context,
+                              label: "اختر المقاس ",
+                              items: sizes,
+                              selectedValue: dropdownValue,
+                              itemBuilder:
+                                  (BuildContext context,  item, bool isSelected) {
+                                return Container(
+                                  decoration: !isSelected
+                                      ? null
+                                      : BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                  child: ListTile(
+                                    onTap: (){
+                                      if (this.mounted) {
+                                        setState(() {
+                                          dropdownValue = item;
+                                          dropdownValue2= "اللون";
+                                          if(dropdownValue != "المقاس"){
+
+                                            colors_map = map[dropdownValue];
+                                            get_color();
+                                          }
+
+                                        });
+                                      }
+
+
+                                      Navigator.pop(context);
+                                    },
+                                    selected: isSelected,
+                                    title: Text(item,style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.bold,fontSize: 12.0.sp)
+                                    ),
+                                  ),
+                                );
+                              },
+
+                            );
+                          },
+                        ),
+                      ),
+                      Expanded(child:Container(
+                       child: Text(" "),
+                      ) ,),
+                      Expanded(
+                       flex: 3,
+                        child: InkWell(
+
+                          child:
+                          Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black)   ,
+                              borderRadius: BorderRadius.circular(10.0),
+
+                              color: Colors.pinkAccent
+
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                getDeviceType()=="small"?
+                                Text("${get_by_size(dropdownValue2,7,7,""  )}",style: TextStyle(color: Colors.white,fontSize:  11.0.sp,fontFamily: "Cairo"),)
+                                    :
+
+                                Text("${get_by_size(dropdownValue2,8,8,"")}  ",style: TextStyle(color: Colors.white,fontSize:  12.0.sp,fontFamily: "Cairo"),),
+                                Icon(Icons.arrow_downward,color: Colors.white,size: 15.0.sp,)
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            SelectDialog.showModal(
+                              context,
+                              label: "اختر اللون ",
+                              items: colors,
+                              selectedValue: dropdownValue2,
+                              itemBuilder:
+                                  (BuildContext context,  item, bool isSelected) {
+                                return Container(
+                                  decoration: !isSelected
+                                      ? null
+                                      : BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                  child: ListTile(
+                                    onTap: (){
+                                      if (this.mounted) {
+                                        setState(() {
+                                          dropdownValue2 = item;
+                                        });
+                                      }
+
+
+                                      Navigator.pop(context);
+                                    },
+                                    selected: isSelected,
+                                    title: Text(item,style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.bold,fontSize: 12.0.sp)
+                                    ),
+                                  ),
+                                );
+                              },
+
+                            );
+                          },
+                        ),
+                      ),
+                      Expanded(child:Container(
+                        child: Text(" "),
+                      ) ,),
+                      SizedBox(width: 10,),
 
                     ],
                   ),
                 ),
-                // Price & Offer Row Ends Here
 
-                // Rating Row Starts Here
-                // RatingRow(),
-                // Rating Row Ends Here
+                Container(
+                  padding: EdgeInsets.fromLTRB(0, 5, 0, 20 ),
+
+                  child: Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        //border: Border.all(color: Colors.blue[700])   ,
+
+                       // color: Colors.pinkAccent,
+                         borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+
+                        ],
+                      ),                      width:40.0.w ,
+                     // padding: EdgeInsets.symmetric(vertical: 1.0.h, horizontal: 1.0.h),
+
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap:coounter_increment,
+                            child: Container(width: 10.0.w,
+                              height:6.0.h ,
+
+                              padding: EdgeInsets.symmetric(vertical: 0.7.h, horizontal: 0.7.h),
+
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey)   ,
+
+                                 color: Colors.pinkAccent,
+                                borderRadius: BorderRadius.only(
+                                  bottomRight:
+                                  Radius.circular(20.0),
+                                  topRight: Radius.circular(
+                                    20.0,
+                                  ),
+                                ),                                  boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 1.5,
+                                    color: Colors.grey[200],
+                                  ),
+                                ],
+                              ),
+                            child:Icon(Icons.add,size: 20.0.sp,color: Colors.white,) ,
+                            ),
+                          ),
+                          Container(width: 13.0.w,
+                                height:6.0.h ,
+                            padding: EdgeInsets.symmetric(vertical: 0.7.h, horizontal: 0.7.h),
+
+                            decoration: BoxDecoration(
+                              //border: Border.all(color: Colors.blue[700])   ,
+                              color: Colors.pinkAccent,
+
+                              // color: Colors.lightBlue,
+                             // borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 1.5,
+                                  color: Colors.grey[200],
+                                ),
+                              ],
+                            ),
+                            child:Center(child: Text(qut.toString(),style: TextStyle(color: Colors.white,fontFamily: "Cairo",fontSize: 13.0.sp),)) ,
+                          ),
+                          InkWell(
+                            onTap: coounter_decrement,
+                            child: Container(width: 10.0.w,
+                              height:6.0.h ,
+
+                              padding: EdgeInsets.symmetric(vertical: 0.7.h, horizontal: 0.7.h),
+
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey)   ,
+                                color: Colors.pinkAccent,
+
+                                // color: Colors.lightBlue,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft:
+                                  Radius.circular(20.0),
+                                  topLeft: Radius.circular(
+                                    20.0,
+                                  ),
+                                ),                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 1.5,
+                                    color: Colors.grey[200],
+                                  ),
+                                ],
+                              ),
+                              child:Center(child: Icon(Icons.remove_outlined,size: 20.0.sp,color: Colors.white)) ,
+                            ),
+                          ),
+
+
+                      ],),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
-
-          // Product Size & Color Start Here
-          //  P
-          //  roductSize(),
-
+          SizedBox(height: 10.0),
           Container(
-            padding: EdgeInsets.fromLTRB(5, 20, 5, 20),
-            color: Colors.white,
-            child: Row(
-              children: [
-
-
-                Expanded(child:
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.pinkAccent,
-
-                    boxShadow: [
-                      BoxShadow(color: Colors.pinkAccent, spreadRadius: 3),
-                    ],
-                  ),
-                  padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                  margin: EdgeInsets.all(5),
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    icon: Icon(Icons.arrow_downward,color: Colors.white,),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
-
-                    onChanged: (String newValue) {
-                      if (this.mounted) {
-    setState(() {
-    dropdownValue = newValue;
-    dropdownValue2= "اللون";
-    if(dropdownValue != "المقاس"){
-
-    colors_map = map[dropdownValue];
-    get_color();
-    }
-
-    });
-    }
-                    },
-                    items:sizes
-                        .map<DropdownMenuItem<String>>(( value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Container(padding: EdgeInsets.all(10),
-                            child: Text(value)),
-                      );
-                    }).toList(),
-                  ),
-                ) ,),
-                Expanded(child:Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.pinkAccent,
-
-                    boxShadow: [
-                      BoxShadow(color: Colors.pinkAccent, spreadRadius: 3),
-                    ],
-                  ),
-                  padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                  margin: EdgeInsets.all(5),
-                  child: DropdownButton<String>(
-                    value: dropdownValue2,
-                    icon: Icon(Icons.arrow_downward,color: Colors.white,),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
-
-                    onChanged: (String newValue) {
-    if (this.mounted) {
-      setState(() {
-        dropdownValue2 = newValue;
-      });
-    }
-                    },
-                    items: colors
-
-                        .map<DropdownMenuItem<String>>(( value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Container(padding: EdgeInsets.all(10),
-                          child: Text(value),
+            width: width,
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child:
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text("منتجات قد تعجبك",
+                        style: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize:15.0.sp,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.7,
+                          color: Theme.of(context).textTheme.headline6.color,
                         ),
-                      );
-                    }).toList(),
-                  ),
-                ) ,),
-                Expanded(child:
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.pinkAccent,
+                      ),
 
-                    boxShadow: [
-                      BoxShadow(color: Colors.pinkAccent, spreadRadius: 3),
+
                     ],
                   ),
-                  padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                  margin: EdgeInsets.all(5),
-                  child: DropdownButton<String>(
-                    value: dropdownValue3,
-                    icon: Icon(Icons.arrow_downward,color: Colors.white,),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10.0),
 
-                    onChanged: (String newValue) {
-    if (this.mounted) {
-      setState(() {
-        dropdownValue3 = newValue;
-      });
-    }
-                    },
-                    items: qut
 
-                        .map<DropdownMenuItem<String>>(( value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Container(padding: EdgeInsets.all(10),
-                          child: Text(value),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ) ,),
+                Releted(Provider.of<ProductsProvider>(context, listen: false).releted,widget.data.id)
+                ,
 
               ],
             ),
           ),
+
+
 
           // Product Size & Color End Here
 
@@ -593,37 +846,54 @@ class _ProductPageState extends State<ProductPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               ButtonTheme(
-                minWidth: ((width) ),
-                height: height/10,
-                child: RaisedButton(
-                  child:is_laad? Container(
-                    child: CircularProgressIndicator(),
-          width: 32,
-          height: 32
-      ):
+                minWidth: 60.0.w,
+                height: 7.0.h,
+                child: Container(
+                  padding:  EdgeInsets.symmetric(vertical: 0.7.h, horizontal:2.0.w),
 
-                  Text(
-                    AppLocalizations.of(context)
-                        .translate('productPage', 'addToCartString'),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: (myLocale.languageCode == 'id' || myLocale.languageCode == 'ru') ? width/25 : width/25,
-                      fontFamily: 'Jost',
-                      letterSpacing: 0.7,
-                      fontWeight: FontWeight.bold,
+                  child: Container(
+                    padding:  EdgeInsets.symmetric(vertical: 0.7.h, horizontal:2.0.w),
+                    color: Colors.black,
+
+                    child: InkWell(
+                      child: is_laad ? CircularProgressIndicator() : Text(
+                        "اضف الي حقيبة التسوق ",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11.0.sp,
+                          fontFamily: 'Cairo',
+                          letterSpacing: 0.7,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () {
+                        if(is_laad==false){
+                          if (this.mounted) {
+                            setState(() {
+                              is_laad = true;
+                            });
+                          }
+                          // _displaySnackBarAddToCart(context);
+                          add_to_cart();
+                        }
+                      },
+
                     ),
                   ),
-                  onPressed: () {
-    if (this.mounted) {
-      setState(() {
-        is_laad = true;
-      });
-    }
-                   // _displaySnackBarAddToCart(context);
-                    add_to_cart();
-                  },
-                  color: Colors.pinkAccent,
                 ),
+              ),
+              ButtonTheme(
+
+                minWidth: 30.0.w,
+                height: 7.0.h,
+                child:
+               Container(
+                   padding:  EdgeInsets.symmetric(vertical: 0.7.h, horizontal:2.0.w),
+                 width:  40.0.w,
+                   child: Container(
+                       padding:  EdgeInsets.symmetric(vertical: 0.7.h, horizontal:4.0.w),
+
+                       color:Colors.pinkAccent,child: Text("${total.toStringAsFixed(2)}" + "  د.كـ ",style: TextStyle(fontFamily: "Cairo",fontSize: 11.0.sp,color: Colors.white),))),
               ),
 
             ],

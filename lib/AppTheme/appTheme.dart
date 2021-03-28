@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class AppTheme {
   AppTheme._();
 
   static final ThemeData lightTheme = ThemeData(
-    scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+
+    primaryColor: Colors.pinkAccent,
+    scaffoldBackgroundColor: Colors.grey[100],
     appBarTheme: AppBarTheme(
       color: Colors.white,
+
       textTheme: TextTheme(
         headline6: TextStyle(
-          color: Colors.black,
+            color: Colors.black,fontWeight: FontWeight.bold, fontFamily: "Cairo",fontSize: 11.0.sp
         ),
       ),
       iconTheme: IconThemeData(
@@ -21,15 +25,14 @@ class AppTheme {
     ),
     textTheme: TextTheme(
       headline6: TextStyle(
-        color: Colors.black
+          color: Colors.black,fontWeight: FontWeight.bold, fontFamily: "Cairo",fontSize: 11.0.sp
       ),
     ),
-    primaryColor: Colors.red,
     primaryColorLight: Colors.redAccent,
     bottomAppBarColor: Colors.white,
     tabBarTheme: TabBarTheme(
       labelStyle: TextStyle(
-              fontSize: 8.8, fontWeight: FontWeight.bold, color: Colors.red),
+              fontSize: 8.8, fontWeight: FontWeight.bold, color: Colors.red,fontFamily: "Cairo"),
       indicator: null,
       labelColor: Colors.red,
       unselectedLabelColor: Colors.black,
@@ -40,7 +43,7 @@ class AppTheme {
     snackBarTheme: SnackBarThemeData(
       backgroundColor: Colors.black,
       contentTextStyle: TextStyle(
-        color: Colors.white,
+        color: Colors.white,fontFamily: "Cairo"
       ),
     ),
     highlightColor: Colors.transparent,
@@ -49,12 +52,13 @@ class AppTheme {
   );
 
   static final ThemeData darkTheme = ThemeData(
-    scaffoldBackgroundColor: const Color(0xFF272928),
+    primaryColor: Colors.pinkAccent,
+    scaffoldBackgroundColor:Colors.black,
     appBarTheme: AppBarTheme(
       color: Colors.black,
       textTheme: TextTheme(
         headline6: TextStyle(
-          color: Colors.white,
+            color: Colors.white,fontWeight: FontWeight.bold, fontFamily: "Cairo",fontSize: 11.0.sp
         ),
       ),
       iconTheme: IconThemeData(
@@ -66,15 +70,14 @@ class AppTheme {
     ),
     textTheme: TextTheme(
       headline6: TextStyle(
-        color: Colors.white
+        color: Colors.white,fontWeight: FontWeight.bold, fontFamily: "Cairo",fontSize: 11.0.sp
       ),
     ),
-    primaryColor: Colors.white54,
     primaryColorLight: Colors.redAccent,
     bottomAppBarColor: Colors.black,
     tabBarTheme: TabBarTheme(
       labelStyle: TextStyle(
-              fontSize: 8.8, fontWeight: FontWeight.bold, color: Colors.red),
+              fontSize: 8.8, fontWeight: FontWeight.bold, color: Colors.red,fontFamily: "Cairo"),
       indicator: null,
       labelColor: Colors.red,
       unselectedLabelColor: Colors.white,
@@ -86,7 +89,7 @@ class AppTheme {
     snackBarTheme: SnackBarThemeData(
       backgroundColor: Colors.white,
       contentTextStyle: TextStyle(
-        color: Colors.black,
+        color: Colors.black,fontFamily: "Cairo"
       ),
     ),
     highlightColor: Colors.transparent,

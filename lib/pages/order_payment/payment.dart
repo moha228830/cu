@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'dart:io' ;
 import 'package:my_store/config.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:my_store/pages/product_list_view/get_function.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -106,9 +108,11 @@ get_net(){
 
             var res = json.decode(response.body);
             if (res["state"]=="1"){
+              Provider.of<PostDataProvider>(context, listen: false).set_cat_after_api(0);
 
 
               _showDialog();
+
 
             }else{
               Fluttertoast.showToast(
@@ -492,7 +496,7 @@ get_net(){
       },
     );
 
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    Future.delayed(const Duration(seconds: 2), () {
       if (this.mounted) {
         setState(() {
           Navigator.push(

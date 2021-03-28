@@ -443,7 +443,7 @@ class _OrderState extends State<Order> {
                                    item["status"]==1? Container(
 
                                       padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
-                                      color: Colors.grey,
+                                      color: Colors.black,
                                       child: Text(
                                         'جاري الشحن ',
                                         style: TextStyle(
@@ -656,7 +656,7 @@ class _OrderState extends State<Order> {
                                                 letterSpacing: 0.7,
                                                 fontWeight: FontWeight.bold,
                                               ),
-                                            ):CircularProgressIndicator(),
+                                            ):CircularProgressIndicator(backgroundColor: Colors.blue,),
                                           ),
                                         ),
                                       ),

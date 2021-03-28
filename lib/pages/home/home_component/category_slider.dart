@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:my_store/functions/localizations.dart';
 import 'package:my_store/pages/Category/category.dart';
+import 'package:my_store/providers/homeProvider.dart';
+import 'package:provider/provider.dart';
 import 'dart:async' show Future, Timer;
 import 'package:shimmer/shimmer.dart';
+import 'package:sizer/sizer.dart';
 
 class CategorySlider extends StatefulWidget {
   List  data ;
@@ -29,20 +32,22 @@ class _CategorySliderState extends State<CategorySlider> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    int type =  Provider.of<HomeProvider>(context, listen: true).is_all;
+    var prov =  Provider.of<HomeProvider>(context, listen: false);
+
 
     return
 
 
       Container(
         width: width,
-        height: height/8,
-        color: Theme.of(context).appBarTheme.color,
+        height: 8.0.h,
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: Container(
-          margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+          padding:  EdgeInsets.symmetric(vertical: 0.0.h, horizontal: 0.0.h),
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: <Widget>[
-              SizedBox(width: 5.0),
 
               ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -52,51 +57,43 @@ class _CategorySliderState extends State<CategorySlider> {
                   Map cat = widget.data[index];
                   return
 
-                    SingleChildScrollView(
-                      child: Row(
+                   Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(width: 5.0),
 
                           InkWell(
                             onTap: () {
-                              if(cat["sub_categories"].length != 0){
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CategoryPage(
-                                        categoryName:"${cat["name"]}" ,data:cat["sub_categories"]
-                                    ),
-                                  ),
-                                );
-                              }
+
+                             prov.set_selected_cat(cat["id"]);
+
+
+                               prov.set_sub_cat(cat["sub_categories"]);
+
 
                             },
                             child: Column(
+                              mainAxisAlignment:  MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
+
                               children: <Widget>[
-                                SizedBox(
-                                  height: 20.0,
-                                ),
+
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.pinkAccent,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 1.5,
-                                        color: Colors.grey,
-                                      ),
-                                    ],
+                                    color:type==cat["id"]?Colors.pinkAccent:  Theme.of(context).bottomAppBarColor,
+                                    border: Border.all(color: Colors.pinkAccent),                                    borderRadius: BorderRadius.circular(10.0),
+
                                   ),
                                   child: Container(
-                                    padding: EdgeInsets.fromLTRB(width/20, height/80, width/20, height/80),
+                                    padding: EdgeInsets.fromLTRB(width/20, 0.5.w, width/20, 0.5.w),
                                     child: Text( "${cat["name"]}"
                                       ,
                                       style: TextStyle(
-                                        fontFamily: 'Jost',
+                                        fontFamily: 'Cairo',
                                         fontWeight: FontWeight.bold,
                                         fontSize: width/25,
-                                        color: Colors.white,
+                                        color:type==cat["id"]?Colors.white: Theme.of(context).primaryColor,
                                         letterSpacing: 1.5,
                                       ),
                                     ),
@@ -108,8 +105,8 @@ class _CategorySliderState extends State<CategorySlider> {
                           SizedBox(width: 5.0),
 
                         ],
-                      ),
-                    )
+                      )
+
 
                   ;
                 },

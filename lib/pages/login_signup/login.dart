@@ -319,25 +319,9 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ],
         ),
-        onWillPop: onWillPop,
       ),
     );
   }
 
-  Future<bool> onWillPop() {
-    DateTime now = DateTime.now();
-    if (currentBackPressTime == null ||
-        now.difference(currentBackPressTime) > Duration(seconds: 2)) {
-      currentBackPressTime = now;
-      Fluttertoast.showToast(
-        msg: AppLocalizations.of(context)
-            .translate('loginPage', 'exitToastString'),
-        backgroundColor: Theme.of(context).textTheme.headline6.color,
-        textColor: Theme.of(context).appBarTheme.color,
-      );
-      return Future.value(false);
-    }
-    exit(0);
-    return Future.value(true);
-  }
+
 }

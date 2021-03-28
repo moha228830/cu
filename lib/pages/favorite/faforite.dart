@@ -17,29 +17,27 @@ import 'package:my_store/pages/product_list_view/filter_row.dart';
 import 'package:my_store/functions/passDataToProducts.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:my_store/pages/product_list_view/product_class.dart';
-import 'package:my_store/pages/product_list_view/get_function.dart';
+import 'package:my_store/pages/favorite/get_function.dart';
 import 'package:my_store/pages/product_list_view/one_product.dart';
 
 import 'dart:async';
 import 'package:http/http.dart' as http;
-class GetProducts extends StatefulWidget {
-  int id;
-  String type;
-  GetProducts(this.id, this.type);
+class GetFavorite extends StatefulWidget {
+
   @override
-  _GetProductsState createState() => _GetProductsState();
+  _GetFavoriteState createState() => _GetFavoriteState();
 }
 
-class _GetProductsState extends State<GetProducts> {
+class _GetFavoriteState extends State<GetFavorite> {
   bool loading = true, all = true, men = false, women = false;
   static const _pageSize = 6;
-int num = 0;
+  int num = 0;
   final PagingController<int, Product> _pagingController =
   PagingController(firstPageKey: 0);
 
   @override
   void initState() {
+
     Timer(const Duration(seconds: 2), () {
       if (this.mounted) {
         setState(() {
@@ -55,7 +53,7 @@ int num = 0;
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final newItems = await fetchProducts(http.Client(), widget.id, widget.type,_pageSize,pageKey);
+      final newItems = await fetchProducts(http.Client(), 1,"favorite",_pageSize,pageKey,context);
       setState(() {
         num = newItems.length;
       });
@@ -85,22 +83,22 @@ int num = 0;
         builderDelegate: PagedChildBuilderDelegate<Product>(
           itemBuilder: (context, item, index) =>
 
-                  (loading)
-                      ? Container(
+          (loading)
+              ? Container(
 
-                    margin: EdgeInsets.only(top: 10.0),
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.grey[300],
-                      highlightColor: Colors.white,
-                      child: ProductsGridView(products: item,num:num),
-                    ),
-                  )
-                      :  Column(
-                        children: [
-                          //SizedBox(height: 2.0.h,),
-                          Expanded(child: ProductsGridView(products: item,num:num)),
-                        ],
-                      ),
+            margin: EdgeInsets.only(top: 10.0),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300],
+              highlightColor: Colors.white,
+              child: ProductsGridView(products: item,num:num),
+            ),
+          )
+              :  Column(
+            children: [
+              //SizedBox(height: 2.0.h,),
+              Expanded(child: ProductsGridView(products: item,num:num)),
+            ],
+          ),
 
 
 

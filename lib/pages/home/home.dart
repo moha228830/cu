@@ -8,14 +8,17 @@ import 'package:my_store/functions/localizations.dart';
 import 'package:my_store/pages/contact.dart';
 import 'package:my_store/pages/orders/orders.dart';
 import 'package:my_store/pages/product_list_view/get_function.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 import 'dart:convert';
+import 'package:sizer/sizer.dart';
+import 'package:my_store/providers/homeProvider.dart';
 
 // My Own Imports
 import 'package:my_store/pages/home/home_main.dart';
-import 'package:my_store/pages/login_signup/login.dart';
+import 'package:my_store/pages/favorite/faforite.dart';
 
 import 'package:my_store/pages/my_account/my_account.dart';
 import 'package:my_store/pages/my_cart.dart';
@@ -34,10 +37,11 @@ class _HomeState extends State<Home> {
   int currentIndex;
   var num = "!";
   var token = utils.CreateCryptoRandomString();
-
+  var user_id;
   DateTime currentBackPressTime;
   @override
   void initState() {
+    m();
     super.initState();
     currentIndex = widget.index??0;
     set_token_not_register();
@@ -49,6 +53,14 @@ class _HomeState extends State<Home> {
         await SharedPreferences.getInstance();
     var tok = localStorage.getString('token');
     var login = localStorage.getString('login');
+    var d = localStorage.getString('user');
+    if(d !=null){
+       user_id = jsonDecode(d)["id"]??"0";
+
+    }else{
+       user_id = "0";
+
+    }
 
     //if(login=="2"){
      //var data_user = localStorage.getString('user_id');
@@ -59,17 +71,19 @@ if ( tok == null  ){
   localStorage.setString('token', token);
   localStorage.setString('user_id', "0");
   localStorage.setString('login', "0");
-
+  Provider.of<HomeProvider>(context, listen: false).set_data_user(token, 0 , "0");
+  localStorage.setStringList('favorite', []);
   // print( tok + "moha");
 
 }else{
+  var fav = localStorage.getStringList('favorite');
 
-   var cl = new PostDataProvider() ;
-      await cl.cat_num(tok);
-      cl.c();
-      setState(() {
-        num =  cl.num ;
-      });
+  Provider.of<HomeProvider>(context, listen: false).get_faforite(fav);
+print(Provider.of<HomeProvider>(context, listen: false).favorite);
+print(fav);
+  Provider.of<HomeProvider>(context, listen: false).set_data_user(tok,user_id, login);
+  Provider.of<PostDataProvider>(context, listen: false).cat_num(tok);
+
 
 }
   print(tok);
@@ -82,22 +96,29 @@ if ( tok == null  ){
   }
 
 
-
+  String m() {
+    final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+    var n = data.size.shortestSide;
+    print(n);
+  }
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    var n = Provider.of<PostDataProvider>(context, listen: true).num ==null?0:
+    Provider.of<PostDataProvider>(context, listen: true).num;
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.pinkAccent,
           title: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(0),
             child: Center(
               child: Text(
-                '   KUSHA-STORE  ',
+                '   KUSHA-كوشا  ',
                 style: TextStyle(
-                  fontFamily: 'Jost',
+                  fontFamily: 'Cairo',
                   fontWeight: FontWeight.bold,
                   fontSize: width/22,
                   letterSpacing: 1.7,
@@ -115,104 +136,127 @@ if ( tok == null  ){
             //    onPressed: () {
 
              //   }),
-           // IconButton(
-            //  icon: Badge(
-              //  badgeContent: Text(
-               //   '2',
-                //  style: TextStyle(color: Colors.white),
-              //  ),
-              //  badgeColor: Theme.of(context).primaryColorLight,
-               // child: Icon(
-                 // Icons.notifications_none,
-               // ),
-             // ),
-            //  onPressed: () {
-
-           //   },
-          //  ),
-          ],
-        ),
-        bottomNavigationBar: BubbleBottomBar(
-          backgroundColor:Colors.pinkAccent,
-          hasNotch: false,
-          opacity: .2,
-          currentIndex: currentIndex,
-          onTap: changePage,
-          borderRadius: BorderRadius.vertical(
-              top: Radius.circular(
-                  16)), //border radius doesn't work when the notch is enabled.
-          elevation: 8,
-          items: <BubbleBottomBarItem>[
-            BubbleBottomBarItem(
-                backgroundColor: Colors.white,
-                icon: Icon(
-                  Icons.home,
-                  color: Theme.of(context).textTheme.headline6.color,
-                ),
-                activeIcon: Icon(
-                  Icons.home,
-                  color: Colors.white,
-                ),
-                title: Text(AppLocalizations.of(context).translate('homePage','home'),
-                  style: TextStyle(fontSize: width/26),
-                )),
-            BubbleBottomBarItem(
-                backgroundColor: Colors.white,
-                icon: Icon(
-                  Icons.apps,
-                  color: Theme.of(context).textTheme.headline6.color,
-                ),
-                activeIcon: Icon(
-                  Icons.apps,
-                  color: Colors.white,
-                ),
-                title: Text("طلباتي",
-                  style: TextStyle(fontSize: width/26),
-                )),
-            BubbleBottomBarItem(
-                backgroundColor: Colors.white,
+         IconButton(
                 icon: Badge(
-                  badgeContent: Text(
-                      num.toString(),
-                    style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize:17)
-                  ),
-                  badgeColor:Colors.white,
+                 badgeContent: n==null?
+                 Text(
+                   '0',
+                   style: TextStyle(color: Colors.white),
+                 ):
+                 Text(
+                    '${n}',
+                    style: TextStyle(color: Colors.white),
+                 ),
+                  badgeColor: Colors.grey,
                   child: Icon(
-                    Icons.shopping_cart,
-                    color: Theme.of(context).textTheme.headline6.color,
+                   Icons.local_grocery_store_sharp,color: Colors.white,size: 25.0.sp,
                   ),
                 ),
-                activeIcon: Icon(
-                  Icons.shopping_cart,
-                  color: Colors.white,
-                ),
-                title: Text(AppLocalizations.of(context).translate('homePage','cart'),
-                  style: TextStyle(fontSize: width/26),
-                )),
-            BubbleBottomBarItem(
-                backgroundColor: Colors.white,
-                icon: Icon(
-                  FontAwesomeIcons.user,
-                  color: Theme.of(context).textTheme.headline6.color,
-                ),
-                activeIcon: Icon(
-                  FontAwesomeIcons.user,
-                  color: Colors.white,
-                  size: 17.0,
-                ),
-                title: Text(AppLocalizations.of(context).translate('homePage','account'),
-                  style: TextStyle(fontSize: width/26),
-                ))
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          curve: Curves.linear,
+                          duration: Duration(milliseconds: 900),
+
+                          type: PageTransitionType.bottomToTop,
+                          child:Home(2)));
+
+              },
+              ),
+
           ],
         ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+
+        currentIndex: currentIndex,
+        onTap: changePage,
+        // borderRadius: BorderRadius.vertical(
+        //  top: Radius.circular(
+        //  16)), //border radius doesn't work when the notch is enabled.
+        elevation: 8,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          new BottomNavigationBarItem(
+            icon: Icon(Icons.home,
+                size: 20.0.sp,
+                color: currentIndex == 0 ? Theme.of(context).primaryColor : Colors.black),
+            title: Text(
+              'الرئيسية',
+              style: TextStyle(
+                  fontFamily: "Cairo",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10.0.sp,
+                  color: currentIndex == 0 ? Theme.of(context).primaryColor : Colors.black),
+            ),
+          ),
+          new BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt,
+                size: 20.0.sp,
+                color: currentIndex == 1 ? Theme.of(context).primaryColor : Colors.black),
+            title: Text(
+              'طلباتي',
+              style: TextStyle(
+                  fontFamily: "Cairo",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10.0.sp,
+                  color: currentIndex == 1 ? Theme.of(context).primaryColor : Colors.black),
+            ),
+          ),
+          new BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart,
+                size: 20.0.sp,
+                color: currentIndex == 2 ? Theme.of(context).primaryColor : Colors.black),
+            title: Text(
+              'السلة',
+              style: TextStyle(
+                  fontFamily: "Cairo",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10.0.sp,
+                  color: currentIndex == 2 ? Theme.of(context).primaryColor : Colors.black),
+            ),
+          ),
+          new BottomNavigationBarItem(
+            icon: Icon(Icons.favorite,
+                size: 20.0.sp,
+                color: currentIndex == 3 ? Theme.of(context).primaryColor : Colors.black),
+            title: Text(
+              'مفضلتي',
+              style: TextStyle(
+                  fontFamily: "Cairo",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10.0.sp,
+                  color: currentIndex == 3 ? Theme.of(context).primaryColor : Colors.black),
+            ),
+          ),
+          new BottomNavigationBarItem(
+            icon: Icon(Icons.person,
+                size: 20.0.sp,
+                color: currentIndex == 4 ? Theme.of(context).primaryColor : Colors.black),
+            title: Text(
+              'حسابي',
+              style: TextStyle(
+                  fontFamily: "Cairo",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10.0.sp,
+                  color: currentIndex == 4 ? Theme.of(context).primaryColor : Colors.black),
+            ),
+          )
+        ],
+      ),
         body: WillPopScope(
           child: (currentIndex == 0)
               ? HomeMain()
               : (currentIndex == 1)
                   ? Order()
                   : (currentIndex == 2)
-                      ? MyCart()
-                      : MyAccount(),
+                      ? MyCart():
+          (currentIndex == 3)?
+                GetFavorite():
+          ( currentIndex == 4)?
+                      MyAccount():
+                 HomeMain(),
           onWillPop: onWillPop,
         ),
     );

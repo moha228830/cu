@@ -391,7 +391,7 @@ get_select(i){
               Card(
                 child: Container(
                   width: width-10,
-                    child:GetProducts2(widget.data[0]["category_id"], "all")),
+                    child:GetProducts(widget.data[0]["category_id"], "all")),
               ),
             ],
           ),

@@ -1,39 +1,35 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:my_store/pages/product_list_view/product_list_view.dart';
+import 'package:my_store/pages/product_list_view/product_list_view2.dart';
+import 'package:my_store/providers/homeProvider.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
-class NewMainSlider extends StatefulWidget {
-  List sliders ;
-  List items ;
-  NewMainSlider(this.sliders,this.items);
-  @override
-  _NewMainSliderState createState() => _NewMainSliderState();
-}
-
-class _NewMainSliderState extends State<NewMainSlider> {
-
-  List items = [];
-  List sliders = [];
-
-
-
+class NewMainSlider extends StatelessWidget {
 
   @override
-  void initState() {
 
-    sliders = widget.sliders;
-    items = widget.items;
-    super.initState();
-  }
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    List sliders = Provider.of<HomeProvider>(context, listen: false).home_sliders;
 
-    return SizedBox(
-      height: height/3,
+    return
+        Container(
+          padding: EdgeInsets.all(0),
+            decoration: BoxDecoration(
+              color:Theme.of(context).bottomAppBarColor,
+              border: Border.all(color: Colors.black),
+              
+
+            ),
+      height:25.0.h,
       width: width,
       child:
-      items.length ==0?
+      sliders.length ==0?
       Carousel(
         dotSize: 4.0,
         dotSpacing: 15.0,
@@ -65,6 +61,7 @@ class _NewMainSliderState extends State<NewMainSlider> {
         ],
       ):
           Carousel(
+            
             dotSize: 4.0,
             dotSpacing: 15.0,
             dotColor: Theme.of(context).primaryColor,
@@ -73,7 +70,27 @@ class _NewMainSliderState extends State<NewMainSlider> {
             borderRadius: true,
             dotVerticalPadding: 5.0,
             dotPosition: DotPosition.bottomRight,
-            images: items,
+            images: sliders.map((one) {
+              return new  InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          curve: Curves.linear,
+                          duration: Duration(milliseconds: 700),
+
+                          type: PageTransitionType.topToBottom,
+                          child:ProductListView2(one["id"], "sliders",)));
+
+
+                },
+                child: Image.network(
+                  one["img_full_path"],
+                  fit: BoxFit.cover,
+                ),
+              );
+            }).toList(),
+
           )
     );
   }

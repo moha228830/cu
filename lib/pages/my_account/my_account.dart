@@ -155,6 +155,7 @@ class _MyAccountState extends State<MyAccount> {
                         .translate('myAccountPage', 'sureDialogueString'),
                     style: TextStyle(
                       fontSize: width / 25,
+                      fontFamily: "Cairo",
                       fontWeight: FontWeight.w700,
                       color: Theme.of(context).textTheme.headline6.color,
                     ),
@@ -266,6 +267,7 @@ class _MyAccountState extends State<MyAccount> {
                         "${my_name}",
                         style: TextStyle(
                             fontSize: width / 24,
+                            fontFamily: "Cairo",
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).textTheme.headline6.color),
                       ),
@@ -301,6 +303,7 @@ class _MyAccountState extends State<MyAccount> {
                       "الوضع الليلي",
                       style: TextStyle(
                           fontSize: width / 25,
+                          fontFamily: "Cairo",
                           color: Theme.of(context).textTheme.headline6.color),
                     ),
                     Switch(
@@ -355,6 +358,7 @@ class _MyAccountState extends State<MyAccount> {
                       .translate('myAccountPage', 'callCenterString'),
                   style: TextStyle(
                       fontSize: width / 25,
+                      fontFamily: "Cairo",
                       color: Theme.of(context).textTheme.headline6.color),
                 )
               ],
@@ -400,6 +404,7 @@ class _MyAccountState extends State<MyAccount> {
                         "تأكيد الحساب",
                         style: TextStyle(
                             fontSize: width / 25,
+                            fontFamily: "Cairo",
                             color: Theme.of(context).textTheme.headline6.color),
                       )
                     ],
@@ -434,6 +439,7 @@ class _MyAccountState extends State<MyAccount> {
                         " الرجوع للتسجيل من جديد",
                         style: TextStyle(
                             fontSize: width / 25,
+                            fontFamily: "Cairo",
                             color: Theme.of(context).textTheme.headline6.color),
                       )
                     ],
@@ -473,6 +479,7 @@ class _MyAccountState extends State<MyAccount> {
                       "رصيدي",
                       style: TextStyle(
                           fontSize: width / 25,
+                          fontFamily: "Cairo",
                           color: Theme.of(context).textTheme.headline6.color),
                     )
                   ],
@@ -510,6 +517,7 @@ class _MyAccountState extends State<MyAccount> {
                       "دفتر العناوين",
                       style: TextStyle(
                           fontSize: width / 25,
+                          fontFamily: "Cairo",
                           color: Theme.of(context).textTheme.headline6.color),
                     )
                   ],
@@ -546,6 +554,7 @@ class _MyAccountState extends State<MyAccount> {
                       "تعديل الاسم",
                       style: TextStyle(
                           fontSize: width / 25,
+                          fontFamily: "Cairo",
                           color: Theme.of(context).textTheme.headline6.color),
                     )
                   ],
@@ -582,6 +591,7 @@ class _MyAccountState extends State<MyAccount> {
                       "تعديل كلمة المرور",
                       style: TextStyle(
                           fontSize: width / 25,
+                          fontFamily: "Cairo",
                           color: Theme.of(context).textTheme.headline6.color),
                     )
                   ],
@@ -618,6 +628,7 @@ class _MyAccountState extends State<MyAccount> {
                       "تعديل الهاتف والدولة",
                       style: TextStyle(
                           fontSize: width / 25,
+                          fontFamily: "Cairo",
                           color: Theme.of(context).textTheme.headline6.color),
                     )
                   ],
@@ -652,6 +663,7 @@ class _MyAccountState extends State<MyAccount> {
                       "تسجيل خروج",
                       style: TextStyle(
                           fontSize: width / 25,
+                          fontFamily: "Cairo",
                           color: Theme.of(context).textTheme.headline6.color),
                     )
                   ],
@@ -687,6 +699,7 @@ class _MyAccountState extends State<MyAccount> {
                     "تسجيل دخول",
                     style: TextStyle(
                         fontSize: width / 25,
+                        fontFamily: "Cairo",
                         color: Theme.of(context).textTheme.headline6.color),
                   )
                 ],

@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:my_store/functions/localizations.dart';
 import 'package:my_store/pages/product_list_view/filter.dart';
+import 'package:my_store/pages/product_list_view/product_class.dart';
+import 'package:my_store/providers/homeProvider.dart';
+import 'package:my_store/providers/productsProvider.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class FilterRow extends StatefulWidget {
   @override
@@ -10,25 +16,27 @@ class FilterRow extends StatefulWidget {
 
 class _FilterRowState extends State<FilterRow> {
   int selectedRadioSort;
-  bool satVal = false;
-  bool sunVal = false;
 
   @override
   void initState() {
     super.initState();
     selectedRadioSort = 0;
   }
+  final PagingController<int, Product> _pagingController =
+  PagingController(firstPageKey: 0);
+  setSelectedRadioSort(int val,type,context) {
+    selectedRadioSort =Provider.of<ProductsProvider>(context, listen: false).type_id;
 
-  setSelectedRadioSort(int val) {
-    setState(() {
-      selectedRadioSort = val;
-      Navigator.pop(context);
-    });
-  }
+    Provider.of<ProductsProvider>(context, listen: false).set_type_id(type);
+    Navigator.pop(context,  _pagingController.refresh());
+
+}
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+
+    return
+      Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -44,17 +52,16 @@ class _FilterRowState extends State<FilterRow> {
                 children: <Widget>[
                   Icon(
                     Icons.sort,
-                    size: 25.0,
+                    size: 20.0.sp,
                     color: Theme.of(context).textTheme.headline6.color,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('productListViewPage', 'sortString'),
+                     " ترتيب حسب ",
                       style: TextStyle(
-                        fontSize: 17.0,
-                        fontFamily: 'Jost',
+                        fontSize: 12.0.sp,
+                        fontFamily: 'Cairo',
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.7,
                         color: Theme.of(context).textTheme.headline6.color,
@@ -85,16 +92,16 @@ class _FilterRowState extends State<FilterRow> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Icon(
-                    Icons.filter_list,
-                    size: 25.0,
+                    Icons.apps,
+                    size: 20.0.sp,
                     color: Theme.of(context).textTheme.headline6.color,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(AppLocalizations.of(context).translate('productListViewPage','filterString'),
+                    child: Text(" الفئات  ",
                       style: TextStyle(
-                        fontSize: 17.0,
-                        fontFamily: 'Jost',
+                        fontSize: 12.0.sp,
+                        fontFamily: 'Cairo',
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.7,
                         color: Theme.of(context).textTheme.headline6.color,
@@ -127,9 +134,9 @@ class _FilterRowState extends State<FilterRow> {
                           AppLocalizations.of(context)
                               .translate('productListViewPage', 'sortByString'),
                           style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 12.0.sp,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Jost',
+                            fontFamily: 'Cairo',
                             letterSpacing: 0.7,
                             color: Theme.of(context).textTheme.headline6.color,
                           ),
@@ -140,17 +147,23 @@ class _FilterRowState extends State<FilterRow> {
                         Divider(
                           height: 1.0,
                         ),
+
                         RadioListTile(
                           value: 1,
                           groupValue: selectedRadioSort,
                           title: Text(
-                            "Popularity",
+
+                            "السعر من الاقل الي الاكبر",
                             style: TextStyle(
+                              fontFamily: "Cairo",
+                              fontSize: 12.0.sp,
+                              fontWeight: FontWeight.bold,
                               color: Theme.of(context).textTheme.headline6.color,
                             ),
                           ),
                           onChanged: (val) {
-                            setSelectedRadioSort(val);
+                            setSelectedRadioSort( val,val,context);
+
                           },
                           activeColor: Theme.of(context).primaryColor,
                         ),
@@ -158,13 +171,16 @@ class _FilterRowState extends State<FilterRow> {
                           value: 2,
                           groupValue: selectedRadioSort,
                           title: Text(
-                            "Price -- Low to High",
+                            "السعر من الاكبر الي الاقل",
                             style: TextStyle(
+                              fontFamily: "Cairo",
+                              fontSize: 12.0.sp,
+                              fontWeight: FontWeight.bold,
                               color: Theme.of(context).textTheme.headline6.color,
                             ),
                           ),
                           onChanged: (val) {
-                            setSelectedRadioSort(val);
+                            setSelectedRadioSort( val,val,context);
                           },
                           activeColor: Theme.of(context).primaryColor,
                         ),
@@ -172,13 +188,16 @@ class _FilterRowState extends State<FilterRow> {
                           value: 3,
                           groupValue: selectedRadioSort,
                           title: Text(
-                            "Price -- High to Low",
+                            "الاكثر رواجا",
                             style: TextStyle(
+                              fontFamily: "Cairo",
+                              fontSize: 12.0.sp,
+                              fontWeight: FontWeight.bold,
                               color: Theme.of(context).textTheme.headline6.color,
                             ),
                           ),
                           onChanged: (val) {
-                            setSelectedRadioSort(val);
+                            setSelectedRadioSort( val,val,context);
                           },
                           activeColor: Theme.of(context).primaryColor,
                         ),
@@ -186,13 +205,33 @@ class _FilterRowState extends State<FilterRow> {
                           value: 4,
                           groupValue: selectedRadioSort,
                           title: Text(
-                            "Newest First",
+                            "الاحدث وصولا",
                             style: TextStyle(
+                              fontFamily: "Cairo",
+                              fontSize: 12.0.sp,
+                              fontWeight: FontWeight.bold,
                               color: Theme.of(context).textTheme.headline6.color,
                             ),
                           ),
                           onChanged: (val) {
-                            setSelectedRadioSort(val);
+                            setSelectedRadioSort( val,val,context);
+                          },
+                          activeColor: Theme.of(context).primaryColor,
+                        ),
+                        RadioListTile(
+                          value: 4,
+                          groupValue: selectedRadioSort,
+                          title: Text(
+                            "عروض الخصم",
+                            style: TextStyle(
+                              fontFamily: "Cairo",
+                              fontSize: 12.0.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).textTheme.headline6.color,
+                            ),
+                          ),
+                          onChanged: (val) {
+                            setSelectedRadioSort( val,val,context);
                           },
                           activeColor: Theme.of(context).primaryColor,
                         ),
