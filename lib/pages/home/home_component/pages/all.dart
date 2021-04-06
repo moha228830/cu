@@ -13,6 +13,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:my_store/pages/product/product.dart';
 import 'package:my_store/pages/home/home_component/recommend/new1.dart';
 import 'package:my_store/pages/home/home_component/recommend/new2.dart';
+import 'package:my_store/pages/home/home_component/recommend/new3.dart';
 
 
 import 'package:my_store/pages/product_list_view/product_class.dart';
@@ -84,7 +85,7 @@ class All extends StatelessWidget {
                               context,
                               PageTransition(
                                   curve: Curves.linear,
-                                  duration: Duration(milliseconds: 900),
+                                  duration: Duration(milliseconds: 500),
 
                                   type: PageTransitionType.rightToLeft,
                                   child:ProductListView2(1, "new",)));
@@ -119,7 +120,6 @@ class All extends StatelessWidget {
           ),
           // Item Discount End
 
-          SizedBox(height: 10.0),
 
           // Item Popular Start
           Container(
@@ -153,7 +153,7 @@ class All extends StatelessWidget {
                               context,
                               PageTransition(
                                   curve: Curves.linear,
-                                  duration: Duration(milliseconds: 900),
+                                  duration: Duration(milliseconds: 500),
 
                                   type: PageTransitionType.rightToLeft,
                                   child:ProductListView2(1, "popular",)));
@@ -188,7 +188,7 @@ class All extends StatelessWidget {
           ),
           // Item Popular End
 
-          SizedBox(height: 10.0),
+
           Container(
             width: width,
             color: Theme.of(context).scaffoldBackgroundColor,
@@ -219,7 +219,7 @@ class All extends StatelessWidget {
                               context,
                               PageTransition(
                                   curve: Curves.linear,
-                                  duration: Duration(milliseconds: 900),
+                                  duration: Duration(milliseconds: 500),
 
                                   type: PageTransitionType.rightToLeft,
                                   child:ProductListView2(1, "over",)));
@@ -253,7 +253,70 @@ class All extends StatelessWidget {
             ),
           ),
           DealOfTheDay(brands),
-          SizedBox(height: 3.0.h),
+           Container(
+            width: width,
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child:
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text("اخترنا لك",
+                        style: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize: 15.0.sp,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.7,
+                          color: Theme.of(context).textTheme.headline6.color,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  curve: Curves.linear,
+                                  duration: Duration(milliseconds: 500),
+
+                                  type: PageTransitionType.rightToLeft,
+                                  child:ProductListView2(1, "popular",)));
+
+                        },
+                        child: Text("شاهد المزيد ",
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontSize: 12.0.sp,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.7,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.0),
+
+
+                new_item.length==0
+                    ? New2(popular)
+                    :
+                New3(new_item)
+                ,
+
+
+              ],
+            ),
+          ),
 
           // New Item Start
 

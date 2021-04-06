@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:io' ;
 import 'package:my_store/config.dart';
 import 'package:my_store/pages/orders/items.dart';
+import 'package:sizer/sizer.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -14,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // My Own Import
 import 'package:my_store/pages/home/home.dart';
-import 'package:my_store/pages/order_payment/delivery_address.dart';
+import 'package:my_store/pages/orders/fatora.dart';
 
 class Order extends StatefulWidget {
   @override
@@ -30,7 +31,15 @@ class _OrderState extends State<Order> {
   Map map = {};
   bool set_num = false;
 
-
+  check_fatora(type,status){
+    if(type == "cach"){
+      if(status != 3){
+        return false ;
+      }
+    }else{
+      return true;
+    }
+  }
   //////////////////////////////////////////////////////////////////////////////////////////////////////
 
   get_carts  () async{
@@ -53,7 +62,7 @@ class _OrderState extends State<Order> {
           });
 
 
-
+      print(response.body);
 
           if (response.statusCode == 200) {
 
@@ -421,7 +430,7 @@ class _OrderState extends State<Order> {
 
 
                     child: Container(
-                      height: height/2.5,
+
                       width: (width - 10.0),
                       child: Card(
                         elevation: 3.0,
@@ -429,6 +438,7 @@ class _OrderState extends State<Order> {
                           padding: const EdgeInsets.all(8.0),
                           child: SingleChildScrollView(
                             child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 Row(
                                   mainAxisAlignment:
@@ -441,12 +451,14 @@ class _OrderState extends State<Order> {
                                       width: 10.0,
                                     ),
                                    item["status"]==1? Container(
+                                     width:width-50,
 
                                       padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
                                       color: Colors.black,
                                       child: Text(
                                         'جاري الشحن ',
                                         style: TextStyle(
+                                          fontFamily: "Cairo",
                                           color: Colors.white,
                                           fontSize: width/24,
                                           fontWeight: FontWeight.w900
@@ -462,6 +474,7 @@ class _OrderState extends State<Order> {
                                        style: TextStyle(
                                            color: Colors.white,
                                            fontSize: width/24,
+                                           fontFamily: "Cairo",
                                            fontWeight: FontWeight.w900
                                        ),
                                      ),
@@ -474,6 +487,7 @@ class _OrderState extends State<Order> {
                                        'تم الاستلام',
                                        style: TextStyle(
                                            color: Colors.white,
+                                           fontFamily: "Cairo",
                                            fontSize: width/24,
                                            fontWeight: FontWeight.w900
                                        ),
@@ -488,6 +502,7 @@ class _OrderState extends State<Order> {
                                        style: TextStyle(
                                            color: Colors.white,
                                            fontSize: width/24,
+                                           fontFamily: "Cairo",
                                            fontWeight: FontWeight.w900
                                        ),
                                      ),
@@ -513,6 +528,7 @@ class _OrderState extends State<Order> {
                                                 .headline6
                                                 .color,
                                             fontSize: width/24,
+                                              fontFamily: "Cairo",
                                             fontWeight: FontWeight.bold
                                           ),
                                         ),
@@ -530,6 +546,7 @@ class _OrderState extends State<Order> {
                                                 .headline6
                                                 .color,
                                               fontSize: width/24,
+                                              fontFamily: "Cairo",
                                               fontWeight: FontWeight.bold
                                           ),
                                         ),
@@ -551,6 +568,7 @@ class _OrderState extends State<Order> {
                                                   .headline6
                                                   .color,
                                               fontSize: width/24,
+                                              fontFamily: "Cairo",
                                               fontWeight: FontWeight.bold
                                           ),
                                         ),
@@ -568,6 +586,7 @@ class _OrderState extends State<Order> {
                                                   .headline6
                                                   .color,
                                               fontSize: width/24,
+                                              fontFamily: "Cairo",
                                               fontWeight: FontWeight.bold
                                           ),
                                         ),
@@ -589,6 +608,7 @@ class _OrderState extends State<Order> {
                                                   .headline6
                                                   .color,
                                               fontSize: width/24,
+                                              fontFamily: "Cairo",
                                               fontWeight: FontWeight.bold
                                           ),
                                         ),
@@ -599,16 +619,96 @@ class _OrderState extends State<Order> {
                                       Expanded(
                                         flex: 2,
                                         child: Text(
-                                          '${item["price"]}  KW',
+                                          '${item["price"]}  KWD',
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .textTheme
                                                   .headline6
                                                   .color,
                                               fontSize: width/24,
+                                              fontFamily: "Cairo",
                                               fontWeight: FontWeight.bold
                                           ),
                                         ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(6),
+                                  child: Row(
+
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Text(
+                                          'حالة الدفع   :',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .color,
+                                              fontSize: width/24,
+                                              fontFamily: "Cairo",
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10.0,
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: item["type"]=="cach"?
+                                        Text(
+                                          'الدفع عند الاستلام',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .color,
+                                              fontSize: width/24,
+                                              fontFamily: "Cairo",
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ):
+                                        item["type"]=="balance"?
+                                        Text(
+                                          'تم الدفع من الرصيد ',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .color,
+                                              fontSize: width/24,
+                                              fontFamily: "Cairo",
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ):
+                                        item["type"]=="visa"?
+                                        Text(
+                                          'تم الدفع ',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .color,
+                                              fontSize: width/24,
+                                              fontFamily: "Cairo",
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ):item["type"]=="knet"?
+                                        Text(
+                                          'تم الدفع',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .color,
+                                              fontSize: width/24,
+                                              fontFamily: "Cairo",
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ):Text(" "),
                                       ),
                                     ],
                                   ),
@@ -627,6 +727,7 @@ class _OrderState extends State<Order> {
 
 
                                       Expanded(
+                                        flex:7,
                                         child: InkWell(
                                           onTap: () {
                                             print(item["items"]);
@@ -640,18 +741,17 @@ class _OrderState extends State<Order> {
 
                                           },
                                           child: Container(
-                                            width: width - 40.0,
-                                            padding: EdgeInsets.all(15.0),
+                                            padding: EdgeInsets.all(10.0),
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
                                               color: Colors.pinkAccent,
-                                              borderRadius: BorderRadius.circular(30.0),
+                                              borderRadius: BorderRadius.circular(10.0),
                                             ),
                                             child: !_load?Text(
                                               "تفاصيل الطلب ",
                                               style: TextStyle(
                                                 color: Theme.of(context).appBarTheme.color,
-                                                fontFamily: 'Jost',
+                                                fontFamily: "Cairo",
                                                 fontSize: width/24,
                                                 letterSpacing: 0.7,
                                                 fontWeight: FontWeight.bold,
@@ -660,6 +760,49 @@ class _OrderState extends State<Order> {
                                           ),
                                         ),
                                       ),
+                                      Expanded(child: Text(" ")),
+
+
+
+                                      Expanded(
+                                        flex:5,
+
+                                        child: InkWell(
+                                          onTap: () {
+                                            print(item["items"]);
+                                            Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                    type: PageTransitionType
+                                                        .rightToLeft,
+                                                    child:Fatora(item["items"],item)    ))
+                                            ;
+
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.all(10.0),
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: Colors.pinkAccent,
+                                              borderRadius: BorderRadius.circular(10.0),
+                                            ),
+                                            child: !_load?Text(
+                                              "الفاتورة ",
+                                              style: TextStyle(
+                                                color: Theme.of(context).appBarTheme.color,
+                                                fontFamily: "Cairo",
+                                                fontSize: width/24,
+                                                letterSpacing: 0.7,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ):CircularProgressIndicator(backgroundColor: Colors.blue,),
+                                          ),
+                                        ),
+                                      )
+
+
+
+
 
 
 

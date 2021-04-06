@@ -8,6 +8,7 @@ import 'package:sizer/sizer.dart';
 import 'package:my_store/pages/product_list_view/product_class.dart';
 
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 // My Own Imports
@@ -32,7 +33,7 @@ class MySlider extends StatelessWidget {
 
     return Scaffold(
       key: _scaffoldKey,
-backgroundColor: Colors.white ,
+backgroundColor: Colors.grey[200] ,
       body: ListView(
         shrinkWrap: true,
         children: <Widget>[
@@ -50,7 +51,7 @@ backgroundColor: Colors.white ,
                   decoration: BoxDecoration(
                     color: Theme.of(context).appBarTheme.color,
                     borderRadius: BorderRadius.circular(0.0),
-                    border: Border.all(color:Colors.grey),
+                    //border: Border.all(color:Colors.grey),
 
 
                   ),                  child: SizedBox(
@@ -58,7 +59,20 @@ backgroundColor: Colors.white ,
                     width: width,
                   child: Carousel(
 
-                      images:   data.map((title) => NetworkImage(title["img_full_path"])).toList(),
+                      images:   data.map((title) => InkWell(child:Container(
+                        decoration: new BoxDecoration(
+                          image: new DecorationImage(
+                            image: new NetworkImage(title["img_full_path"]),
+                            fit: BoxFit.fill,
+                          )
+                        ),
+                        ) ,
+
+                      onTap: (){
+                        launch("${title["link"]}");
+
+                      },
+                      ) ).toList(),
 
 
 
@@ -81,38 +95,41 @@ backgroundColor: Colors.white ,
 
             ],
           ),
-          SizedBox(height: 2.0.h,),
-          Container(
-            color: Colors.black,
-            padding: EdgeInsets.symmetric(vertical: 0.7.h, horizontal: 0.0.h),
-            child: Center(child:
-            Text("عروض مزهلة لدي كوشا استور",style: TextStyle(color: Colors.white,fontFamily: "Cairo",fontSize: 14.0.sp),)),
-          ),
-          SizedBox(height: 3.0.h,),
-          InkWell(
-            onTap: (){
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      curve: Curves.linear,
-                      duration: Duration(milliseconds: 400),
-                      type: PageTransitionType.bottomToTop,
-                      child: Home(0)));
 
-            },
+          SizedBox(height: 8.0.h,),
+          Container(
+            height:13.0.h ,
+            color: Colors.white,
+           // padding: EdgeInsets.symmetric(vertical: 2.0.h, horizontal: 21.0.h),
             child: Center(
               child: Container(
-                width: 50.0.w,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(20.0),
-                  border: Border.all(color:Colors.grey),
+                height:8.0.h ,
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            curve: Curves.linear,
+                            duration: Duration(milliseconds: 400),
+                            type: PageTransitionType.bottomToTop,
+                            child: Home(0)));
+
+                  },
+                  child: Center(
+                    child: Container(
+                      width: 70.0.w,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(20.0),
+                        border: Border.all(color:Colors.grey),
 
 
+                      ),
+                      child: Center(child:
+                      Text("تخطي",style: TextStyle(color: Colors.white,fontFamily: "Cairo",fontSize: 14.0.sp),)),
+                    ),
+                  ),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 0.0.h, horizontal: 0.0.h),
-                child: Center(child:
-                Text("تخطي",style: TextStyle(color: Colors.white,fontFamily: "Cairo",fontSize: 14.0.sp),)),
               ),
             ),
           ),

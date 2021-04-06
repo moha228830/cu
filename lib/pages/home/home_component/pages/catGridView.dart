@@ -31,7 +31,7 @@ class _CatGridViewState extends State<CatGridView> {
                 context,
                 PageTransition(
                     curve: Curves.linear,
-                    duration: Duration(milliseconds: 700),
+                    duration: Duration(milliseconds: 500),
 
                     type: PageTransitionType.topToBottom,
                     child:ProductListView(widget.cats["id"],"sub")));
@@ -47,26 +47,41 @@ class _CatGridViewState extends State<CatGridView> {
 
 
                     child:  Container(
-                      height: 20.0.h,
-                      width: 45.0.w,
+                      alignment: Alignment.bottomCenter,
+                      height: 31.0.h,
+                      width: 48.0.w,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colors.black)   ,
+                        borderRadius: BorderRadius.circular(0),
+                        //border: Border.all(color: Colors.black)   ,
                         image: DecorationImage(
                           image: NetworkImage(widget.cats["img_full_path"]),
                           fit: BoxFit.fill,
+
                         ),
 
-                        //color: Colors.blue[700 ]
+                        color: Colors.white
                       ),
-                    ),
+                      child:
+
+                           Container(
+                             color: Colors.white,
+                               width: 48.0.w,
+                               padding: EdgeInsets.symmetric(vertical: 1.0.h, horizontal: 1.0.h),
+
+                               child: Row(
+                                 mainAxisAlignment: MainAxisAlignment.center,
+                                 children: [
+                                   Text("${widget.cats["name"]}",style:TextStyle(color: Colors.black,fontFamily: "Cairo")),
+                                 ],
+                               )))
+                      ,
+
 
 
 
 
 
                   ),
-                  Center(child: Text("${widget.cats["name"]}",style:Theme.of(context).textTheme.headline6))
                 ]
               ),
             ),

@@ -12,6 +12,7 @@ import 'package:my_store/AppTheme/my_behaviour.dart';
 import 'package:my_store/functions/change_language.dart';
 import 'package:my_store/functions/localizations.dart';
 import 'package:my_store/pages/home/home.dart';
+import 'package:my_store/pages/order_payment/myfatorah.dart';
 import 'package:my_store/providers/homeProvider.dart';
 import 'package:my_store/providers/productsProvider.dart';
 import 'package:my_store/slider/slider.dart';

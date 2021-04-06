@@ -370,9 +370,9 @@ class _ProductListViewState extends State<ProductListView> {
                   PagedSliverGrid<int, Product>(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 5,
-                      childAspectRatio:(MediaQuery.of(context).size.width / 3.5) / (MediaQuery.of(context).size.height / 3.6),
+                      crossAxisSpacing: 6,
+                      mainAxisSpacing: 2,
+                      childAspectRatio:(MediaQuery.of(context).size.width / 2) / (MediaQuery.of(context).size.height /2.83),
 
                     ),
                     pagingController: _pagingController,

@@ -5,13 +5,13 @@ import 'package:my_store/pages/product_list_view/get_function.dart';
 import 'package:my_store/pages/product_list_view/product_class.dart';
 import 'package:my_store/providers/homeProvider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class Releted extends StatefulWidget {
   List data;
   int id ;
   Releted(this.data,this.id);
-
   @override
   _ReletedState createState() => _ReletedState();
 }
@@ -19,6 +19,12 @@ class Releted extends StatefulWidget {
 class _ReletedState extends State<Releted> {
 List all = [];
 List some = [];
+set_fav(context)async{
+  SharedPreferences localStorage =
+  await SharedPreferences.getInstance();
+  localStorage.setStringList('favorite',Provider.of<HomeProvider>(context, listen: false).favorite);
+}
+
   @override
   void initState() {
   //  print(widget.data);
@@ -48,14 +54,9 @@ List some = [];
                     decoration: BoxDecoration(
                       color: Theme.of(context).appBarTheme.color,
                       borderRadius: BorderRadius.circular(20.0),
-                      border: Border.all(color: Theme.of(context).primaryColor),
+                      border: Border.all(color:Colors.grey[300]),
 
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 0.7,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ],
+
                     ),
                     child: SingleChildScrollView(
                       child: Column(
@@ -104,28 +105,27 @@ List some = [];
                                   ),
                                 ),
                                 Positioned(
-                                  top: 0.0,
-                                  right:0.0,
+                                  top: 2.0,
+                                  right:2.0,
                                   child: InkWell(
                                     onTap: (){
-                                      print("favorit");
+                                      Provider.of<HomeProvider>(context, listen: false).toggel_faforite(cat["id"]);
+                                      set_fav(context);
                                     },
                                     child: Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        margin: EdgeInsets.all(6.0),
+                                        padding: EdgeInsets.all(2.0),
+                                        margin: EdgeInsets.all(2.0),
                                         decoration: BoxDecoration(
                                           color: Theme.of(context).scaffoldBackgroundColor,
 
-                                          borderRadius: BorderRadius.only(
-                                            topLeft:
-                                            Radius.circular(10.0),
-                                            bottomRight: Radius.circular(
-                                              10.0,
-                                            ),
-                                          ),
+                                          borderRadius: BorderRadius.circular(30),
                                         ),
+
                                         child:
-                                        Icon(Icons.favorite_border_outlined,color: Colors.red,size: 15.0.sp,)
+                                        Provider.of<HomeProvider>(context, listen: true).favorite_int.contains(cat["id"])?
+                                        Icon(Icons.favorite,color: Colors.pinkAccent,size: 20.0.sp,):
+
+                                        Icon(Icons.favorite_border_outlined,color: Colors.pinkAccent,size: 20.0.sp,)
                                     ),
                                   ),
                                 ),
@@ -159,7 +159,7 @@ List some = [];
                                   MainAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      "${cat["over_price"]} KW ", textDirection: TextDirection.ltr,
+                                      "${cat["over_price"]} KWD ", textDirection: TextDirection.ltr,
                                       style: TextStyle(
                                         fontSize: width/24,
                                         fontWeight: FontWeight.bold,
@@ -176,7 +176,7 @@ List some = [];
                                       width: 7.0,
                                     ),
                                     Text(
-                                      "${cat["price"]} KW ", textDirection: TextDirection.ltr,
+                                      "${cat["price"]} KWD ", textDirection: TextDirection.ltr,
                                       style: TextStyle(
                                           fontSize: width/30,
                                           decoration: TextDecoration

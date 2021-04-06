@@ -26,7 +26,7 @@ class Cat extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            childAspectRatio:(MediaQuery.of(context).size.width / 5.5) / (MediaQuery.of(context).size.height / 10),
+            childAspectRatio:(MediaQuery.of(context).size.width / 2) / (MediaQuery.of(context).size.height / 3),
 
 
           ),

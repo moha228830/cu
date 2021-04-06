@@ -25,7 +25,7 @@ class New1 extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     var new_item = data;
     return  Container(
-      height: 45.1.h,
+      height: 37.4.h,
       padding: EdgeInsets.all(0),
       margin: EdgeInsets.all(0),
 
@@ -41,12 +41,12 @@ class New1 extends StatelessWidget {
                 child: InkWell(
                   child:
                   Container(
-                    margin:EdgeInsets.symmetric(vertical: 0.5.h, horizontal: 0.5.h),
+                    margin:EdgeInsets.symmetric(vertical: 0.6.h, horizontal: 0.4.h),
                     decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.black,
-                      ),
+                      color: Colors.white,
+                      //borderRadius: BorderRadius.circular(10.0),
+                     // border: Border.all(color: Colors.black,
+                     // ),
 
 
                     ),
@@ -61,15 +61,15 @@ class New1 extends StatelessWidget {
                               child: Stack(
                                 children: <Widget>[
                                   Container(
-                                    height: 26.0.h,
-                                    width: 45.0.w,
+                                    height: 24.0.h,
+                                    width: 47.0.w,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
                                         topLeft:
-                                        Radius.circular(10.0),
+                                        Radius.circular(0.0),
                                         topRight:
                                              Radius.circular(
-                                          10.0,
+                                          0.0,
                                         ),
                                       ),
                                       image: DecorationImage(
@@ -80,20 +80,68 @@ class New1 extends StatelessWidget {
                                     ),
                                     margin: EdgeInsets.all(0.0),
                                   ),
+                                  Positioned(
+                                    bottom: 0.0,
+                                    left: 0.0,
+                                    child: Container(
+                                      padding: EdgeInsets.all(5.0),
+                                      margin: EdgeInsets.all(0.0),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).primaryColor,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft:
+                                          Radius.circular(0.0),
+                                          bottomRight: Radius.circular(
+                                            0.0,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                          "${cat["precentage"]} - %",
+                                          style: TextStyle(
+                                            fontSize: 8.0.sp,
+                                            color: Colors.white,
+                                          )),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 0.0,
+                                    right:0.0,
+                                    child: InkWell(
+                                      onTap: (){
+                                        Provider.of<HomeProvider>(context, listen: false).toggel_faforite(cat["id"]);
+                                        set_fav(context);
+                                      },
+                                      child: Container(
+                                          padding: EdgeInsets.all(2.0),
+                                          margin: EdgeInsets.all(2.0),
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context).scaffoldBackgroundColor,
 
+                                            borderRadius: BorderRadius.circular(30),
+                                            ),
+
+                                          child:
+                                          Provider.of<HomeProvider>(context, listen: true).favorite_int.contains(cat["id"])?
+                                          Icon(Icons.favorite,color: Colors.pinkAccent,size: 16.0.sp,):
+
+                                          Icon(Icons.favorite_border_outlined,color: Colors.pinkAccent,size: 16.0.sp,)
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
                             Container(
                               color: Theme.of(context).scaffoldBackgroundColor,
                               height: 12.0.h,
-                              width: 45.0.w,
-                              alignment: Alignment.center,
+                              width: 46.0.w,
 
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text(
-                                    get_by_size(cat["name"],20,18,"..") ,
+                                  Text(" "+
+                                    get_by_size(cat["name"],22,22,"..") ,
                                     style: TextStyle(
                                       fontSize: 10.0.sp,
                                       fontFamily: 'Cairo',
@@ -108,8 +156,8 @@ class New1 extends StatelessWidget {
                                     maxLines: 1,
                                     textAlign: TextAlign.center,
                                   ),
-                                  Text(
-                                    get_by_size(cat["description"],22,20,"..") ,
+                                  Text(" "+
+                                    get_by_size(cat["description"],24,24,"..") ,
                                     style: TextStyle(
                                       fontSize: 9.0.sp,
                                       fontFamily: 'Cairo',
@@ -124,13 +172,16 @@ class New1 extends StatelessWidget {
                                     maxLines: 1,
                                     textAlign: TextAlign.center,
                                   ),
-                                  SizedBox(height: 1.0.h,),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.center,
+                                    MainAxisAlignment.start,
                                     children: <Widget>[
+                                      SizedBox(
+                                        width: 0.5.w,
+                                      ),
                                       Container(
                                       //  width:20.0.w ,
+
                                         child: Text(
                                           "${cat["price"]} KWD ", textDirection: TextDirection.ltr,
                                           style: TextStyle(
@@ -145,7 +196,7 @@ class New1 extends StatelessWidget {
                                       ),
 
                                       SizedBox(
-                                        width: 7.0.w,
+                                        width: 4.0.w,
                                       ),
                                       Container(
                                         child: Text(
@@ -168,73 +219,7 @@ class New1 extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  bottomRight:
-                                  Radius.circular(10.0),
-                                 bottomLeft:
-                                  Radius.circular(
-                                    10.0,
-                                  ),
-                                ),
 
-                              ),
-                            height: 5.7 .h,width: 45.0.w,
-                              child: Center(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-
-                                      child: Text(" ",style: TextStyle(
-                                          fontSize: 12.0.sp,
-                                          fontFamily: "Cairo",
-
-                                          color: Colors.white),),
-                                    ),
-                                    Expanded(
-                                      flex:4 ,
-                                      child: Text("إشتري الان",style: TextStyle(
-                                          fontSize: 10.0.sp,
-                                          fontFamily: "Cairo",
-
-                                          color: Colors.white
-                                      ),),
-                                    ),
-                                    Expanded(
-                                      flex:2 ,
-                                      child:
-                                     Container(  decoration: BoxDecoration(
-                                       color: Colors.pinkAccent,
-                                       borderRadius: BorderRadius.only(
-                                         bottomRight:
-                                         Radius.circular(0.0),
-                                         bottomLeft:
-                                         Radius.circular(
-                                           10.0,
-                                         ),
-                                       ),
-
-                                     ), child: InkWell(
-                                       onTap: () {
-                                         Provider.of<HomeProvider>(context, listen: false).toggel_faforite(cat["id"]);
-                                         set_fav(context);
-                                       },
-                                       child: Center(
-                                         child:
-
-                                         Provider.of<HomeProvider>(context, listen: true).favorite_int.contains(cat["id"])?
-                                         Icon(Icons.favorite,color: Colors.white,size: 25.0.sp,):
-
-                                         Icon(Icons.favorite_border_outlined,color: Colors.white,size: 25.0.sp,),
-
-                                       ),
-                                     ), ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
                           ],
                         ),
                       ),
@@ -246,7 +231,7 @@ class New1 extends StatelessWidget {
                           context,
                           PageTransition(
                               curve: Curves.linear,
-                              duration: Duration(milliseconds: 700),
+                              duration: Duration(milliseconds: 500),
 
                               type: PageTransitionType.rightToLeft,
                               child: ProductPage(

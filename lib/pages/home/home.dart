@@ -149,7 +149,7 @@ print(fav);
                  ),
                   badgeColor: Colors.grey,
                   child: Icon(
-                   Icons.local_grocery_store_sharp,color: Colors.white,size: 25.0.sp,
+                   Icons.local_grocery_store_sharp,color: Colors.white,size: 20.0.sp,
                   ),
                 ),
                 onPressed: () {

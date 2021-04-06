@@ -43,12 +43,11 @@ class _ProductsGridViewState extends State<ProductsGridView> {
     return InkWell(
       child:
       Container(
-        margin:EdgeInsets.symmetric(vertical: 0.7.h, horizontal: 0.7.h),
+        margin:EdgeInsets.symmetric(vertical: 0.75.h, horizontal: 0.1.h),
         decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(10.0),
-          border: Border.all(color: Colors.black,
-          ),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(0.0),
+        //  border: Border.all(color: Colors.white,),
 
 
         ),
@@ -63,15 +62,15 @@ class _ProductsGridViewState extends State<ProductsGridView> {
                 child: Stack(
                   children: <Widget>[
                     Container(
-                      height: 28.5.h,
+                      height: 22.5.h,
                       width: 50.0.w,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topLeft:
-                          Radius.circular(10.0),
+                          Radius.circular(0.0),
                           topRight:
                           Radius.circular(
-                            10.0,
+                            0.0,
                           ),
                         ),
                         image: DecorationImage(
@@ -82,20 +81,46 @@ class _ProductsGridViewState extends State<ProductsGridView> {
                       ),
                       margin: EdgeInsets.all(0.0),
                     ),
+                    Positioned(
+                      top: 0.0,
+                      right:0.0,
+                      child: InkWell(
+                        onTap: (){
+                          Provider.of<HomeProvider>(context, listen: false).toggel_faforite(products.id);
+                          set_fav(context);
+                        },
+                        child: Container(
+                            padding: EdgeInsets.all(2.0),
+                            margin: EdgeInsets.all(2.0),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+
+                            child:
+                            Provider.of<HomeProvider>(context, listen: true).favorite_int.contains(products.id)?
+                            Icon(Icons.favorite,color: Colors.pinkAccent,size: 16.0.sp,):
+
+                            Icon(Icons.favorite_border_outlined,color: Colors.pinkAccent,size: 16.0.sp,)
+                        ),
+                      ),
+                    ),
 
                   ],
                 ),
               ),
               Container(
                 color: Theme.of(context).scaffoldBackgroundColor,
-                height: 12.0.h,
-                width: 50.0.w,
-                alignment: Alignment.center,
+                height: 10.5.h,
+                width: 48.0.w,
 
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+
                   children: <Widget>[
-                    Text(
-                      get_by_size(products.name,20,18,"..") ,
+                    Text(" "+
+                      get_by_size(products.name,23,23,"..") ,
                       style: TextStyle(
                         fontSize: 10.0.sp,
                         fontFamily: 'Cairo',
@@ -110,8 +135,8 @@ class _ProductsGridViewState extends State<ProductsGridView> {
                       maxLines: 1,
                       textAlign: TextAlign.center,
                     ),
-                    Text(
-                      get_by_size(products.description,22,20,"..") ,
+                    Text(" "+
+                      get_by_size(products.description,25,25,"..") ,
                       style: TextStyle(
                         fontSize: 9.0.sp,
                         fontFamily: 'Cairo',
@@ -126,11 +151,15 @@ class _ProductsGridViewState extends State<ProductsGridView> {
                       maxLines: 1,
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 1.0.h,),
+                   // SizedBox(height: 1.0.h,),
                     Row(
                       mainAxisAlignment:
-                      MainAxisAlignment.center,
+                      MainAxisAlignment.start,
                       children: <Widget>[
+
+                        SizedBox(
+                          width: 0.5.w,
+                        ),
                         Container(
                           //  width:20.0.w ,
                           child: Text(
@@ -147,7 +176,7 @@ class _ProductsGridViewState extends State<ProductsGridView> {
                         ),
 
                         SizedBox(
-                          width: 7.0.w,
+                          width: 3.0.w,
                         ),
                         Container(
                           child: Text(
@@ -170,72 +199,7 @@ class _ProductsGridViewState extends State<ProductsGridView> {
                   ],
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomRight:
-                    Radius.circular(10.0),
-                    bottomLeft:
-                    Radius.circular(
-                      10.0,
-                    ),
-                  ),
 
-                ),
-                height: 5.7 .h,width: 50.0.w,
-                child: Center(
-                  child: Row(
-                    children: [
-                      Expanded(
-
-                        child: Text(" ",style: TextStyle(
-                            fontSize: 12.0.sp,
-                            fontFamily: "Cairo",
-
-                            color: Colors.white),),
-                      ),
-                      Expanded(
-                        flex:4 ,
-                        child: Text("إشتري الان",style: TextStyle(
-                            fontSize: 10.0.sp,
-                            fontFamily: "Cairo",
-
-                            color: Colors.white
-                        ),),
-                      ),
-                      Expanded(
-                        flex:2 ,
-                        child:
-                        Container(  decoration: BoxDecoration(
-                          color: Colors.pinkAccent,
-                          borderRadius: BorderRadius.only(
-                            bottomRight:
-                            Radius.circular(0.0),
-                            bottomLeft:
-                            Radius.circular(
-                              10.0,
-                            ),
-                          ),
-
-                        ), child: InkWell(
-                          onTap: () {
-                            Provider.of<HomeProvider>(context, listen: false).toggel_faforite(products.id);
-                            set_fav(context);
-                          },
-                          child: Center(
-                              child:
-                              Provider.of<HomeProvider>(context, listen: true).favorite_int.contains(products.id)?
-                              Icon(Icons.favorite,color: Colors.white,size: 25.0.sp,):
-
-                              Icon(Icons.favorite_border_outlined,color: Colors.white,size: 25.0.sp,)
-
-                          ),
-                        ), ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
             ],
           ),
         ),

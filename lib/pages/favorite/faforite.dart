@@ -76,7 +76,7 @@ class _GetFavoriteState extends State<GetFavorite> {
           crossAxisCount: 2,
           crossAxisSpacing: 5,
           mainAxisSpacing: 5,
-          childAspectRatio:(MediaQuery.of(context).size.width / 3.5) / (MediaQuery.of(context).size.height / 3.6),
+          childAspectRatio:(MediaQuery.of(context).size.width / 2) / (MediaQuery.of(context).size.height /2.79),
 
         ),
         pagingController: _pagingController,

@@ -82,7 +82,8 @@ class _CategorySliderState extends State<CategorySlider> {
                                 Container(
                                   decoration: BoxDecoration(
                                     color:type==cat["id"]?Colors.pinkAccent:  Theme.of(context).bottomAppBarColor,
-                                    border: Border.all(color: Colors.pinkAccent),                                    borderRadius: BorderRadius.circular(10.0),
+                                    border: Border.all(color: Colors.black),
+                                    borderRadius: BorderRadius.circular(5.0),
 
                                   ),
                                   child: Container(

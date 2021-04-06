@@ -10,7 +10,7 @@ import 'package:my_store/pages/profile/password.dart';
 import 'package:my_store/pages/profile/phone.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 import 'package:my_store/pages/login_signup/signup.dart';
 import 'package:my_store/pages/profile/data.dart';
 
@@ -228,57 +228,23 @@ class _MyAccountState extends State<MyAccount> {
       ListView(
       shrinkWrap: true,
       children: <Widget>[
-        Container(
+        Image(
+          image: AssetImage('assets/my.jpeg'),
           width: width,
-          height: 360.0,
-          child: Stack(
-            children: <Widget>[
-              Image(
-                image: AssetImage('assets/user_profile/background.jpg'),
-                width: width,
-                height: 220.0,
-                fit: BoxFit.cover,
-              ),
-              Positioned(
-                top: 165.0,
-                right: ((width / 2) - 50.0),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: 110.0,
-                      width: 110.0,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(55.0),
-                        border: Border.all(color: Colors.white, width: 5.0),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: new BorderRadius.circular(50.0),
-                        child: Image(
-                          image: AssetImage('assets/user_profile/profile.png'),
-                          height: 100.0,
-                          width: 100.0,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child:  Text(
-                        "${my_name}",
-                        style: TextStyle(
-                            fontSize: width / 24,
-                            fontFamily: "Cairo",
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).textTheme.headline6.color),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          height: 220.0,
+          fit: BoxFit.fill,
+        ),
+        Center(
+          child: Padding(
+            padding: EdgeInsets.only(top: 8.0),
+            child:  Text(
+              "${my_name}",
+              style: TextStyle(
+                  fontSize: width / 24,
+                  fontFamily: "Cairo",
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.headline6.color),
+            ),
           ),
         ),
         Container(

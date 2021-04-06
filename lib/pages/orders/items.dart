@@ -1,19 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_store/functions/localizations.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io' ;
-import 'package:my_store/config.dart';
+import 'package:sizer/sizer.dart';
 
-import 'package:fluttertoast/fluttertoast.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
-// My Own Import
-import 'package:my_store/pages/home/home.dart';
-import 'package:my_store/pages/order_payment/delivery_address.dart';
 
 class Items extends StatefulWidget {
 
@@ -51,7 +39,7 @@ class _ItemsState extends State<Items> {
 
     cartItem =  widget.data.length;
 
-   cartItemList = widget.data;
+    cartItemList = widget.data;
   }
 
   @override
@@ -65,9 +53,10 @@ class _ItemsState extends State<Items> {
           title: Text(
             "تفاصيل الطلب",
             style: TextStyle(
-              fontFamily: 'Jost',
+              fontFamily: 'Cairo',
               fontSize: width/25,
               letterSpacing: 1.7,
+              color: Colors.white ,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -75,7 +64,7 @@ class _ItemsState extends State<Items> {
         ),
         body:
 
-         Padding(
+        Padding(
           padding: EdgeInsets.only(top: 10.0),
           child: ListView(
             children: [
@@ -91,224 +80,249 @@ class _ItemsState extends State<Items> {
                   return Container(
                     alignment: Alignment.center,
 
-                      child: Container(
-                        height: 150,
-                        width: (width - 10.0),
-                        child: Card(
-                          elevation: 3.0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: <Widget>[
-                                SingleChildScrollView(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Column(
+                    child: Container(
+                      width: (width - 10.0),
+                      child: Card(
+                        elevation: 3.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              SingleChildScrollView(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Container(
+                                          width: width/4,
+                                          height: height/8,
+                                          child: Image(
+                                            image:NetworkImage(item['img_full_path']),
+                                            fit: BoxFit.fitHeight,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    Container(
+                                      padding: EdgeInsets.all(10.0),
+                                      // width: (width - 20.0),
+                                      child: Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          Container(
-                                            width: width/4,
-                                            height: height/8,
-                                            child: Image(
-                                              image:NetworkImage(item['img_full_path']),
-                                              fit: BoxFit.fitHeight,
+                                          Text(
+                                            '${item['name']}',
+
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .color,
+                                              fontSize: 12.0.sp,
+                                              fontFamily: "Cairo",
+                                              fontWeight: FontWeight.bold,
                                             ),
+                                          ),
+                                          SizedBox(
+                                            height: 7.0,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                'السعر:',
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      .color,
+                                                  fontSize: width/26,
+                                                  fontFamily: "Cairo",
+
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 10.0,
+                                              ),
+                                              Text(
+                                                '${item['price']}  KWD',
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      .color,
+                                                  fontSize: width/26,
+                                                  fontFamily: "Cairo",
+
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 7.0,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                'الكمية :',
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      .color,
+                                                  fontSize: width/26,
+                                                  fontFamily: "Cairo",
+
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 10.0,
+                                              ),
+                                              Text(
+                                                '${item['qut']}  ',
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      .color,
+                                                  fontSize: width/26,
+                                                  fontFamily: "Cairo",
+
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 7.0,
                                           ),
                                         ],
                                       ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(10.0),
+                                      // width: (width - 20.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          item["color"] !=null ?
+                                          Text(
+                                            '${item["color"]}',
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .color,
+                                              fontSize: width/26,
+                                              fontFamily: "Cairo",
 
-                                      Container(
-                                        padding: EdgeInsets.all(10.0),
-                                        // width: (width - 20.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              '${item['name']}',
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .textTheme
-                                                    .headline6
-                                                    .color,
-                                                fontSize: 15.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                            SizedBox(
-                                              height: 7.0,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                              children: <Widget>[
-                                                Text(
-                                                  'الوحدة:',
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6
-                                                        .color,
-                                                    fontSize: width/26,
-                                                  ),
+                                          ):Text(" "),
+                                          SizedBox(
+                                            height: 7.0,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              item["size"] !=null?
+                                              Text(
+                                                'المقاس :',
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      .color,
+                                                  fontSize: width/26,
+                                                  fontFamily: "Cairo",
+
                                                 ),
-                                                SizedBox(
-                                                  width: 10.0,
+                                              ):Text(" "),
+                                              SizedBox(
+                                                width: 10.0,
+                                              ),  item["size"] !=null ?
+                                              Text(
+                                                '${item["size"]}',
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      .color,
+                                                  fontSize: 12.0.sp,
                                                 ),
-                                                Text(
-                                                  '${item['price']}  KW',
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6
-                                                        .color,
-                                                    fontSize: width/26,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 7.0,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                              children: <Widget>[
-                                                Text(
-                                                  'الكمية :',
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6
-                                                        .color,
-                                                    fontSize: width/26,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 10.0,
-                                                ),
-                                                Text(
-                                                  '${item['qut']}  ',
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6
-                                                        .color,
-                                                    fontSize: width/26,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 7.0,
-                                            ),
-                                          ],
-                                        ),
+                                              ):Text(" "),
+                                            ],
+                                          ),
+
+
+                                          SizedBox(
+                                            height: 7.0,
+                                          ),
+                                        ],
                                       ),
-                                      Container(
-                                        padding: EdgeInsets.all(10.0),
-                                        // width: (width - 20.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            item["color"] !=null ?
-                                            Text(
-                                              '${item["color"]}',
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .textTheme
-                                                    .headline6
-                                                    .color,
-                                                fontSize: width/26,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ):Text(" "),
-                                            SizedBox(
-                                              height: 7.0,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                              children: <Widget>[
-                                                item["size"] !=null?
-                                                Text(
-                                                  'المقاس :',
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6
-                                                        .color,
-                                                    fontSize: width/26,
-                                                  ),
-                                                ):Text(" "),
-                                                SizedBox(
-                                                  width: 10.0,
-                                                ),  item["size"] !=null ?
-                                                Text(
-                                                  '${item["size"]}',
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6
-                                                        .color,
-                                                    fontSize: 15.0,
-                                                  ),
-                                                ):Text(" "),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 7.0,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                              children: <Widget>[
+                                    ),
 
-                                                SizedBox(
-                                                  width: 10.0,
-                                                ),
-                                                Text(
-                                                  '${(item["price"] * item["qut"]).toStringAsFixed(2)} KW  ',
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6
-                                                        .color,
-                                                    fontSize: width/26,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 7.0,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-
-                                    ],
-                                  ),
+                                  ],
                                 ),
+                              ),
 
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                children: <Widget>[
 
-                              ],
-                            ),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Text(
+                                    "اجمالي السعر    ",
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .color,
+                                      fontFamily: "Cairo",
+                                      fontSize: 12.0.sp,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${(item["price"] * item["qut"]).toStringAsFixed(2)} KW  ',
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .color,
+                                      fontFamily: "Cairo",
+
+                                      fontSize: 12.0.sp,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
+                    ),
 
                   )
 
