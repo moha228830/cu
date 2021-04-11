@@ -87,6 +87,7 @@ class MyApp extends StatelessWidget {
                     AppLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
                   ],
                   theme: AppTheme.lightTheme,
                   darkTheme: AppTheme.darkTheme,
